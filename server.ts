@@ -1,39 +1,38 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import * as express from 'express';
-import * as http from 'http';
-import * as bodyParser from 'body-parser';
-import * as cookieParser from 'cookie-parser';
-import * as morgan from 'morgan';
-import * as cors from 'cors';
-import * as winston from 'winston';
+import * as express from "express";
+import * as http from "http";
+import * as bodyParser from "body-parser";
+import * as cookieParser from "cookie-parser";
+import * as morgan from "morgan";
+import * as cors from "cors";
+import * as winston from "winston";
+import { Router } from "express";
+import * as jayson from "jayson/promise";
 import {
   userErrorHandler,
   serverErrorHandler,
   unknownErrorHandler,
-} from './utils/errors/errorHandler';
-import { initLogger } from './utils/helpers/logger';
-import { Router } from 'express';
-import * as jayson from 'jayson/promise';
+} from "./utils/errors/errorHandler";
+import { initLogger } from "./utils/helpers/logger";
 
 export class Server {
   public app: express.Application;
+
   private config: any;
+
   private server: http.Server;
+
   private logger: winston.Logger;
 
   public static bootstrap(
     config: any,
     router: Router,
-    RpcServer?: jayson.Server,
+    RpcServer?: jayson.Server
   ): Server {
     return new Server(config, router, RpcServer);
   }
 
-  private constructor(
-    config: any,
-    router: Router,
-    RpcServer?: jayson.Server,
-  ) {
+  private constructor(config: any, router: Router, RpcServer?: jayson.Server) {
     this.app = express();
     this.config = config;
     this.logger = initLogger(config);
@@ -45,28 +44,28 @@ export class Server {
     this.server.listen(this.config.server.port, () => {
       console.log(
         `Server running in ${
-          process.env.NODE_ENV || 'development'
-        } environment on port ${config.server.port}`,
+          process.env.NODE_ENV || "development"
+        } environment on port ${config.server.port}`
       );
       this.log(
-        'info',
+        "info",
         `Server running in ${
-          process.env.NODE_ENV || 'development'
+          process.env.NODE_ENV || "development"
         } environment on port ${config.server.port}`,
-        'server started',
+        "server started"
       );
     });
 
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
     // handle RPC
     if (RpcServer) {
       RpcServer.http().listen(config.rpc.port, () => {
         console.log(`RPC server running on port ${config.rpc.port}`);
         this.log(
-          'info',
+          "info",
           `RPC server running on port ${config.rpc.port}`,
-          'RPC server started',
+          "RPC server started"
         );
       });
     }
@@ -78,12 +77,12 @@ export class Server {
     };
     this.app.use(cors(corsOptions));
 
-    if (process.env.NODE_ENV === 'development') {
-      this.app.use(morgan('dev'));
+    if (process.env.NODE_ENV === "development") {
+      this.app.use(morgan("dev"));
     }
 
-    this.app.use(express.json({ limit: '500mb' }));
-    this.app.use(bodyParser.json({ limit: '500mb' }));
+    this.app.use(express.json({ limit: "500mb" }));
+    this.app.use(bodyParser.json({ limit: "500mb" }));
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.use(cookieParser());
   }
@@ -100,7 +99,7 @@ export class Server {
     description: string,
     correlationId?: string,
     user?: string,
-    more?: object,
+    more?: object
   ) => {
     this.logger.log({
       name,

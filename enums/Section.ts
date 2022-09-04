@@ -1,4 +1,4 @@
 export enum Section {
-    OPERATIVE = 'operative',
-    WAR = 'war',
+  OPERATIVE = "operative",
+  WAR = "war",
 }

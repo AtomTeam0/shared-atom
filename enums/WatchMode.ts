@@ -1,5 +1,5 @@
 export enum WatchMode {
-    COMPLETE = 'complete',
-    MIDDLE = 'middle',
-    UNREAD = 'unread',
+  COMPLETE = "complete",
+  MIDDLE = "middle",
+  UNREAD = "unread",
 }

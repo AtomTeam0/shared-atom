@@ -1,12 +1,12 @@
-import { IChapter, IChapterDoc } from './chapter.interface';
+import { IChapter, IChapterDoc } from "./chapter.interface";
 
 export interface IPakalQuery {
-    pakalId: string;
+  pakalId: string;
 }
 
 export interface IPakal {
-    id?: string;
-    chapters: string[] | IChapter[] | IChapterDoc[];
-    preKnowledge?: string[];
-    test?: string;
+  id?: string;
+  chapters: string[] | IChapter[] | IChapterDoc[];
+  preKnowledge?: string[];
+  test?: string;
 }

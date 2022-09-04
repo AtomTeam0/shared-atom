@@ -1,19 +1,19 @@
 export interface ITestResult {
-    name: string;
-    title: string;
-    grade: number;
+  name: string;
+  title: string;
+  grade: number;
 }
 
 export interface ITestByUserQuery {
-    testId?: string;
-    userId?: string;
+  testId?: string;
+  userId?: string;
 }
 
 export interface ITestUserless {
-    testId: string;
-    grade: number;
+  testId: string;
+  grade: number;
 }
 
 export interface ITestByUser extends ITestUserless {
-    userId: string;
+  userId: string;
 }

@@ -1,13 +1,13 @@
-import { WatchMode } from '../enums/WatchMode';
+import { WatchMode } from "../enums/WatchMode";
 
 export interface IChapter {
-    id?: string;
-    title: string;
-    description?: string;
-    iframe: string;
-    mode?: WatchMode;
+  id?: string;
+  title: string;
+  description?: string;
+  iframe: string;
+  mode?: WatchMode;
 }
 
 export interface IChapterDoc extends IChapter {
-    patchUserInfo: (userId: string) => any;
+  patchUserInfo: (userId: string) => any;
 }
