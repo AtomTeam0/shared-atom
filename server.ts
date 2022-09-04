@@ -14,25 +14,30 @@ import {
   unknownErrorHandler,
 } from "./utils/errors/errorHandler";
 import { initLogger } from "./utils/helpers/logger";
+import { IServerConfig } from "./interfaces/serverConfig.interface";
 
 export class Server {
   public app: express.Application;
 
-  private config: any;
+  private config: IServerConfig;
 
   private server: http.Server;
 
   private logger: winston.Logger;
 
   public static bootstrap(
-    config: any,
+    config: IServerConfig,
     router: Router,
     RpcServer?: jayson.Server
   ): Server {
     return new Server(config, router, RpcServer);
   }
 
-  private constructor(config: any, router: Router, RpcServer?: jayson.Server) {
+  private constructor(
+    config: IServerConfig,
+    router: Router,
+    RpcServer?: jayson.Server
+  ) {
     this.app = express();
     this.config = config;
     this.logger = initLogger(config);
@@ -45,13 +50,13 @@ export class Server {
       console.log(
         `Server running in ${
           process.env.NODE_ENV || "development"
-        } environment on port ${config.server.port}`
+        } environment on port ${this.config.server.port}`
       );
       this.log(
         "info",
         `Server running in ${
           process.env.NODE_ENV || "development"
-        } environment on port ${config.server.port}`,
+        } environment on port ${this.config.server.port}`,
         "server started"
       );
     });
@@ -60,11 +65,11 @@ export class Server {
 
     // handle RPC
     if (RpcServer) {
-      RpcServer.http().listen(config.rpc.port, () => {
-        console.log(`RPC server running on port ${config.rpc.port}`);
+      RpcServer.http().listen(this.config.rpc!.port, () => {
+        console.log(`RPC server running on port ${this.config.rpc!.port}`);
         this.log(
           "info",
-          `RPC server running on port ${config.rpc.port}`,
+          `RPC server running on port ${this.config.rpc!.port}`,
           "RPC server started"
         );
       });
