@@ -3,9 +3,9 @@ import { IUser } from "../interfaces/user.interface";
 import { RPCRequest } from "../utils/rpc";
 
 export class UsersRPCService {
-  static rpcHostname = RPCconfig.userService.rpcHostname;
+  private static rpcHostname = RPCconfig.userService.rpcHostname;
 
-  static rpcPort = RPCconfig.userService.rpcPort;
+  private static rpcPort = RPCconfig.userService.rpcPort;
 
   static async getById(userId: string): Promise<IUser> {
     return RPCRequest(
