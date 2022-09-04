@@ -13,4 +13,5 @@ export interface IServerConfig {
   rpc?: {
     port: number;
   };
+  [k: string]: Record<string, unknown> | undefined;
 }
