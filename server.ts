@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import * as express from "express";
 import * as http from "http";
 import * as bodyParser from "body-parser";
@@ -65,11 +64,11 @@ export class Server {
 
     // handle RPC
     if (RpcServer) {
-      RpcServer.http().listen(this.config.rpc!.port, () => {
-        console.log(`RPC server running on port ${this.config.rpc!.port}`);
+      RpcServer.http().listen(this.config.rpc?.port, () => {
+        console.log(`RPC server running on port ${this.config.rpc?.port}`);
         this.log(
           "info",
-          `RPC server running on port ${this.config.rpc!.port}`,
+          `RPC server running on port ${this.config.rpc?.port}`,
           "RPC server started"
         );
       });
