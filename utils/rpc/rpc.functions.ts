@@ -26,20 +26,19 @@ export const RPCClientRequest = async (
 };
 
 export const RPCServerRequest =
-  async (
-    validator: Joi.ObjectSchema<any>,
-    managerFunction: (val: any) => any
-  ): Promise<any> =>
+  (
+    managerFunction: (val: any) => any,
+    validator?: Joi.ObjectSchema<any>
+  ): any =>
   async (args: Array<any>) => {
-    const { error, value } = validator.validate(
-      args[1],
-      defaultValidationOptions
-    );
-    if (error) {
-      throw new RPCValidationError();
+    if (validator) {
+      const { error } = validator.validate(args[1], defaultValidationOptions);
+      if (error) {
+        throw new RPCValidationError();
+      }
     }
 
     contextService.set("userId", args[0]);
-    const result = await managerFunction(value);
+    const result = await managerFunction(args[1]);
     return result;
   };
