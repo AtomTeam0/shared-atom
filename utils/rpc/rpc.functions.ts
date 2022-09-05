@@ -9,7 +9,6 @@ export const RPCClientRequest = async (
   rpcHostname: string,
   rpcPort: number,
   route: string,
-  reqUserId: string,
   params: { [k: string]: any } = {}
 ): Promise<any> => {
   const rpcClient = jayson.Client.http({
@@ -19,7 +18,10 @@ export const RPCClientRequest = async (
 
   console.log(`-- ${route} RPC request was called --`);
 
-  const response = await rpcClient.request(route, [reqUserId, params]);
+  const response = await rpcClient.request(route, [
+    contextService.get("userId"),
+    params,
+  ]);
   return response.result;
 };
 
