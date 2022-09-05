@@ -7,14 +7,11 @@ export class UsersRPCService {
 
   private static rpcPort = RPCconfig.userService.rpcPort;
 
-  static async getById(userId: string): Promise<IUser> {
+  static async getById(): Promise<IUser> {
     return RPCClientRequest(
       UsersRPCService.rpcHostname,
       UsersRPCService.rpcPort,
-      "getById",
-      {
-        userId,
-      }
+      "getById"
     );
   }
 }
