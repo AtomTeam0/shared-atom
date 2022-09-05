@@ -3,6 +3,8 @@ import { Permission } from "../enums/Permission";
 import { IUser } from "../interfaces/user.interface";
 import { AuthenticationError, PermissionError } from "./errors/generalError";
 
+const contextService = require("request-context");
+
 export class Validator {
   static validatePermission(
     permissions: Permission[] = [...Object.values(Permission)]
@@ -27,6 +29,8 @@ export class Validator {
     ) {
       return new PermissionError();
     }
+
+    contextService.set("userId", user.id);
     return undefined;
   }
 }

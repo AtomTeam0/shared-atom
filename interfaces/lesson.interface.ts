@@ -2,7 +2,6 @@ import { IChapter, IChapterDoc } from "./chapter.interface";
 
 export interface ILessonQuery {
   lessonId: string;
-  userId: string;
 }
 
 export interface ILesson {

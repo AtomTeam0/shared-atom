@@ -37,12 +37,12 @@ export class Server {
     router: Router,
     RpcServer?: jayson.Server
   ) {
+    // handle express
     this.app = express();
     this.config = config;
     this.logger = initLogger(config);
     this.configureMiddlewares();
     this.app.use(router);
-
     this.initializeErrorHandler();
     this.server = http.createServer(this.app);
     this.server.listen(this.config.server.port, () => {
@@ -59,7 +59,6 @@ export class Server {
         "server started"
       );
     });
-
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
     // handle RPC

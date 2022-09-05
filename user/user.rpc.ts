@@ -1,6 +1,6 @@
-import { RPCconfig } from "../rpc.config";
+import { RPCconfig } from "../utils/rpc/rpc.config";
 import { IUser } from "../interfaces/user.interface";
-import { RPCRequest } from "../utils/rpc";
+import { RPCClientRequest } from "../utils/rpc/rpc";
 
 export class UsersRPCService {
   private static rpcHostname = RPCconfig.userService.rpcHostname;
@@ -8,10 +8,11 @@ export class UsersRPCService {
   private static rpcPort = RPCconfig.userService.rpcPort;
 
   static async getById(userId: string): Promise<IUser> {
-    return RPCRequest(
+    return RPCClientRequest(
       UsersRPCService.rpcHostname,
       UsersRPCService.rpcPort,
       "getById",
+      userId,
       {
         userId,
       }

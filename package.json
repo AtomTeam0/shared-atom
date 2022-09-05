@@ -11,6 +11,7 @@
     "jayson": "^4.0.0",
     "joi": "^17.6.0",
     "morgan": "^1.10.0",
+    "request-context": "^2.0.0",
     "winston": "^3.8.1"
   },
   "devDependencies": {
