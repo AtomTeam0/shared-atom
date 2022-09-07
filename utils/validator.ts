@@ -34,3 +34,27 @@ export class Validator {
     return undefined;
   }
 }
+
+export const idExistsInDb = async (
+  id: string,
+  getFunction: (id: string) => Promise<any>,
+  ErrorToThrow: typeof Error
+) => {
+  const result = await getFunction(id);
+  if (!result) {
+    throw new ErrorToThrow();
+  }
+};
+
+export const idArrayExistsInDb = async (
+  idArray: string[],
+  getFunction: (id: string) => Promise<any>,
+  ErrorToThrow: typeof Error
+) => {
+  const results = await Promise.all(
+    idArray.map(async (id: string) => getFunction(id))
+  );
+  if (results.some((result: any) => !result)) {
+    throw new ErrorToThrow();
+  }
+};
