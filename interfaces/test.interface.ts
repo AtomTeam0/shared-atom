@@ -1,7 +1,7 @@
-interface IQuestion {
+export interface IQuestion {
   question: string;
   options: string[];
-  correctAnswerIndex: number;
+  correctAnswer: string;
 }
 
 export interface ITest {
