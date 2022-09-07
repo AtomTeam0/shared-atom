@@ -1,4 +1,5 @@
 import { IChapter, IChapterDoc } from "./chapter.interface";
+import { ITest } from "./test.interface";
 
 export interface IPakalQuery {
   pakalId: string;
@@ -7,6 +8,5 @@ export interface IPakalQuery {
 export interface IPakal {
   id?: string;
   chapters: string[] | IChapter[] | IChapterDoc[];
-  preKnowledge?: string[];
-  test?: string;
+  test?: string | ITest;
 }
