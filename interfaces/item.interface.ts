@@ -15,7 +15,6 @@ export interface IItemQuery {
 
 export interface IItem {
   id?: string;
-  createdAt: Date;
   updatedAt: Date;
   title: string;
   description: string;
