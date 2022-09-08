@@ -11,6 +11,6 @@ export interface ILesson {
   goal: string;
   experience: string;
   chapters: string[] | IChapter[];
-  preKnowledge?: string[] | IItem[];
+  preKnowledge: string[] | IItem[];
   test?: string | ITest;
 }
