@@ -18,7 +18,7 @@ export interface IUser {
   favorites: string[] | IItem[];
   lastWatched: string[] | IItem[];
   employees: string[] | IUser[];
-  podcasts: { podcastId: string; mode: WatchMode; note: string }[];
+  media: { mediaId: string; mode: WatchMode; note: string }[];
   chapters: { chapterId: string; mode: WatchMode }[];
 }
 
