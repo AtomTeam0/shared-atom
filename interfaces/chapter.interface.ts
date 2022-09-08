@@ -7,7 +7,3 @@ export interface IChapter {
   iframe: string;
   mode?: WatchMode;
 }
-
-export interface IChapterDoc extends IChapter {
-  patchUserInfo: (userId: string) => any;
-}

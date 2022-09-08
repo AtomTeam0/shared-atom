@@ -1,4 +1,4 @@
-import { IChapter, IChapterDoc } from "./chapter.interface";
+import { IChapter } from "./chapter.interface";
 import { IItem } from "./item.interface";
 import { ITest } from "./test.interface";
 
@@ -10,7 +10,7 @@ export interface ILesson {
   id?: string;
   goal: string;
   experience: string;
-  chapters: string[] | IChapter[] | IChapterDoc[];
+  chapters: string[] | IChapter[];
   preKnowledge?: string[] | IItem[];
   test?: string | ITest;
 }

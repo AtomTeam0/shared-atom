@@ -18,8 +18,10 @@ export interface IItem {
   createdAt: Date;
   updatedAt: Date;
   title: string;
+  description: string;
   views: number;
   priority: number;
+  isActive: boolean;
   areas: Area[];
   sections: Section[];
   categories: Category[];
@@ -31,8 +33,4 @@ export interface IItem {
   unit: string | IUnit;
   similarItems: string[] | IItem[];
   isFavorite?: boolean;
-}
-
-export interface IItemDoc extends IItem {
-  patchUserInfo: (userId: string) => any;
 }
