@@ -7,6 +7,7 @@ export interface IPakalQuery {
 
 export interface IPakal {
   id?: string;
+  pdfURL: string;
   chapters: string[] | IChapter[];
   test?: string | ITest;
 }

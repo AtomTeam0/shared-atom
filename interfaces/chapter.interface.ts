@@ -4,5 +4,5 @@ export interface IChapter extends IUserChapterPatch {
   id?: string;
   title: string;
   description?: string;
-  iframe: string;
+  page: number;
 }

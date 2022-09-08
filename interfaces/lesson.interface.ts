@@ -10,6 +10,7 @@ export interface ILesson {
   id?: string;
   goal: string;
   experience: string;
+  pdfURL: string;
   chapters: string[] | IChapter[];
   preKnowledge: string[] | IItem[];
   test?: string | ITest;
