@@ -1,9 +1,8 @@
-import { WatchMode } from "../enums/WatchMode";
+import { IUserChapterPatch } from "./user.interface";
 
-export interface IChapter {
+export interface IChapter extends IUserChapterPatch {
   id?: string;
   title: string;
   description?: string;
   iframe: string;
-  mode?: WatchMode;
 }

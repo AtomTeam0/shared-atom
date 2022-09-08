@@ -21,3 +21,12 @@ export interface IUser {
   podcasts: { podcastId: string; mode: WatchMode; note: string }[];
   chapters: { chapterId: string; mode: WatchMode }[];
 }
+
+export interface IUserChapterPatch {
+  mode?: WatchMode;
+}
+
+export interface IUserMediaPatch {
+  mode?: WatchMode;
+  note?: string;
+}
