@@ -1,6 +1,14 @@
 import { Category } from "../enums/Category";
-import { IBestSoldier } from "./bestSoldier.interface";
 import { IComment } from "./comment.interface";
+
+interface IBestSoldier {
+  name: string;
+  age: number;
+  unit: string;
+  city: string;
+  description: string;
+  image: string;
+}
 
 export interface IArticle {
   id?: string;
