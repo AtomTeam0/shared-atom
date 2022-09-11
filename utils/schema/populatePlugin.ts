@@ -3,7 +3,7 @@ import { queryFunctionTypes } from "./schemaHelpers";
 
 export function populatePlugin(
   schema: mongoose.Schema,
-  properties: { path: string; ref: string }[]
+  options: { path: string; ref: string }[]
 ) {
   schema.pre(
     "aggregate",
@@ -11,7 +11,7 @@ export function populatePlugin(
       this: mongoose.Aggregate<any>,
       next: mongoose.HookNextFunction
     ) {
-      properties.forEach((p) => {
+      options.forEach((p) => {
         this.pipeline().unshift({
           $lookup: {
             from: p.ref,
@@ -32,7 +32,7 @@ export function populatePlugin(
         this: mongoose.Query<any, any>,
         next: mongoose.HookNextFunction
       ) {
-        this.populate(properties.map((p) => p.path));
+        this.populate(options.map((p) => p.path));
         next();
       }
     )

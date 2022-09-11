@@ -3,8 +3,10 @@ import { queryFunctionTypes } from "./schemaHelpers";
 
 export function conditionPlugin(
   schema: mongoose.Schema,
-  properyName: string,
-  wantedVal: any
+  options: {
+    properyName: string;
+    wantedVal: any;
+  }
 ) {
   schema.pre(
     "aggregate",
@@ -12,7 +14,9 @@ export function conditionPlugin(
       this: mongoose.Aggregate<any>,
       next: mongoose.HookNextFunction
     ) {
-      this.pipeline().unshift({ $match: { [properyName]: wantedVal } });
+      this.pipeline().unshift({
+        $match: { [options.properyName]: options.wantedVal },
+      });
       next();
     }
   );
@@ -24,7 +28,7 @@ export function conditionPlugin(
         this: mongoose.Query<any, any>,
         next: mongoose.HookNextFunction
       ) {
-        this.where({ [properyName]: wantedVal });
+        this.where({ [options.properyName]: options.wantedVal });
         next();
       }
     );
