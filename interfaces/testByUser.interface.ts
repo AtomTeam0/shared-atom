@@ -1,3 +1,7 @@
+import { IItem } from "./item.interface";
+import { ITest } from "./test.interface";
+import { IUser } from "./user.interface";
+
 export interface ITestResult {
   name: string;
   title: string;
@@ -10,10 +14,11 @@ export interface ITestByUserQuery {
 }
 
 export interface ITestUserless {
-  testId: string;
+  test: string | ITest;
+  item: string | IItem;
   grade: number;
 }
 
 export interface ITestByUser extends ITestUserless {
-  userId: string;
+  user: string | IUser;
 }
