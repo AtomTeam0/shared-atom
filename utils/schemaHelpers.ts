@@ -14,8 +14,7 @@ export const queryFunctionTypes = [
 
 export const populatePlugin = async (
   properties: { path: string; ref: string }[],
-  schema: mongoose.Schema,
-  doc: mongoose.Model<any>
+  schema: mongoose.Schema
 ) => {
   const aggregateMiddleWare = schema.pre(
     "aggregate",
@@ -41,7 +40,7 @@ export const populatePlugin = async (
     schema.post(
       type,
       async function (
-        this: mongoose.Query<typeof doc, typeof doc>,
+        this: mongoose.Query<any, any>,
         next: mongoose.HookNextFunction
       ) {
         this.populate(properties.map((p) => p.path));
