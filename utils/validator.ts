@@ -37,25 +37,43 @@ export class Validator {
 }
 
 export const idExistsInDb = async (
-  id: string,
+  id: any | undefined,
   getFunction: (id: string) => Promise<any>,
   ErrorToThrow: typeof UserError
 ) => {
-  const result = await getFunction(id);
-  if (!result) {
-    throw new ErrorToThrow();
+  const isString = (value: unknown) =>
+    Object.prototype.toString.call(value) === "[object String]";
+
+  if (id) {
+    if (!isString(id)) {
+      throw new ErrorToThrow();
+    }
+    const result = await getFunction(id);
+    if (!result) {
+      throw new ErrorToThrow();
+    }
   }
 };
 
 export const idArrayExistsInDb = async (
-  idArray: string[],
+  idArray: any[] | undefined,
   getFunction: (id: string) => Promise<any>,
   ErrorToThrow: typeof UserError
 ) => {
-  const results = await Promise.all(
-    idArray.map(async (id: string) => getFunction(id))
-  );
-  if (results.some((result: any) => !result)) {
-    throw new ErrorToThrow();
+  const isNonEmptyArrayOfStrings = (value: unknown): value is string[] =>
+    Array.isArray(value) &&
+    value.length > 0 &&
+    value.every((item) => typeof item === "string");
+
+  if (idArray) {
+    if (!isNonEmptyArrayOfStrings(idArray)) {
+      throw new ErrorToThrow();
+    }
+    const results = await Promise.all(
+      idArray.map(async (id: string) => getFunction(id))
+    );
+    if (results.some((result: any) => !result)) {
+      throw new ErrorToThrow();
+    }
   }
 };
