@@ -12,11 +12,11 @@ export const queryFunctionTypes = [
   "updateMany",
 ];
 
-export const populatePlugin = (
-  properties: { path: string; ref: string }[],
-  schema: mongoose.Schema
-) => {
-  const aggregateMiddleWare = schema.pre(
+export function populatePlugin(
+  schema: mongoose.Schema,
+  properties: { path: string; ref: string }[]
+) {
+  schema.pre(
     "aggregate",
     async function (
       this: mongoose.Aggregate<any>,
@@ -36,7 +36,7 @@ export const populatePlugin = (
     }
   );
 
-  const queryMiddleWares = queryFunctionTypes.map((type: string) =>
+  queryFunctionTypes.map((type: string) =>
     schema.post(
       type,
       async function (
@@ -48,6 +48,4 @@ export const populatePlugin = (
       }
     )
   );
-
-  return [aggregateMiddleWare, ...queryMiddleWares];
-};
+}
