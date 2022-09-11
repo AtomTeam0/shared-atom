@@ -1,11 +1,11 @@
-import { IUser } from "../interfaces/user.interface";
+import { IUser } from "../../../interfaces/user.interface";
 import { UsersRPCService } from "./user.rpc";
 
 export const userPatcher = async (
   foreignArrayProperty: keyof IUser & string,
   foreignIdProperty: string,
-  localObjToPatch: { id: string; [k: string]: any },
-  defaultValue: { [k: string]: any }
+  defaultValue: { [k: string]: any },
+  localObjToPatch: { id: string; [k: string]: any }
 ): Promise<any> => {
   const user = await UsersRPCService.getById();
   if (!user) {
@@ -25,8 +25,8 @@ export const userPatcher = async (
 export const userPatcherBooleanCheck = async (
   foreignArrayProperty: keyof IUser & string,
   localboolProperty: string,
-  localObjToPatch: { id: string; [k: string]: any },
-  defaultValue: boolean
+  defaultValue: boolean,
+  localObjToPatch: { id: string; [k: string]: any }
 ): Promise<any> => {
   const user = await UsersRPCService.getById();
   if (!user) {

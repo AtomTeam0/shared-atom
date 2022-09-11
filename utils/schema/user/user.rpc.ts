@@ -1,6 +1,6 @@
-import { RPCconfig } from "../utils/rpc/rpc.config";
-import { IUser } from "../interfaces/user.interface";
-import { RPCClientRequest } from "../utils/rpc/rpc.functions";
+import { RPCconfig } from "../../rpc/rpc.config";
+import { IUser } from "../../../interfaces/user.interface";
+import { RPCClientRequest } from "../../rpc/rpc.functions";
 
 export class UsersRPCService {
   private static rpcHostname = RPCconfig.userService.rpcHostname;

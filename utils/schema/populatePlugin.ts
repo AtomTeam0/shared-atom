@@ -1,16 +1,5 @@
 import * as mongoose from "mongoose";
-
-export const queryFunctionTypes = [
-  "count",
-  "find",
-  "findOne",
-  "findOneAndDelete",
-  "findOneAndRemove",
-  "findOneAndUpdate",
-  "update",
-  "updateOne",
-  "updateMany",
-];
+import { queryFunctionTypes } from "./schemaHelpers";
 
 export function populatePlugin(
   schema: mongoose.Schema,
