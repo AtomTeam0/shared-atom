@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Permission } from "../enums/Permission";
 import { IUser } from "../interfaces/user.interface";
+import { UserError } from "./errors/applicationError";
 import { AuthenticationError, PermissionError } from "./errors/generalError";
 
 const contextService = require("request-context");
@@ -38,7 +39,7 @@ export class Validator {
 export const idExistsInDb = async (
   id: string,
   getFunction: (id: string) => Promise<any>,
-  ErrorToThrow: typeof Error
+  ErrorToThrow: typeof UserError
 ) => {
   const result = await getFunction(id);
   if (!result) {
@@ -49,7 +50,7 @@ export const idExistsInDb = async (
 export const idArrayExistsInDb = async (
   idArray: string[],
   getFunction: (id: string) => Promise<any>,
-  ErrorToThrow: typeof Error
+  ErrorToThrow: typeof UserError
 ) => {
   const results = await Promise.all(
     idArray.map(async (id: string) => getFunction(id))
