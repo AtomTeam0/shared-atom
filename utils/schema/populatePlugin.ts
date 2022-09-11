@@ -12,7 +12,7 @@ export function populatePlugin(
       next: mongoose.HookNextFunction
     ) {
       options.forEach((p) => {
-        this.pipeline().unshift({
+        this.pipeline().push({
           $lookup: {
             from: p.ref,
             foreignField: "_id",
