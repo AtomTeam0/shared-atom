@@ -5,11 +5,9 @@ import { queryFunctionTypes } from "./schemaHelpers";
 
 export function patchBooleanPlugin(
   schema: mongoose.Schema,
-  options: {
-    foreignArrayProperty: keyof IUser & string;
-    localboolProperty: string;
-    defaultValue: boolean;
-  }
+  foreignArrayProperty: keyof IUser & string,
+  localboolProperty: string,
+  defaultValue: boolean
 ) {
   queryFunctionTypes.map((type: string) =>
     schema.post(
@@ -20,9 +18,9 @@ export function patchBooleanPlugin(
         doc = {
           ...doc,
           ...(await userPatcherBooleanCheck(
-            options.foreignArrayProperty,
-            options.localboolProperty,
-            options.defaultValue,
+            foreignArrayProperty,
+            localboolProperty,
+            defaultValue,
             doc
           )),
         };
@@ -34,11 +32,9 @@ export function patchBooleanPlugin(
 
 export function patchObjectPlugin(
   schema: mongoose.Schema,
-  options: {
-    foreignArrayProperty: keyof IUser & string;
-    foreignIdProperty: string;
-    defaultValue: { [k: string]: any };
-  }
+  foreignArrayProperty: keyof IUser & string,
+  foreignIdProperty: string,
+  defaultValue: { [k: string]: any }
 ) {
   queryFunctionTypes.map((type: string) =>
     schema.post(
@@ -49,9 +45,9 @@ export function patchObjectPlugin(
         doc = {
           ...doc,
           ...(await userPatcher(
-            options.foreignArrayProperty,
-            options.foreignIdProperty,
-            options.defaultValue,
+            foreignArrayProperty,
+            foreignIdProperty,
+            defaultValue,
             doc
           )),
         };
