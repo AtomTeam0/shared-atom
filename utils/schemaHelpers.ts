@@ -12,7 +12,7 @@ export const queryFunctionTypes = [
   "updateMany",
 ];
 
-export const populatePlugin = async (
+export const populatePlugin = (
   properties: { path: string; ref: string }[],
   schema: mongoose.Schema
 ) => {
