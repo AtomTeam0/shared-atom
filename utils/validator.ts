@@ -55,7 +55,10 @@ export const idExistsInDb = async (
     if (!result) {
       throw new IdNotFoundError(propertyName);
     }
+
+    return result;
   }
+  return undefined;
 };
 
 export const idArrayExistsInDb = async (
@@ -78,5 +81,8 @@ export const idArrayExistsInDb = async (
     if (results.some((result: any) => !result)) {
       throw new IdArrayNotFoundError(propertyName);
     }
+
+    return results;
   }
+  return undefined;
 };
