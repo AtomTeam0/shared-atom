@@ -1,6 +1,6 @@
 import * as jayson from "jayson/promise";
 import * as Joi from "joi";
-import { RPCValidationError } from "../errors/generalError";
+import { RPCValidationError } from "../errors/validationError";
 import { defaultValidationOptions } from "../joi/joi.functions";
 
 const contextService = require("request-context");
