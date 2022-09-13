@@ -13,11 +13,16 @@ export function populatePlugin(
     ) {
       options.forEach((p) => {
         this.pipeline().push({
-          $lookup: {
-            from: p.ref,
-            foreignField: "_id",
-            localField: p.path,
-            as: p.path,
+          $cond: {
+            if: { $ne: [`$${p.path}`, undefined] },
+            then: {
+              $lookup: {
+                from: p.ref,
+                foreignField: "_id",
+                localField: p.path,
+                as: p.path,
+              },
+            },
           },
         });
       });
