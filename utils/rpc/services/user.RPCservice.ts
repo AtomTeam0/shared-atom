@@ -16,4 +16,10 @@ export class UsersRPCService {
   static async getAmountOfUsers(): Promise<number> {
     return RPCClientRequest(UsersRPCService.rpcClient, "getAmountOfUsers");
   }
+
+  static async addLastWatched(itemId: string): Promise<IUser> {
+    return RPCClientRequest(UsersRPCService.rpcClient, "addLastWatched", {
+      itemId,
+    });
+  }
 }
