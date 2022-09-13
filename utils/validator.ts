@@ -1,8 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import { Permission } from "../enums/Permission";
 import { IUser } from "../interfaces/user.interface";
-import { UserError } from "./errors/applicationError";
 import { AuthenticationError, PermissionError } from "./errors/generalError";
+import {
+  IdArrayNotFoundError,
+  IdNotFoundError,
+} from "./errors/validationError";
 
 const contextService = require("request-context");
 
@@ -39,18 +42,18 @@ export class Validator {
 export const idExistsInDb = async (
   id: any | undefined,
   getFunction: (id: string) => Promise<any>,
-  ErrorToThrow: typeof UserError
+  propertyName: string
 ) => {
   const isString = (value: unknown) =>
     Object.prototype.toString.call(value) === "[object String]";
 
   if (id) {
     if (!isString(id)) {
-      throw new ErrorToThrow();
+      throw new IdNotFoundError(propertyName);
     }
     const result = await getFunction(id);
     if (!result) {
-      throw new ErrorToThrow();
+      throw new IdNotFoundError(propertyName);
     }
   }
 };
@@ -58,7 +61,7 @@ export const idExistsInDb = async (
 export const idArrayExistsInDb = async (
   idArray: any[] | undefined,
   getFunction: (id: string) => Promise<any>,
-  ErrorToThrow: typeof UserError
+  propertyName: string
 ) => {
   const isNonEmptyArrayOfStrings = (value: unknown): value is string[] =>
     Array.isArray(value) &&
@@ -67,13 +70,13 @@ export const idArrayExistsInDb = async (
 
   if (idArray) {
     if (!isNonEmptyArrayOfStrings(idArray)) {
-      throw new ErrorToThrow();
+      throw new IdArrayNotFoundError(propertyName);
     }
     const results = await Promise.all(
       idArray.map(async (id: string) => getFunction(id))
     );
     if (results.some((result: any) => !result)) {
-      throw new ErrorToThrow();
+      throw new IdArrayNotFoundError(propertyName);
     }
   }
 };
