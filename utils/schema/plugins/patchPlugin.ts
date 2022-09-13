@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
-import { IUser } from "../../interfaces/user.interface";
-import { userPatcherBooleanCheck, userPatcher } from "./user/user.helpers";
-import { queryFunctionTypes } from "./schemaHelpers";
+import { IUser } from "../../../interfaces/user.interface";
+import { queryFunctionTypes } from "../schemaHelpers";
+import { userPatcherBooleanCheck, userPatcher } from "../user.helpers";
 
 export function patchBooleanPlugin(
   schema: mongoose.Schema,

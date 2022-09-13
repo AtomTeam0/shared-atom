@@ -6,16 +6,10 @@ import { defaultValidationOptions } from "../joi/joi.functions";
 const contextService = require("request-context");
 
 export const RPCClientRequest = async (
-  rpcHostname: string,
-  rpcPort: number,
+  rpcClient: jayson.HttpClient,
   route: string,
   params?: { [k: string]: any }
 ): Promise<any> => {
-  const rpcClient = jayson.Client.http({
-    hostname: rpcHostname,
-    port: rpcPort,
-  });
-
   console.log(`-- ${route} RPC request was called --`);
 
   const response = await rpcClient.request(route, [

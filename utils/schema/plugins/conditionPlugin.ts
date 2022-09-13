@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { queryFunctionTypes } from "./schemaHelpers";
+import { queryFunctionTypes } from "../schemaHelpers";
 
 export function conditionPlugin(
   schema: mongoose.Schema,
