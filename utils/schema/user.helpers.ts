@@ -24,7 +24,7 @@ export const userPatcher = async (
 
 export const userPatcherBooleanCheck = async (
   foreignArrayProperty: keyof IUser & string,
-  localboolProperty: string,
+  localBoolProperty: string,
   defaultValue: boolean,
   localObjToPatch: { id: string; [k: string]: any }
 ): Promise<any> => {
@@ -36,6 +36,6 @@ export const userPatcherBooleanCheck = async (
   const doesExist = array.some((id: any) => id === localObjToPatch.id);
   return {
     ...localObjToPatch,
-    [localboolProperty]: doesExist || defaultValue,
+    [localBoolProperty]: doesExist || defaultValue,
   };
 };
