@@ -5,7 +5,7 @@
         "sourceMap": true,
         "outDir": "dist",
         "strict": true,
-        "forceConsistentCasingInFileNames": false,
+        "forceConsistentCasingInFileNames": true,
         "skipLibCheck": true,
         "typeRoots": ["./node_modules/@types", "./typings"]
     },
