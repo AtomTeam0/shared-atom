@@ -1,4 +1,5 @@
 import * as jayson from "jayson/promise";
+import { IChapter } from "../../../interfaces/chapter.interface";
 import { ILesson } from "../../../interfaces/lesson.interface";
 import { IPakal } from "../../../interfaces/pakal.interface";
 import { RPCconfig } from "../rpc.config";
@@ -19,6 +20,12 @@ export class LessonRPCService {
   static async getPakalById(pakalId: string): Promise<IPakal> {
     return RPCClientRequest(LessonRPCService.rpcClient, "getPakalById", {
       pakalId,
+    });
+  }
+
+  static async getChapterById(chapterId: string): Promise<IChapter> {
+    return RPCClientRequest(LessonRPCService.rpcClient, "getChapterById", {
+      chapterId,
     });
   }
 }
