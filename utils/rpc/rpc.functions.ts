@@ -12,10 +12,10 @@ export const RPCClientRequest = async (
 ): Promise<any> => {
   console.log(`-- ${route} RPC request was called --`);
 
-  const response = await rpcClient.request(route, [
-    contextService.get("userId"),
-    ...(params ? [params] : []),
-  ]);
+  const response = await rpcClient.request(route, {
+    userId: contextService.get("userId"),
+    params,
+  });
   return response.result;
 };
 
@@ -24,15 +24,18 @@ export const RPCServerRequest =
     managerFunction: (val: any) => any,
     validator?: Joi.ObjectSchema<any>
   ): any =>
-  async (args: Array<any>) => {
+  async (payload: { userId: string; params?: { [k: string]: any } }) => {
     if (validator) {
-      const { error } = validator.validate(args[1], defaultValidationOptions);
+      const { error } = validator.validate(
+        payload.params,
+        defaultValidationOptions
+      );
       if (error) {
         throw new RPCValidationError();
       }
     }
 
-    contextService.set("userId", args[0]);
-    const result = await managerFunction(args[1]);
+    contextService.set("userId", payload.userId);
+    const result = await managerFunction(payload.params);
     return result;
   };
