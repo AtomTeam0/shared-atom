@@ -1,8 +1,8 @@
-import { Area } from "../enums/Area";
+import { IArea } from "./area.interface";
 
 export interface INews {
   id?: string;
   createdAt: Date;
   description: string;
-  area: Area;
+  area: string | IArea;
 }

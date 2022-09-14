@@ -1,4 +1,3 @@
-import { Area } from "../enums/Area";
 import { Permission } from "../enums/Permission";
 import { Section } from "../enums/Section";
 import { WatchMode } from "../enums/WatchMode";
@@ -6,7 +5,7 @@ import { IItem } from "./item.interface";
 
 export interface IUserQuery {
   section: Section;
-  area: Area;
+  area: string;
 }
 
 export interface IUser {

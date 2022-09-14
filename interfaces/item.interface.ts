@@ -1,13 +1,13 @@
-import { Area } from "../enums/Area";
 import { Category } from "../enums/Category";
 import { ContentType } from "../enums/ContentType";
 import { Corp } from "../enums/Corp";
 import { Grade } from "../enums/Grade";
 import { Section } from "../enums/Section";
+import { IArea } from "./area.interface";
 import { IUnit } from "./unit.interface";
 
 export interface IItemQuery {
-  area: Area;
+  area: string;
   section: Section;
   category?: Category;
   contentType?: ContentType;
@@ -21,7 +21,6 @@ export interface IItem {
   views: number;
   priority: number;
   isActive: boolean;
-  areas: Area[];
   sections: Section[];
   categories: Category[];
   corps: Corp[];
@@ -29,6 +28,7 @@ export interface IItem {
   contentType: ContentType;
   thumbNail: string;
   contentId: string;
+  areas: string[] | IArea[];
   unit: string | IUnit;
   similarItems: string[] | IItem[];
   isFavorite?: boolean;

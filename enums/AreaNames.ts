@@ -1,4 +1,4 @@
-export enum Area {
+export enum AreaNames {
   LEBANON = "lebanon",
   SYRIA = "syria",
   GAZA = "gaza",
