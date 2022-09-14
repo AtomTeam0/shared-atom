@@ -29,7 +29,7 @@ export class Validator {
 
     if (
       user.permission === undefined ||
-      !permissions.includes(user.permission)
+      ![permissions, ...Permission.ADMIN].includes(user.permission)
     ) {
       return new PermissionError();
     }
@@ -44,8 +44,7 @@ export const idExistsInDb = async (
   getFunction: (id: string) => Promise<any>,
   propertyName: string
 ) => {
-  const isString = (value: unknown) =>
-    Object.prototype.toString.call(value) === "[object String]";
+  const isString = (value: unknown) => typeof value === "string";
 
   if (id) {
     if (!isString(id)) {
