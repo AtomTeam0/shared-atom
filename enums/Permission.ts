@@ -3,4 +3,5 @@ export enum Permission {
   EDITOR = "editor",
   COMMANDOR = "commandor",
   ORGANIZER = "organizer",
+  DIRECTOR = "director",
 }
