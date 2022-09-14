@@ -1,6 +1,7 @@
 import { Permission } from "../enums/Permission";
 import { Section } from "../enums/Section";
 import { WatchMode } from "../enums/WatchMode";
+import { IArea } from "./area.interface";
 import { IItem } from "./item.interface";
 
 export interface IUserQuery {
@@ -12,8 +13,8 @@ export interface IUser {
   id?: string;
   firstName: string;
   lastName: string;
-  section: Section;
   permission: Permission;
+  area: string | IArea;
   favorites: string[] | IItem[];
   lastWatched: string[] | IItem[];
   employees: string[] | IUser[];
