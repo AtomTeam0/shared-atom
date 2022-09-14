@@ -1,4 +1,5 @@
 import * as jayson from "jayson/promise";
+import { IArea } from "../../../interfaces/area.interface";
 import { IItem } from "../../../interfaces/item.interface";
 import { RPCconfig } from "../rpc.config";
 import { RPCClientRequest } from "../rpc.functions";
@@ -12,6 +13,12 @@ export class ItemRPCService {
   static async getItemById(itemId: string): Promise<IItem> {
     return RPCClientRequest(ItemRPCService.rpcClient, "getItemById", {
       itemId,
+    });
+  }
+
+  static async getAreaById(areaId: string): Promise<IArea> {
+    return RPCClientRequest(ItemRPCService.rpcClient, "getAreaById", {
+      areaId,
     });
   }
 }
