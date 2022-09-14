@@ -5,7 +5,7 @@ import { IItem } from "./item.interface";
 
 export interface IUserQuery {
   section: Section;
-  area: string;
+  areaId: string;
 }
 
 export interface IUser {
