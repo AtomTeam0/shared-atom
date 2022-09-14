@@ -7,7 +7,7 @@ import { IArea } from "./area.interface";
 import { IUnit } from "./unit.interface";
 
 export interface IItemQuery {
-  area: string;
+  areaId: string;
   section: Section;
   category?: Category;
   contentType?: ContentType;
