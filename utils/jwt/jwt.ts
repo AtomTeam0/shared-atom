@@ -15,7 +15,7 @@ export const verifyToken = (
     throw new TokenNotProvided();
   }
 
-  jwt.verify(token, JWTconfig.secretKey, (err, user) => {
+  jwt.verify(token, JWTconfig.secretKey, (err: any, user: any) => {
     if (err) {
       throw new InvalidToken();
     }
