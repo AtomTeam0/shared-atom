@@ -74,9 +74,6 @@ export class Server {
         );
       });
     }
-
-    // handle context
-    this.app.use(contextService.middleware("request"));
   }
 
   private configureMiddlewares() {
@@ -93,6 +90,9 @@ export class Server {
     this.app.use(bodyParser.json({ limit: "500mb" }));
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.use(cookieParser());
+
+    // handle context
+    this.app.use(contextService.middleware("request"));
   }
 
   private initializeErrorHandler() {
