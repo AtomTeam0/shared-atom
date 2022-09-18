@@ -6,39 +6,38 @@ import {
   IdArrayNotFoundError,
   IdNotFoundError,
 } from "./errors/validationError";
-import { verifyToken } from "./jwt/jwt";
+import { wrapAsyncMiddleware } from "./helpers/wrapper";
 
 const contextService = require("request-context");
 
-export class Validator {
-  static validatePermission(
-    permissions: Permission[] = [...Object.values(Permission)]
-  ) {
-    return (req: Request, res: Response, next: NextFunction) => {
-      next(verifyToken(req));
-      next(Validator.permissionValidator((req as any).user, permissions));
-    };
-  }
-
-  private static permissionValidator(
+export const validatePermission = (
+  permissions: Permission[] = [...Object.values(Permission)]
+) => {
+  const permissionValidator = (
     user: IUser | undefined,
-    permissions: Permission[]
-  ) {
+    permissionsToValidate: Permission[]
+  ) => {
     if (!user || !user.id) {
       return new AuthenticationError();
     }
 
     if (
       user.permission === undefined ||
-      ![Permission.ADMIN, ...permissions].includes(user.permission)
+      ![Permission.ADMIN, ...permissionsToValidate].includes(user.permission)
     ) {
       return new PermissionError();
     }
 
     contextService.set("request:userId", user.id);
     return undefined;
-  }
-}
+  };
+
+  return wrapAsyncMiddleware(
+    async (req: Request, _res: Response, next: NextFunction) => {
+      next(permissionValidator((req as any).user, permissions));
+    }
+  );
+};
 
 export const idExistsInDb = async (
   id: any | undefined,
