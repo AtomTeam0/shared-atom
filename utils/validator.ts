@@ -6,6 +6,7 @@ import {
   IdArrayNotFoundError,
   IdNotFoundError,
 } from "./errors/validationError";
+import { verifyToken } from "./jwt/jwt";
 
 const contextService = require("request-context");
 
@@ -14,6 +15,7 @@ export class Validator {
     permissions: Permission[] = [...Object.values(Permission)]
   ) {
     return (req: Request, res: Response, next: NextFunction) => {
+      next(verifyToken);
       next(Validator.permissionValidator((req as any).user, permissions));
     };
   }

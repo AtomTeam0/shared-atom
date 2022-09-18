@@ -20,3 +20,16 @@ export class IdArrayNotFoundError extends UserError {
     );
   }
 }
+
+export class TokenNotProvided extends UserError {
+  constructor() {
+    super("Must provide token", 401);
+  }
+}
+
+export class InvalidToken extends UserError {
+  constructor() {
+    super("Invalid Token", 401);
+  }
+}
+
