@@ -30,7 +30,7 @@ export class Validator {
 
     if (
       user.permission === undefined ||
-      ![permissions, ...Permission.ADMIN].includes(user.permission)
+      ![Permission.ADMIN, ...permissions].includes(user.permission)
     ) {
       return new PermissionError();
     }
