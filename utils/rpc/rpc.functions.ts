@@ -12,7 +12,7 @@ export const RPCClientRequest = async (
 ): Promise<any> => {
   console.log(`-- ${route} RPC request was called --`);
 
-  const userId = contextService.get("userId");
+  const userId = contextService.get("request:userId");
 
   const response = await rpcClient.request(route, {
     ...(userId && { userId }),
@@ -38,7 +38,7 @@ export const RPCServerRequest =
     }
 
     if (payload.userId) {
-      contextService.set("userId", payload.userId);
+      contextService.set("request:userId", payload.userId);
     }
 
     const result = payload.params

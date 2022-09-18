@@ -15,6 +15,8 @@ import {
 import { initLogger } from "./utils/helpers/logger";
 import { IServerConfig } from "./interfaces/serverConfig.interface";
 
+const contextService = require("request-context");
+
 export class Server {
   public app: express.Application;
 
@@ -72,6 +74,9 @@ export class Server {
         );
       });
     }
+
+    // handle context
+    this.app.use(contextService.middleware("request"));
   }
 
   private configureMiddlewares() {

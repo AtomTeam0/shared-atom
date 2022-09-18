@@ -35,7 +35,7 @@ export class Validator {
       return new PermissionError();
     }
 
-    contextService.set("userId", user.id);
+    contextService.set("request:userId", user.id);
     return undefined;
   }
 }
