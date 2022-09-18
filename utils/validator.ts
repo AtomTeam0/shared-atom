@@ -10,7 +10,7 @@ import { wrapAsyncMiddleware } from "./helpers/wrapper";
 
 const contextService = require("request-context");
 
-export const validatePermission = (
+export const validateUserAndPermission = (
   permissions: Permission[] = [...Object.values(Permission)]
 ) => {
   const permissionValidator = (

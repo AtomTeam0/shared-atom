@@ -20,7 +20,7 @@ const normalizeRequest = (req: any, value: any): void => {
   req.params = value.params;
 };
 
-export const ValidateRequest = (
+export const validateRequest = (
   schema: Joi.ObjectSchema<any>,
   options: Joi.ValidationOptions = defaultValidationOptions
 ) => {
