@@ -21,7 +21,7 @@ export const RPCClientRequest = async (
 
 export const RPCServerRequest =
   (
-    managerFunction: (val: any) => any,
+    managerFunction: (val?: any) => any,
     validator?: Joi.ObjectSchema<any>
   ): any =>
   async (payload: { userId: string; params?: { [k: string]: any } }) => {
@@ -36,6 +36,8 @@ export const RPCServerRequest =
     }
 
     contextService.set("userId", payload.userId);
-    const result = await managerFunction(payload.params);
+    const result = payload.params
+      ? await managerFunction(...Object.values(payload.params))
+      : await managerFunction();
     return result;
   };
