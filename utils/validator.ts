@@ -15,7 +15,7 @@ export class Validator {
     permissions: Permission[] = [...Object.values(Permission)]
   ) {
     return (req: Request, res: Response, next: NextFunction) => {
-      next(verifyToken);
+      next(verifyToken(req));
       next(Validator.permissionValidator((req as any).user, permissions));
     };
   }
