@@ -13,10 +13,9 @@ export class Validator {
   static validatePermission(
     permissions: Permission[] = [...Object.values(Permission)]
   ) {
-    const middleware = (req: Request, res: Response, next: NextFunction) => {
+    return (req: Request, res: Response, next: NextFunction) => {
       next(Validator.permissionValidator((req as any).user, permissions));
     };
-    return middleware;
   }
 
   private static permissionValidator(
