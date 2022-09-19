@@ -33,3 +33,8 @@ export interface IItem {
   similarItems: string[] | IItem[];
   isFavorite?: boolean;
 }
+
+export interface IItemGroup {
+  category: Category;
+  items: IItem[];
+}
