@@ -21,3 +21,8 @@ export interface IArticle {
   bestSoldier: string | IBestSoldier;
   thumbnail: string;
 }
+
+export interface IArticleGroup {
+  category: Category;
+  articles: IArticle[];
+}
