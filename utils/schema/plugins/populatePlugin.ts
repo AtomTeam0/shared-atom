@@ -15,19 +15,13 @@ export function populatePlugin(
         this.pipeline().push({
           $lookup: {
             from: p.ref,
-            foreignField: "_id",
             localField: p.path,
-            pipeline: [
-              {
-                $match: {
-                  $expr: { $ne: [`$${p.path}`, undefined] },
-                },
-              },
-            ],
+            foreignField: "_id",
             as: p.path,
           },
         });
       });
+      console.log(this.pipeline());
       next();
     }
   );
