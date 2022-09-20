@@ -4,7 +4,7 @@ import { queryFunctionTypes } from "../schemaHelpers";
 export function conditionPlugin(
   schema: mongoose.Schema,
   options: {
-    properyName: string;
+    propertyName: string;
     wantedVal: any;
   }
 ) {
@@ -15,7 +15,7 @@ export function conditionPlugin(
       next: mongoose.HookNextFunction
     ) {
       this.pipeline().unshift({
-        $match: { [options.properyName]: options.wantedVal },
+        $match: { [options.propertyName]: options.wantedVal },
       });
       next();
     }
@@ -28,7 +28,7 @@ export function conditionPlugin(
         this: mongoose.Query<any, any>,
         next: mongoose.HookNextFunction
       ) {
-        this.where({ [options.properyName]: options.wantedVal });
+        this.where({ [options.propertyName]: options.wantedVal });
         next();
       }
     );
