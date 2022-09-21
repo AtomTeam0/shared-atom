@@ -15,7 +15,7 @@ import {
 import { initLogger } from "./utils/helpers/logger";
 import { IServerConfig } from "./interfaces/serverConfig.interface";
 
-const contextService = require("request-context");
+const contextService = require("express-http-context");
 
 export class Server {
   public app: express.Application;
@@ -92,7 +92,7 @@ export class Server {
     this.app.use(cookieParser());
 
     // handle context
-    this.app.use(contextService.middleware("request"));
+    this.app.use(contextService.middleware);
   }
 
   private initializeErrorHandler() {

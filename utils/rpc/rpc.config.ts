@@ -5,7 +5,7 @@ export const RPCconfig = {
   },
   lessonService: {
     rpcPort: +(process.env.APPLICATION_RPC_PORT || 5000),
-    rpcHostname: process.env.LOSSON_SERVICE_RPC_HOST || "localhost",
+    rpcHostname: process.env.LESSON_SERVICE_RPC_HOST || "localhost",
   },
   mediaService: {
     rpcPort: +(process.env.APPLICATION_RPC_PORT || 5000),
