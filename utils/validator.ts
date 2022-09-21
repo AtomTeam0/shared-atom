@@ -69,11 +69,16 @@ export const validateUserAndPermission = (
       return new AuthenticationError();
     }
 
-    const dbUser = await idExistsInDb(
-      user.id,
-      UsersRPCService.getUserById,
-      "userId"
-    );
+    let dbUser;
+    try {
+      dbUser = await idExistsInDb(
+        user.id,
+        UsersRPCService.getUserById,
+        "userId"
+      );
+    } catch (error) {
+      return error;
+    }
 
     if (
       dbUser.permission === undefined ||
