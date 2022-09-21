@@ -76,8 +76,8 @@ export const validateUserAndPermission = (
         UsersRPCService.getUserById,
         "userId"
       );
-    } catch (error) {
-      return error;
+    } catch (err) {
+      return err;
     }
 
     if (
@@ -93,7 +93,11 @@ export const validateUserAndPermission = (
 
   return wrapAsyncMiddleware(
     async (req: Request, _res: Response, next: NextFunction) => {
-      next(permissionValidator((req as any).user, permissions));
+      const error = await permissionValidator((req as any).user, permissions);
+      if (error) {
+        throw error;
+      }
+      next();
     }
   );
 };
