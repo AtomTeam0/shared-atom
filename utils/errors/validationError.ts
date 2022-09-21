@@ -32,4 +32,3 @@ export class InvalidToken extends UserError {
     super("Invalid Token", 401);
   }
 }
-

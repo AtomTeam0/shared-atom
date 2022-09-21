@@ -1,36 +1,12 @@
 import * as mongoose from "mongoose";
 import { IUser } from "../../../interfaces/user.interface";
+import {
+  patchInAggregation,
+  userPatcher,
+  patchBooleanInAggregation,
+  userPatcherBoolean,
+} from "../user.helpers";
 import { queryFunctionTypes } from "../schemaHelpers";
-import { userPatcherBooleanCheck, userPatcher } from "../user.helpers";
-
-export function patchBooleanPlugin(
-  schema: mongoose.Schema,
-  options: {
-    foreignArrayProperty: keyof IUser & string;
-    localboolProperty: string;
-    defaultValue: boolean;
-  }
-) {
-  queryFunctionTypes.map((type: string) =>
-    schema.post(
-      type,
-      { document: false, query: true },
-      async (doc, next: mongoose.HookNextFunction) => {
-        // eslint-disable-next-line no-param-reassign
-        doc = {
-          ...doc,
-          ...(await userPatcherBooleanCheck(
-            options.foreignArrayProperty,
-            options.localboolProperty,
-            options.defaultValue,
-            doc
-          )),
-        };
-        next();
-      }
-    )
-  );
-}
 
 export function patchObjectPlugin(
   schema: mongoose.Schema,
@@ -40,20 +16,67 @@ export function patchObjectPlugin(
     defaultValue: { [k: string]: any };
   }
 ) {
+  schema.pre(
+    "aggregate",
+    async function (
+      this: mongoose.Aggregate<any> & { isSecondIteration: boolean },
+      next: mongoose.HookNextFunction
+    ) {
+      this.pipeline().push(...(await patchInAggregation(options)));
+      next();
+    }
+  );
+
   queryFunctionTypes.map((type: string) =>
     schema.post(
       type,
       { document: false, query: true },
-      async (doc, next: mongoose.HookNextFunction) => {
+      async (doc: any, next: mongoose.HookNextFunction) => {
         // eslint-disable-next-line no-param-reassign
         doc = {
           ...doc,
-          ...(await userPatcher(
+          ...((await userPatcher(
             options.foreignArrayProperty,
             options.foreignIdProperty,
+            doc._id
+          )) || options.defaultValue),
+        };
+        next();
+      }
+    )
+  );
+}
+
+export function patchBooleanPlugin(
+  schema: mongoose.Schema,
+  options: {
+    foreignArrayProperty: keyof IUser & string;
+    localBoolProperty: string;
+    defaultValue: boolean;
+  }
+) {
+  schema.pre(
+    "aggregate",
+    async function (
+      this: mongoose.Aggregate<any> & { isSecondIteration: boolean },
+      next: mongoose.HookNextFunction
+    ) {
+      this.pipeline().push(...(await patchBooleanInAggregation(options)));
+      next();
+    }
+  );
+
+  queryFunctionTypes.map((type: string) =>
+    schema.post(
+      type,
+      { document: false, query: true },
+      async (doc: any, next: mongoose.HookNextFunction) => {
+        // eslint-disable-next-line no-param-reassign
+        doc = {
+          ...doc,
+          [options.localBoolProperty]:
+            (await userPatcherBoolean(options.foreignArrayProperty, doc._id)) ||
             options.defaultValue,
-            doc
-          )),
         };
         next();
       }

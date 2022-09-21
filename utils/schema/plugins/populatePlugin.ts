@@ -21,7 +21,6 @@ export function populatePlugin(
           },
         });
       });
-      console.log(this.pipeline());
       next();
     }
   );
