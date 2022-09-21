@@ -69,25 +69,20 @@ export const validateUserAndPermission = (
       return new AuthenticationError();
     }
 
-    let dbUser;
+    if (
+      !user.permission ||
+      ![Permission.ADMIN, ...permissionsToValidate].includes(user.permission)
+    ) {
+      return new PermissionError();
+    }
+    contextService.set("request:userId", user.id);
+
     try {
-      dbUser = await idExistsInDb(
-        user.id,
-        UsersRPCService.getUserById,
-        "userId"
-      );
+      await idExistsInDb(user.id, UsersRPCService.getUserById, "userId");
     } catch (err) {
       return err;
     }
 
-    if (
-      dbUser.permission === undefined ||
-      ![Permission.ADMIN, ...permissionsToValidate].includes(dbUser.permission)
-    ) {
-      return new PermissionError();
-    }
-
-    contextService.set("request:userId", dbUser.id);
     return undefined;
   };
 
