@@ -9,8 +9,8 @@ export class UsersRPCService {
     port: RPCconfig.userService.rpcPort,
   });
 
-  static async getById(): Promise<IUser> {
-    return RPCClientRequest(UsersRPCService.rpcClient, "getById");
+  static async getUserById(): Promise<IUser> {
+    return RPCClientRequest(UsersRPCService.rpcClient, "getUserById");
   }
 
   static async getAmountOfUsers(): Promise<number> {

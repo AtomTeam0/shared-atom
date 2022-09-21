@@ -7,37 +7,9 @@ import {
   IdNotFoundError,
 } from "./errors/validationError";
 import { wrapAsyncMiddleware } from "./helpers/wrapper";
+import { UsersRPCService } from "./rpc/services/user.RPCservice";
 
 const contextService = require("request-context");
-
-export const validateUserAndPermission = (
-  permissions: Permission[] = [...Object.values(Permission)]
-) => {
-  const permissionValidator = (
-    user: IUser | undefined,
-    permissionsToValidate: Permission[]
-  ) => {
-    if (!user || !user.id) {
-      return new AuthenticationError();
-    }
-
-    if (
-      user.permission === undefined ||
-      ![Permission.ADMIN, ...permissionsToValidate].includes(user.permission)
-    ) {
-      return new PermissionError();
-    }
-
-    contextService.set("request:userId", user.id);
-    return undefined;
-  };
-
-  return wrapAsyncMiddleware(
-    async (req: Request, _res: Response, next: NextFunction) => {
-      next(permissionValidator((req as any).user, permissions));
-    }
-  );
-};
 
 export const idExistsInDb = async (
   id: any | undefined,
@@ -84,4 +56,39 @@ export const idArrayExistsInDb = async (
     return results;
   }
   return undefined;
+};
+
+export const validateUserAndPermission = (
+  permissions: Permission[] = [...Object.values(Permission)]
+) => {
+  const permissionValidator = async (
+    user: IUser | undefined,
+    permissionsToValidate: Permission[]
+  ) => {
+    if (!user || !user.id) {
+      return new AuthenticationError();
+    }
+
+    const dbUser = await idExistsInDb(
+      user.id,
+      UsersRPCService.getUserById,
+      "userId"
+    );
+
+    if (
+      dbUser.permission === undefined ||
+      ![Permission.ADMIN, ...permissionsToValidate].includes(dbUser.permission)
+    ) {
+      return new PermissionError();
+    }
+
+    contextService.set("request:userId", dbUser.id);
+    return undefined;
+  };
+
+  return wrapAsyncMiddleware(
+    async (req: Request, _res: Response, next: NextFunction) => {
+      next(permissionValidator((req as any).user, permissions));
+    }
+  );
 };

@@ -4,7 +4,7 @@ import { UsersRPCService } from "../rpc/services/user.RPCservice";
 export const getUserArray = async (
   foreignArrayProperty: keyof IUser & string
 ): Promise<any> => {
-  const user = await UsersRPCService.getById();
+  const user = await UsersRPCService.getUserById();
   if (!user) {
     return [];
   }
