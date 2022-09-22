@@ -7,7 +7,6 @@ import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { AreaModel } from "./area.model";
 import { UnitModel } from "./unit.model";
 
-// eslint-disable-next-line import/no-unresolved
 const mongooseFuzzySearching = require("mongoose-fuzzy-searching");
 
 const ItemSchema: mongoose.Schema = new mongoose.Schema(

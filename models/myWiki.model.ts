@@ -1,7 +1,6 @@
 import * as mongoose from "mongoose";
 import { IMyWiki } from "../interfaces/myWiki.interface";
 
-// eslint-disable-next-line import/no-unresolved
 const mongooseFuzzySearching = require("mongoose-fuzzy-searching");
 
 const MyWikiSchema: mongoose.Schema = new mongoose.Schema(
