@@ -21,16 +21,10 @@ export function conditionPlugin(
     }
   );
 
-  queryFunctionTypes.forEach((type: string) => {
-    schema.pre(
-      type,
-      async function (
-        this: mongoose.Query<any, any>,
-        next: mongoose.HookNextFunction
-      ) {
-        this.where({ [options.propertyName]: options.wantedVal });
-        next();
-      }
-    );
-  });
+  queryFunctionTypes.map((type: string) =>
+    schema.pre(type, function (next: mongoose.HookNextFunction) {
+      this.where({ [options.propertyName]: options.wantedVal });
+      next();
+    })
+  );
 }

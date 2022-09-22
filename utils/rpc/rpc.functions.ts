@@ -3,8 +3,6 @@ import * as Joi from "joi";
 import { RPCValidationError } from "../errors/validationError";
 import { defaultValidationOptions } from "../joi/joi.functions";
 
-const contextService = require("express-http-context");
-
 export const RPCClientRequest = async (
   rpcClient: jayson.HttpClient,
   route: string,
@@ -12,7 +10,7 @@ export const RPCClientRequest = async (
 ): Promise<any> => {
   console.log(`-- ${route} RPC request was called --`);
 
-  const userId = contextService.get("userId");
+  const { userId } = <any>global;
 
   const response = await rpcClient.request(route, {
     ...(userId && { userId }),
@@ -38,7 +36,7 @@ export const RPCServerRequest =
     }
 
     if (payload.userId) {
-      contextService.set("userId", payload.userId);
+      (<any>global).userId = payload.userId;
     }
 
     const result = await managerFunction(

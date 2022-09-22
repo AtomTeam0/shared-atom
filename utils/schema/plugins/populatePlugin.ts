@@ -26,15 +26,9 @@ export function populatePlugin(
   );
 
   queryFunctionTypes.map((type: string) =>
-    schema.post(
-      type,
-      async function (
-        this: mongoose.Query<any, any>,
-        next: mongoose.HookNextFunction
-      ) {
-        this.populate(options.map((p) => p.path));
-        next();
-      }
-    )
+    schema.pre(type, function (next: mongoose.HookNextFunction) {
+      options.map((p) => this.populate(p.path));
+      next();
+    })
   );
 }

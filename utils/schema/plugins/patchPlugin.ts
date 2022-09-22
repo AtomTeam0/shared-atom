@@ -28,22 +28,18 @@ export function patchObjectPlugin(
   );
 
   queryFunctionTypes.map((type: string) =>
-    schema.post(
-      type,
-      { document: false, query: true },
-      async (doc: any, next: mongoose.HookNextFunction) => {
-        // eslint-disable-next-line no-param-reassign
-        doc = {
-          ...doc,
-          ...((await userPatcher(
-            options.foreignArrayProperty,
-            options.foreignIdProperty,
-            doc._id
-          )) || options.defaultValue),
-        };
-        next();
-      }
-    )
+    schema.post(type, async (doc: any, next: mongoose.HookNextFunction) => {
+      // eslint-disable-next-line no-param-reassign
+      doc = {
+        ...doc,
+        ...((await userPatcher(
+          options.foreignArrayProperty,
+          options.foreignIdProperty,
+          doc._id
+        )) || options.defaultValue),
+      };
+      next();
+    })
   );
 }
 
@@ -67,19 +63,15 @@ export function patchBooleanPlugin(
   );
 
   queryFunctionTypes.map((type: string) =>
-    schema.post(
-      type,
-      { document: false, query: true },
-      async (doc: any, next: mongoose.HookNextFunction) => {
-        // eslint-disable-next-line no-param-reassign
-        doc = {
-          ...doc,
-          [options.localBoolProperty]:
-            (await userPatcherBoolean(options.foreignArrayProperty, doc._id)) ||
-            options.defaultValue,
-        };
-        next();
-      }
-    )
+    schema.post(type, async (doc: any, next: mongoose.HookNextFunction) => {
+      // eslint-disable-next-line no-param-reassign
+      doc = {
+        ...doc,
+        [options.localBoolProperty]:
+          (await userPatcherBoolean(options.foreignArrayProperty, doc._id)) ||
+          options.defaultValue,
+      };
+      next();
+    })
   );
 }

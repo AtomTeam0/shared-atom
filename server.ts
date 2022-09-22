@@ -13,7 +13,7 @@ import {
   unknownErrorHandler,
 } from "./utils/errors/errorHandler";
 import { initLogger } from "./utils/helpers/logger";
-import { IServerConfig } from "./interfaces/serverConfig.interface";
+import { IServerConfig } from "./interfaces/helpers/serverConfig.interface";
 
 const contextService = require("express-http-context");
 
