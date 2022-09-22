@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
-import { patchObjectPlugin } from "../../microServices/lesson-service/shared/utils/schema/plugins/patchPlugin";
 import { WatchMode } from "../enums/WatchMode";
 import { IChapter } from "../interfaces/chapter.interface";
+import { patchObjectPlugin } from "../utils/schema/plugins/patchPlugin";
 
 const ChapterSchema: mongoose.Schema = new mongoose.Schema(
   {
