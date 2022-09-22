@@ -1,6 +1,6 @@
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
-import { IArea } from "../../microServices/item-compositor/shared/interfaces/area.interface";
+import { IArea } from "../interfaces/area.interface";
 
 const AreaSchema: mongoose.Schema = new mongoose.Schema(
   {

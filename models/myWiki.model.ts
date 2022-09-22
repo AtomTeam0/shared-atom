@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { IMyWiki } from "../../microServices/news-service/shared/interfaces/myWiki.interface";
+import { IMyWiki } from "../interfaces/myWiki.interface";
 
 // eslint-disable-next-line import/no-unresolved
 const mongooseFuzzySearching = require("mongoose-fuzzy-searching");

@@ -1,8 +1,8 @@
 import * as mongoose from "mongoose";
-import { Permission } from "../../microServices/user-service/shared/enums/Permission";
-import { WatchMode } from "../../microServices/user-service/shared/enums/WatchMode";
-import { IUser } from "../../microServices/user-service/shared/interfaces/user.interface";
-import { populatePlugin } from "../../microServices/user-service/shared/utils/schema/plugins/populatePlugin";
+import { Permission } from "../enums/Permission";
+import { WatchMode } from "../enums/WatchMode";
+import { IUser } from "../interfaces/user.interface";
+import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { AreaModel } from "./area.model";
 import { ChapterModel } from "./chapter.model";
 import { ItemModel } from "./item.model";

@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
-import { WatchMode } from "../../microServices/media-service/shared/enums/WatchMode";
-import { IMedia } from "../../microServices/media-service/shared/interfaces/media.interface";
 import { patchObjectPlugin } from "../../microServices/media-service/shared/utils/schema/plugins/patchPlugin";
+import { WatchMode } from "../enums/WatchMode";
+import { IMedia } from "../interfaces/media.interface";
 
 const MediaSchema: mongoose.Schema = new mongoose.Schema(
   {

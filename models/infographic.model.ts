@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { IInfographic } from "../../microServices/media-service/shared/interfaces/infographic.interface";
+import { IInfographic } from "../interfaces/infographic.interface";
 
 const InfographicSchema: mongoose.Schema = new mongoose.Schema(
   {

@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { ITest } from "../../microServices/lesson-service/shared/interfaces/test.interface";
+import { ITest } from "../interfaces/test.interface";
 
 const TestSchema: mongoose.Schema = new mongoose.Schema(
   {

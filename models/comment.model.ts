@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
-import { IComment } from "../../microServices/news-service/shared/interfaces/comment.interface";
-import { populatePlugin } from "../../microServices/news-service/shared/utils/schema/plugins/populatePlugin";
+import { IComment } from "../interfaces/comment.interface";
+import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { UserModel } from "./user.model";
 
 const CommentSchema: mongoose.Schema = new mongoose.Schema(

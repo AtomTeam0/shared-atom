@@ -1,10 +1,9 @@
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
-import { config } from "../../microServices/item-compositor/src/config";
-import { IItem } from "../../microServices/item-compositor/shared/interfaces/item.interface";
-import { conditionPlugin } from "../../microServices/item-compositor/shared/utils/schema/plugins/conditionPlugin";
-import { patchBooleanPlugin } from "../../microServices/item-compositor/shared/utils/schema/plugins/patchPlugin";
-import { populatePlugin } from "../../microServices/item-compositor/shared/utils/schema/plugins/populatePlugin";
+import { IItem } from "../interfaces/item.interface";
+import { conditionPlugin } from "../utils/schema/plugins/conditionPlugin";
+import { patchBooleanPlugin } from "../utils/schema/plugins/patchPlugin";
+import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { AreaModel } from "./area.model";
 import { UnitModel } from "./unit.model";
 
@@ -29,12 +28,10 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
     priority: {
       type: Number,
       required: true,
-      default: Math.ceil(config.priority.maxPriority / 2),
+      default: 50,
       validate: {
-        validator: (val: number) =>
-          val <= config.priority.maxPriority &&
-          val >= config.priority.minPriority,
-        message: `priority out of range (${config.priority.minPriority}-${config.priority.maxPriority})`,
+        validator: (val: number) => val <= 100 && val >= 1,
+        message: `priority out of range (1-100)`,
       },
     },
     timeToRead: {

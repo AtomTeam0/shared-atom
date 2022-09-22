@@ -1,6 +1,6 @@
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
-import { IUnit } from "../../microServices/item-compositor/shared/interfaces/unit.interface";
+import { IUnit } from "../interfaces/unit.interface";
 
 const UnitSchema: mongoose.Schema = new mongoose.Schema(
   {

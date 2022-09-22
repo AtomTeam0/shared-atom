@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
-import { INews } from "../../microServices/news-service/shared/interfaces/news.interface";
-import { populatePlugin } from "../../microServices/news-service/shared/utils/schema/plugins/populatePlugin";
+import { INews } from "../interfaces/news.interface";
+import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { AreaModel } from "./area.model";
 
 const NewsSchema: mongoose.Schema = new mongoose.Schema(

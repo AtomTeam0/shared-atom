@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
-import { IPakal } from "../../microServices/lesson-service/shared/interfaces/pakal.interface";
-import { populatePlugin } from "../../microServices/lesson-service/shared/utils/schema/plugins/populatePlugin";
+import { IPakal } from "../interfaces/pakal.interface";
+import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { ChapterModel } from "./chapter.model";
 import { TestModel } from "./test.model";
 

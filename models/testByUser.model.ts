@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
-import { ITestByUser } from "../../microServices/lesson-service/shared/interfaces/testByUser.interface";
-import { populatePlugin } from "../../microServices/lesson-service/shared/utils/schema/plugins/populatePlugin";
+import { ITestByUser } from "../interfaces/testByUser.interface";
+import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { ItemModel } from "./item.model";
 import { TestModel } from "./test.model";
 import { UserModel } from "./user.model";
