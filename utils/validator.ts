@@ -9,8 +9,6 @@ import {
 import { wrapAsyncMiddleware } from "./helpers/wrapper";
 import { UsersRPCService } from "./rpc/services/user.RPCservice";
 
-const contextService = require("express-http-context");
-
 export const idExistsInDb = async (
   id: any | undefined,
   getFunction: (id: string) => Promise<any>,
@@ -75,7 +73,7 @@ export const validateUserAndPermission = (
     ) {
       return new PermissionError();
     }
-    contextService.set("userId", user.id);
+    (<any>global).userId = user.id;
 
     try {
       await idExistsInDb(user.id, UsersRPCService.getUserById, "userId");
