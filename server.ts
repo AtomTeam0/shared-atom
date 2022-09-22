@@ -15,8 +15,6 @@ import {
 import { initLogger } from "./utils/helpers/logger";
 import { IServerConfig } from "./interfaces/helpers/serverConfig.interface";
 
-const contextService = require("express-http-context");
-
 export class Server {
   public app: express.Application;
 
@@ -90,9 +88,6 @@ export class Server {
     this.app.use(bodyParser.json({ limit: "500mb" }));
     this.app.use(bodyParser.urlencoded({ extended: true }));
     this.app.use(cookieParser());
-
-    // handle context
-    this.app.use(contextService.middleware);
   }
 
   private initializeErrorHandler() {
