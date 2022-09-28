@@ -39,6 +39,11 @@ export const RPCServerRequest =
       (<any>global).userId = payload.userId;
     }
 
+    // handle plugins
+    (<any>global).skipCondition = false;
+    (<any>global).skipPopulate = false;
+    (<any>global).skipPatch = false;
+
     const result = await managerFunction(
       ...(payload.params ? Object.values(payload.params) : [])
     );

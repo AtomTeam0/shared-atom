@@ -12,14 +12,16 @@ export function populatePlugin(
       next: mongoose.HookNextFunction
     ) {
       options.forEach((p) => {
-        this.pipeline().push({
-          $lookup: {
-            from: p.ref,
-            localField: p.path,
-            foreignField: "_id",
-            as: p.path,
-          },
-        });
+        if (!(<any>global).skipPopulate) {
+          this.pipeline().push({
+            $lookup: {
+              from: p.ref,
+              localField: p.path,
+              foreignField: "_id",
+              as: p.path,
+            },
+          });
+        }
       });
       next();
     }
@@ -27,7 +29,9 @@ export function populatePlugin(
 
   queryFunctionTypes.map((type: string) =>
     schema.pre(type, function (next: mongoose.HookNextFunction) {
-      options.map((p) => this.populate(p.path));
+      if (!(<any>global).skipPopulate) {
+        options.map((p) => this.populate(p.path));
+      }
       next();
     })
   );

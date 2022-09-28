@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
 import { IUser } from "../../../interfaces/user.interface";
 import {
@@ -19,27 +21,37 @@ export function patchObjectPlugin(
   schema.pre(
     "aggregate",
     async function (
-      this: mongoose.Aggregate<any> & { isSecondIteration: boolean },
+      this: mongoose.Aggregate<any>,
       next: mongoose.HookNextFunction
     ) {
-      this.pipeline().push(...(await patchInAggregation(options)));
+      if (!(<any>global).skipPatch) {
+        this.pipeline().push(...(await patchInAggregation(options)));
+      }
       next();
     }
   );
 
   queryFunctionTypes.map((type: string) =>
-    schema.post(type, async (doc: any, next: mongoose.HookNextFunction) => {
-      // eslint-disable-next-line no-param-reassign
-      doc = {
-        ...doc,
-        ...((await userPatcher(
-          options.foreignArrayProperty,
-          options.foreignIdProperty,
-          doc._id
-        )) || options.defaultValue),
-      };
-      next();
-    })
+    schema.post(
+      type,
+      async function (
+        this: mongoose.Query<any, any>,
+        doc: any,
+        next: mongoose.HookNextFunction
+      ) {
+        if (!(<any>global).skipPatch) {
+          doc = {
+            ...doc,
+            ...((await userPatcher(
+              options.foreignArrayProperty,
+              options.foreignIdProperty,
+              doc._id
+            )) || options.defaultValue),
+          };
+        }
+        next();
+      }
+    )
   );
 }
 
@@ -54,24 +66,36 @@ export function patchBooleanPlugin(
   schema.pre(
     "aggregate",
     async function (
-      this: mongoose.Aggregate<any> & { isSecondIteration: boolean },
+      this: mongoose.Aggregate<any>,
       next: mongoose.HookNextFunction
     ) {
-      this.pipeline().push(...(await patchBooleanInAggregation(options)));
+      if (!(<any>global).skipPatch) {
+        this.pipeline().push(...(await patchBooleanInAggregation(options)));
+      }
       next();
     }
   );
 
   queryFunctionTypes.map((type: string) =>
-    schema.post(type, async (doc: any, next: mongoose.HookNextFunction) => {
-      // eslint-disable-next-line no-param-reassign
-      doc = {
-        ...doc,
-        [options.localBoolProperty]:
-          (await userPatcherBoolean(options.foreignArrayProperty, doc._id)) ||
-          options.defaultValue,
-      };
-      next();
-    })
+    schema.post(
+      type,
+      async function (
+        this: mongoose.Query<any, any>,
+        doc: any,
+        next: mongoose.HookNextFunction
+      ) {
+        if (!(<any>global).skipPatch) {
+          doc = {
+            ...doc,
+            [options.localBoolProperty]:
+              (await userPatcherBoolean(
+                options.foreignArrayProperty,
+                doc._id
+              )) || options.defaultValue,
+          };
+        }
+        next();
+      }
+    )
   );
 }

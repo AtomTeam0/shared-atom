@@ -14,16 +14,20 @@ export function conditionPlugin(
       this: mongoose.Aggregate<any>,
       next: mongoose.HookNextFunction
     ) {
-      this.pipeline().unshift({
-        $match: { [options.propertyName]: options.wantedVal },
-      });
+      if (!(<any>global).skipCondition) {
+        this.pipeline().unshift({
+          $match: { [options.propertyName]: options.wantedVal },
+        });
+      }
       next();
     }
   );
 
   queryFunctionTypes.map((type: string) =>
     schema.pre(type, function (next: mongoose.HookNextFunction) {
-      this.where({ [options.propertyName]: options.wantedVal });
+      if (!(<any>global).skipCondition) {
+        this.where({ [options.propertyName]: options.wantedVal });
+      }
       next();
     })
   );
