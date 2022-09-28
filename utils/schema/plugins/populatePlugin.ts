@@ -1,4 +1,5 @@
 import * as mongoose from "mongoose";
+import { setPluginUsage } from "../plugin.helpers";
 import { queryFunctionTypes } from "../schemaHelpers";
 
 export function populatePlugin(
@@ -23,6 +24,7 @@ export function populatePlugin(
           });
         }
       });
+      setPluginUsage(true, true, true);
       next();
     }
   );
@@ -32,6 +34,7 @@ export function populatePlugin(
       if (!(<any>global).skipPopulate) {
         options.map((p) => this.populate(p.path));
       }
+      setPluginUsage(true, true, true);
       next();
     })
   );

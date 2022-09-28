@@ -2,7 +2,6 @@ import * as jayson from "jayson/promise";
 import * as Joi from "joi";
 import { RPCValidationError } from "../errors/validationError";
 import { defaultValidationOptions } from "../joi/joi.functions";
-import { setPluginUsage } from "../schema/plugin.helpers";
 
 export const RPCClientRequest = async (
   rpcClient: jayson.HttpClient,
@@ -40,11 +39,8 @@ export const RPCServerRequest =
       (<any>global).userId = payload.userId;
     }
 
-    setPluginUsage(true, true, true);
     const result = await managerFunction(
       ...(payload.params ? Object.values(payload.params) : [])
     );
-    setPluginUsage(false, false, false);
-
     return result;
   };

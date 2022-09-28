@@ -9,6 +9,7 @@ import {
   userPatcherBoolean,
 } from "../user.helpers";
 import { queryFunctionTypes } from "../schemaHelpers";
+import { setPluginUsage } from "../plugin.helpers";
 
 export function patchObjectPlugin(
   schema: mongoose.Schema,
@@ -72,6 +73,7 @@ export function patchBooleanPlugin(
       if (!(<any>global).skipPatch) {
         this.pipeline().push(...(await patchBooleanInAggregation(options)));
       }
+      setPluginUsage(true, true, true);
       next();
     }
   );
@@ -94,6 +96,7 @@ export function patchBooleanPlugin(
               )) || options.defaultValue,
           };
         }
+        setPluginUsage(true, true, true);
         next();
       }
     )

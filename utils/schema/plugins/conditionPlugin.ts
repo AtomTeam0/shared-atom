@@ -1,4 +1,5 @@
 import * as mongoose from "mongoose";
+import { setPluginUsage } from "../plugin.helpers";
 import { queryFunctionTypes } from "../schemaHelpers";
 
 export function conditionPlugin(
@@ -19,6 +20,7 @@ export function conditionPlugin(
           $match: { [options.propertyName]: options.wantedVal },
         });
       }
+      setPluginUsage(true, true, true);
       next();
     }
   );
@@ -28,6 +30,7 @@ export function conditionPlugin(
       if (!(<any>global).skipCondition) {
         this.where({ [options.propertyName]: options.wantedVal });
       }
+      setPluginUsage(true, true, true);
       next();
     })
   );
