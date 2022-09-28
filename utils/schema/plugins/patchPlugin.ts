@@ -26,7 +26,7 @@ export function patchObjectPlugin(
       next: mongoose.HookNextFunction
     ) {
       if (!(<any>global).skipPatch) {
-        this.pipeline().push(...(await patchInAggregation(options)));
+        this.pipeline().unshift(...(await patchInAggregation(options)));
       }
       setPluginUsage({ skipPatch: true });
       next();
@@ -73,7 +73,7 @@ export function patchBooleanPlugin(
       next: mongoose.HookNextFunction
     ) {
       if (!(<any>global).skipPatch) {
-        this.pipeline().push(...(await patchBooleanInAggregation(options)));
+        this.pipeline().unshift(...(await patchBooleanInAggregation(options)));
       }
       setPluginUsage({ skipPatch: true });
       next();
@@ -85,16 +85,16 @@ export function patchBooleanPlugin(
       type,
       async function (
         this: mongoose.Query<any, any>,
-        doc: any,
-        next: mongoose.HookNextFunction
+        res: any,
+        next: (err?: mongoose.CallbackError) => void
       ) {
         if (!(<any>global).skipPatch) {
-          doc = {
-            ...doc,
+          res = {
+            ...res,
             [options.localBoolProperty]:
               (await userPatcherBoolean(
                 options.foreignArrayProperty,
-                doc._id
+                res._id
               )) || options.defaultValue,
           };
         }

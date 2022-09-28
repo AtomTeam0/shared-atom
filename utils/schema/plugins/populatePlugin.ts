@@ -14,7 +14,7 @@ export function populatePlugin(
     ) {
       options.forEach((p) => {
         if (!(<any>global).skipPopulate) {
-          this.pipeline().push({
+          this.pipeline().unshift({
             $lookup: {
               from: p.ref,
               localField: p.path,
