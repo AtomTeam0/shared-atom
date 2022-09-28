@@ -2,6 +2,7 @@ import * as jayson from "jayson/promise";
 import * as Joi from "joi";
 import { RPCValidationError } from "../errors/validationError";
 import { defaultValidationOptions } from "../joi/joi.functions";
+import { setPluginUsage } from "../schema/plugin.helpers";
 
 export const RPCClientRequest = async (
   rpcClient: jayson.HttpClient,
@@ -39,8 +40,15 @@ export const RPCServerRequest =
       (<any>global).userId = payload.userId;
     }
 
+    // save temp globals
+    const { skipCondition, skipPopulate, skipPatch } = <any>global;
+
     const result = await managerFunction(
       ...(payload.params ? Object.values(payload.params) : [])
     );
+
+    // set globals back to original values
+    setPluginUsage(skipCondition, skipPopulate, skipPatch);
+
     return result;
   };
