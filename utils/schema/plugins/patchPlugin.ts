@@ -73,7 +73,7 @@ export function patchBooleanPlugin(
       if (!(<any>global).skipPatch) {
         this.pipeline().push(...(await patchBooleanInAggregation(options)));
       }
-      setPluginUsage(true, true, true);
+      setPluginUsage({ skipPopulate: true });
       next();
     }
   );
@@ -96,7 +96,7 @@ export function patchBooleanPlugin(
               )) || options.defaultValue,
           };
         }
-        setPluginUsage(true, true, true);
+        setPluginUsage({ skipPopulate: true });
         next();
       }
     )

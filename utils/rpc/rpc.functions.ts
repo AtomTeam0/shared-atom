@@ -48,7 +48,7 @@ export const RPCServerRequest =
     );
 
     // set globals back to original values
-    setPluginUsage(skipCondition, skipPopulate, skipPatch);
+    setPluginUsage({ skipCondition, skipPopulate, skipPatch });
 
     return result;
   };

@@ -20,7 +20,7 @@ export function conditionPlugin(
           $match: { [options.propertyName]: options.wantedVal },
         });
       }
-      setPluginUsage(true, true, true);
+      setPluginUsage({ skipCondition: true });
       next();
     }
   );
@@ -30,7 +30,7 @@ export function conditionPlugin(
       if (!(<any>global).skipCondition) {
         this.where({ [options.propertyName]: options.wantedVal });
       }
-      setPluginUsage(true, true, true);
+      setPluginUsage({ skipCondition: true });
       next();
     })
   );

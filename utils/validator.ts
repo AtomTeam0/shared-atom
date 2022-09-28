@@ -8,6 +8,7 @@ import {
 } from "./errors/validationError";
 import { wrapAsyncMiddleware } from "./helpers/wrapper";
 import { UsersRPCService } from "./rpc/services/user.RPCservice";
+import { setPluginUsage } from "./schema/plugin.helpers";
 
 export const idExistsInDb = async (
   id: any | undefined,
@@ -20,11 +21,16 @@ export const idExistsInDb = async (
     if (!isString(id)) {
       throw new IdNotFoundError(propertyName);
     }
+
+    const { skipCondition } = <any>global;
+    setPluginUsage({ skipCondition: true });
+
     const result = await getFunction(id);
     if (!result) {
       throw new IdNotFoundError(propertyName);
     }
 
+    setPluginUsage({ skipCondition });
     return result;
   }
   return undefined;
