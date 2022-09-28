@@ -16,3 +16,11 @@ export const setPluginUsage = (options: {
       ? options.skipPatch
       : (<any>global).skipPatch;
 };
+
+export const initPluginUsage = (): void => {
+  setPluginUsage({
+    skipCondition: false,
+    skipPopulate: false,
+    skipPatch: false,
+  });
+};

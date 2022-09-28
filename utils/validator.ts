@@ -8,7 +8,7 @@ import {
 } from "./errors/validationError";
 import { wrapAsyncMiddleware } from "./helpers/wrapper";
 import { UsersRPCService } from "./rpc/services/user.RPCservice";
-import { setPluginUsage } from "./schema/plugin.helpers";
+import { initPluginUsage, setPluginUsage } from "./schema/plugin.helpers";
 
 export const idExistsInDb = async (
   id: any | undefined,
@@ -80,6 +80,7 @@ export const validateUserAndPermission = (
       return new PermissionError();
     }
     (<any>global).userId = user.id;
+    initPluginUsage();
 
     try {
       await idExistsInDb(user.id, UsersRPCService.getUserById, "userId");

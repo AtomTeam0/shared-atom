@@ -28,6 +28,7 @@ export function patchObjectPlugin(
       if (!(<any>global).skipPatch) {
         this.pipeline().push(...(await patchInAggregation(options)));
       }
+      setPluginUsage({ skipPatch: true });
       next();
     }
   );
@@ -50,6 +51,7 @@ export function patchObjectPlugin(
             )) || options.defaultValue),
           };
         }
+        setPluginUsage({ skipPatch: true });
         next();
       }
     )
@@ -73,7 +75,7 @@ export function patchBooleanPlugin(
       if (!(<any>global).skipPatch) {
         this.pipeline().push(...(await patchBooleanInAggregation(options)));
       }
-      setPluginUsage({ skipPopulate: true });
+      setPluginUsage({ skipPatch: true });
       next();
     }
   );
@@ -96,7 +98,7 @@ export function patchBooleanPlugin(
               )) || options.defaultValue,
           };
         }
-        setPluginUsage({ skipPopulate: true });
+        setPluginUsage({ skipPatch: true });
         next();
       }
     )

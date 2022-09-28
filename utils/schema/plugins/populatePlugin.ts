@@ -24,7 +24,7 @@ export function populatePlugin(
           });
         }
       });
-      setPluginUsage({ skipPatch: true });
+      setPluginUsage({ skipPopulate: true });
       next();
     }
   );
@@ -34,7 +34,7 @@ export function populatePlugin(
       if (!(<any>global).skipPopulate) {
         options.map((p) => this.populate(p.path));
       }
-      setPluginUsage({ skipPatch: true });
+      setPluginUsage({ skipPopulate: true });
       next();
     })
   );
