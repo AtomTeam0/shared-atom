@@ -65,9 +65,9 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
       default: [],
     },
-    podcasts: {
+    media: {
       type: {
-        podcastId: {
+        mediaId: {
           type: mongoose.Types.ObjectId,
           required: true,
           ref: MediaModel,
@@ -79,7 +79,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
         },
         note: {
           type: String,
-          required: true,
+          required: false,
         },
       },
       required: true,

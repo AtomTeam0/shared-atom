@@ -38,16 +38,16 @@ export function patchObjectPlugin(
       type,
       async function (
         this: mongoose.Query<any, any>,
-        doc: any,
-        next: mongoose.HookNextFunction
+        res: any,
+        next: (err?: mongoose.CallbackError) => void
       ) {
         if (!(<any>global).skipPatch) {
-          doc = {
-            ...doc,
+          res = {
+            ...res,
             ...((await userPatcher(
               options.foreignArrayProperty,
               options.foreignIdProperty,
-              doc._id
+              res._id
             )) || options.defaultValue),
           };
         }
