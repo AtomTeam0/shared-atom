@@ -1,6 +1,6 @@
 import * as jayson from "jayson/promise";
 import * as Joi from "joi";
-import { RPCValidationError } from "../errors/validationError";
+import { RPCFunctionError } from "../errors/validationError";
 import { defaultValidationOptions } from "../joi/joi.functions";
 import { setPluginUsage } from "../schema/plugin.helpers";
 
@@ -10,13 +10,18 @@ export const RPCClientRequest = async (
   params?: { [k: string]: any }
 ): Promise<any> => {
   console.log(`-- ${route} RPC request was called --`);
-
+  const isError = (obj: any) => obj.name && obj.message && obj.status;
   const { userId } = <any>global;
 
   const response = await rpcClient.request(route, {
     ...(userId && { userId }),
     params,
   });
+
+  if (isError(response)) {
+    throw response;
+  }
+
   return response.result;
 };
 
@@ -32,7 +37,7 @@ export const RPCServerRequest =
         defaultValidationOptions
       );
       if (error) {
-        throw new RPCValidationError();
+        return new RPCFunctionError(error);
       }
     }
 
@@ -43,12 +48,17 @@ export const RPCServerRequest =
     // save temp globals
     const { skipCondition, skipPopulate, skipPatch } = <any>global;
 
-    const result = await managerFunction(
-      ...(payload.params ? Object.values(payload.params) : [])
-    );
-
-    // set globals back to original values
-    setPluginUsage({ skipCondition, skipPopulate, skipPatch });
+    let result;
+    try {
+      result = await managerFunction(
+        ...(payload.params ? Object.values(payload.params) : [])
+      );
+    } catch (error: any) {
+      return new RPCFunctionError(error);
+    } finally {
+      // set globals back to original values
+      setPluginUsage({ skipCondition, skipPopulate, skipPatch });
+    }
 
     return result;
   };

@@ -1,11 +1,10 @@
 import { ServerError, UserError } from "./applicationError";
 
-export class RPCValidationError extends ServerError {
-  constructor() {
-    super("RPC validation error", 400);
+export class RPCFunctionError extends ServerError {
+  constructor(err: Error) {
+    super(`RPC function error: ${err.message}`, 400);
   }
 }
-
 export class IdNotFoundError extends UserError {
   constructor(funcName: string) {
     super(`id given in ${funcName} is not found in the db`, 404);
