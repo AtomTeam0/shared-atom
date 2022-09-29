@@ -12,14 +12,13 @@ import { initPluginUsage, setPluginUsage } from "./schema/plugin.helpers";
 
 export const idExistsInDb = async (
   id: any | undefined,
-  getFunction: (id: string) => Promise<any>,
-  propertyName: string
+  getFunction: (id: string) => Promise<any>
 ) => {
   const isString = (value: unknown) => typeof value === "string";
 
   if (id) {
     if (!isString(id)) {
-      throw new IdNotFoundError(propertyName);
+      throw new IdNotFoundError(getFunction.name);
     }
 
     const { skipCondition } = <any>global;
@@ -27,7 +26,7 @@ export const idExistsInDb = async (
 
     const result = await getFunction(id);
     if (!result) {
-      throw new IdNotFoundError(propertyName);
+      throw new IdNotFoundError(getFunction.name);
     }
 
     setPluginUsage({ skipCondition });
@@ -38,8 +37,7 @@ export const idExistsInDb = async (
 
 export const idArrayExistsInDb = async (
   idArray: any[] | undefined,
-  getFunction: (id: string) => Promise<any>,
-  propertyName: string
+  getFunction: (id: string) => Promise<any>
 ) => {
   const isNonEmptyArrayOfStrings = (value: unknown): value is string[] =>
     Array.isArray(value) &&
@@ -48,13 +46,13 @@ export const idArrayExistsInDb = async (
 
   if (idArray) {
     if (!isNonEmptyArrayOfStrings(idArray)) {
-      throw new IdArrayNotFoundError(propertyName);
+      throw new IdArrayNotFoundError(getFunction.name);
     }
     const results = await Promise.all(
       idArray.map(async (id: string) => getFunction(id))
     );
     if (results.some((result: any) => !result)) {
-      throw new IdArrayNotFoundError(propertyName);
+      throw new IdArrayNotFoundError(getFunction.name);
     }
 
     return results;
@@ -83,7 +81,7 @@ export const validateUserAndPermission = (
     initPluginUsage();
 
     try {
-      await idExistsInDb(user.id, UsersRPCService.getUserById, "userId");
+      await idExistsInDb(user.id, UsersRPCService.getUserById);
     } catch (err) {
       return err;
     }
