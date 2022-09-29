@@ -1,8 +1,8 @@
 import { ServerError, UserError } from "./applicationError";
 
 export class RPCFunctionError extends ServerError {
-  constructor(err: Error) {
-    super(`RPC function error: ${err.message}`, 400);
+  constructor(err?: Error) {
+    super(`RPC function error${err && `: ${err.message}`}`, 400);
   }
 }
 export class IdNotFoundError extends UserError {
