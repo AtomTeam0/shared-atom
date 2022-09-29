@@ -21,6 +21,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
     personalId: {
       type: String,
       required: true,
+      unique: true,
     },
     permission: {
       type: String,
