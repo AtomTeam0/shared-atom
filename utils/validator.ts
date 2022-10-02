@@ -21,7 +21,8 @@ export const idExistsInDb = async (
       throw new IdNotFoundError(getFunction.name);
     }
 
-    const { skipCondition, skipPopulate, skipPatch } = <any>global;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { userId, ...pluginGlobal } = <any>global;
     setPluginUsage({
       skipCondition: true,
       skipPopulate: true,
@@ -33,7 +34,7 @@ export const idExistsInDb = async (
       throw new IdNotFoundError(getFunction.name);
     }
 
-    setPluginUsage({ skipCondition, skipPopulate, skipPatch });
+    setPluginUsage({ ...pluginGlobal });
     return result;
   }
   return undefined;
