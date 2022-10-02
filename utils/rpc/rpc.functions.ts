@@ -10,19 +10,19 @@ export const RPCClientRequest = async (
   params?: { [k: string]: any }
 ): Promise<any> => {
   console.log(`-- ${route} RPC request was called --`);
-  const isError = (obj: any) => obj.name && obj.message && obj.status;
+  const isError = (obj: any) => !!obj.name && !!obj.message && !!obj.status;
   const { userId } = <any>global;
 
-  const response = await rpcClient.request(route, {
+  const { result } = await rpcClient.request(route, {
     ...(userId && { userId }),
     params,
   });
 
-  if (isError(response)) {
-    throw response;
+  if (isError(result)) {
+    throw result;
   }
 
-  return response.result;
+  return result;
 };
 
 export const RPCServerRequest =

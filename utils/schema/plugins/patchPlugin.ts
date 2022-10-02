@@ -41,7 +41,7 @@ export function patchObjectPlugin(
         res: any,
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!(<any>global).skipPatch) {
+        if (!(<any>global).skipPatch && !!res) {
           res._doc = {
             ...res._doc,
             ...((await userPatcher(
@@ -88,7 +88,7 @@ export function patchBooleanPlugin(
         res: any,
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!(<any>global).skipPatch) {
+        if (!(<any>global).skipPatch && !!res) {
           res._doc = {
             ...res._doc,
             [options.localBoolProperty]:
