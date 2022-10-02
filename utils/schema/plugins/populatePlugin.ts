@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 import { setPluginUsage } from "../plugin.helpers";
-import { queryFunctionTypes } from "../schemaHelpers";
+import { queryAllFunctionTypes } from "../schemaHelpers";
 
 export function populatePlugin(
   schema: mongoose.Schema,
@@ -29,7 +29,7 @@ export function populatePlugin(
     }
   );
 
-  queryFunctionTypes.map((type: string) =>
+  queryAllFunctionTypes.map((type: string) =>
     schema.pre(type, function (next: mongoose.HookNextFunction) {
       if (!(<any>global).skipPopulate) {
         options.map((p) => this.populate(p.path));

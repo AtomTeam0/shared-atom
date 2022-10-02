@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 import { setPluginUsage } from "../plugin.helpers";
-import { queryFunctionTypes } from "../schemaHelpers";
+import { queryAllFunctionTypes } from "../schemaHelpers";
 
 export function conditionPlugin(
   schema: mongoose.Schema,
@@ -25,7 +25,7 @@ export function conditionPlugin(
     }
   );
 
-  queryFunctionTypes.map((type: string) =>
+  queryAllFunctionTypes.map((type: string) =>
     schema.pre(type, function (next: mongoose.HookNextFunction) {
       if (!(<any>global).skipCondition) {
         this.where({ [options.propertyName]: options.wantedVal });

@@ -1,11 +1,14 @@
-export const queryFunctionTypes = [
-  "count",
-  "find",
+export const querySingleFunctionTypes = [
   "findOne",
   "findOneAndDelete",
   "findOneAndRemove",
   "findOneAndUpdate",
-  "update",
   "updateOne",
-  "updateMany",
+];
+
+export const queryManyFunctionTypes = ["count", "find", "update", "updateMany"];
+
+export const queryAllFunctionTypes = [
+  ...querySingleFunctionTypes,
+  ...queryManyFunctionTypes,
 ];

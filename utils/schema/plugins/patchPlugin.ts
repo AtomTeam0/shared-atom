@@ -8,7 +8,10 @@ import {
   patchBooleanInAggregation,
   userPatcherBoolean,
 } from "../user.helpers";
-import { queryFunctionTypes } from "../schemaHelpers";
+import {
+  queryManyFunctionTypes,
+  querySingleFunctionTypes,
+} from "../schemaHelpers";
 import { setPluginUsage } from "../plugin.helpers";
 
 export function patchObjectPlugin(
@@ -33,7 +36,7 @@ export function patchObjectPlugin(
     }
   );
 
-  queryFunctionTypes.map((type: string) =>
+  querySingleFunctionTypes.map((type: string) =>
     schema.post(
       type,
       async function (
@@ -50,6 +53,32 @@ export function patchObjectPlugin(
               String(res._id)
             )) || options.defaultValue),
           };
+        }
+        setPluginUsage({ skipPatch: true });
+        next();
+      }
+    )
+  );
+
+  queryManyFunctionTypes.map((type: string) =>
+    schema.post(
+      type,
+      async function (
+        this: mongoose.Query<any, any>,
+        res: any[],
+        next: (err?: mongoose.CallbackError) => void
+      ) {
+        if (!(<any>global).skipPatch && !!res) {
+          res = await Promise.all(
+            res.map(async (doc) => ({
+              ...doc,
+              ...((await userPatcher(
+                options.foreignArrayProperty,
+                options.foreignIdProperty,
+                String(doc._id)
+              )) || options.defaultValue),
+            }))
+          );
         }
         setPluginUsage({ skipPatch: true });
         next();
@@ -80,7 +109,7 @@ export function patchBooleanPlugin(
     }
   );
 
-  queryFunctionTypes.map((type: string) =>
+  querySingleFunctionTypes.map((type: string) =>
     schema.post(
       type,
       async function (
@@ -97,6 +126,32 @@ export function patchBooleanPlugin(
                 String(res._id)
               )) || options.defaultValue,
           };
+        }
+        setPluginUsage({ skipPatch: true });
+        next();
+      }
+    )
+  );
+
+  queryManyFunctionTypes.map((type: string) =>
+    schema.post(
+      type,
+      async function (
+        this: mongoose.Query<any, any>,
+        res: any[],
+        next: (err?: mongoose.CallbackError) => void
+      ) {
+        if (!(<any>global).skipPatch && !!res) {
+          res = await Promise.all(
+            res.map(async (doc) => ({
+              ...doc,
+              [options.localBoolProperty]:
+                (await userPatcherBoolean(
+                  options.foreignArrayProperty,
+                  String(doc._id)
+                )) || options.defaultValue,
+            }))
+          );
         }
         setPluginUsage({ skipPatch: true });
         next();
