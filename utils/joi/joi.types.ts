@@ -8,6 +8,4 @@ export const joiEnum = (enumObj: { [k: string]: string }) =>
 export const joiMongoId = Joi.string().regex(/^[0-9a-fA-F]{24}$/);
 export const joiMinioId = Joi.string().regex(/^[0-9a-fA-F]{24}$/);
 export const joiPersonalId = Joi.string().regex(/^[0-9]{9}$/);
-export const joiPdfURL = Joi.string().regex(
-  /^(https?:\/\/)?www\.([\da-z.-]+)\.([a-z.]{2,6})\/[\w .-]+?\.pdf$/
-);
+export const joiPdfURL = Joi.string().regex(/^(http.+)(\.pdf)$/);
