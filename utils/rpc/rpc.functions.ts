@@ -2,6 +2,7 @@ import * as jayson from "jayson/promise";
 import * as Joi from "joi";
 import { RPCFunctionError } from "../errors/validationError";
 import { defaultValidationOptions } from "../joi/joi.functions";
+import { initPluginUsage } from "../schema/plugin.helpers";
 
 export const RPCClientRequest = async (
   rpcClient: jayson.HttpClient,
@@ -12,16 +13,16 @@ export const RPCClientRequest = async (
   const isError = (obj: any) => !!obj.name && !!obj.message && !!obj.status;
   const { userId } = <any>global;
 
-  const { result } = await rpcClient.request(route, {
+  const response = await rpcClient.request(route, {
     ...(userId && { userId }),
     params,
   });
 
-  if (isError(result)) {
-    throw result;
+  if (isError(response)) {
+    throw response.result;
   }
 
-  return result;
+  return response.result;
 };
 
 export const RPCServerRequest =
@@ -43,6 +44,7 @@ export const RPCServerRequest =
     if (payload.userId) {
       (<any>global).userId = payload.userId;
     }
+    initPluginUsage();
 
     let result;
     try {
