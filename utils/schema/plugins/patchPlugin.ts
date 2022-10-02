@@ -42,12 +42,12 @@ export function patchObjectPlugin(
         next: (err?: mongoose.CallbackError) => void
       ) {
         if (!(<any>global).skipPatch) {
-          res = {
-            ...res,
+          res._doc = {
+            ...res._doc,
             ...((await userPatcher(
               options.foreignArrayProperty,
               options.foreignIdProperty,
-              res._id
+              String(res._id)
             )) || options.defaultValue),
           };
         }
@@ -89,12 +89,12 @@ export function patchBooleanPlugin(
         next: (err?: mongoose.CallbackError) => void
       ) {
         if (!(<any>global).skipPatch) {
-          res = {
-            ...res,
+          res._doc = {
+            ...res._doc,
             [options.localBoolProperty]:
               (await userPatcherBoolean(
                 options.foreignArrayProperty,
-                res._id
+                String(res._id)
               )) || options.defaultValue,
           };
         }

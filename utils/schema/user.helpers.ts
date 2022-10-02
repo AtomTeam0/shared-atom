@@ -3,12 +3,12 @@ import { UsersRPCService } from "../rpc/services/user.RPCservice";
 
 export const getUserArray = async (
   foreignArrayProperty: keyof IUser & string
-): Promise<any> => {
+): Promise<Array<any[]>> => {
   const user = await UsersRPCService.getUserById();
   if (!user) {
     return [];
   }
-  return user[foreignArrayProperty] as Array<string>;
+  return user[foreignArrayProperty] as any[];
 };
 
 export const userPatcher = async (
@@ -19,7 +19,7 @@ export const userPatcher = async (
   const array = await getUserArray(foreignArrayProperty);
   const obj = array.find((item: any) => item[foreignIdProperty] === localId);
   if (obj) {
-    delete obj[foreignIdProperty];
+    delete (obj as any)[foreignIdProperty];
   }
   return obj;
 };
