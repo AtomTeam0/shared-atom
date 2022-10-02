@@ -21,15 +21,19 @@ export const idExistsInDb = async (
       throw new IdNotFoundError(getFunction.name);
     }
 
-    const { skipCondition } = <any>global;
-    setPluginUsage({ skipCondition: true });
+    const { skipCondition, skipPopulate, skipPatch } = <any>global;
+    setPluginUsage({
+      skipCondition: true,
+      skipPopulate: true,
+      skipPatch: true,
+    });
 
     const result = await getFunction(id);
     if (!result) {
       throw new IdNotFoundError(getFunction.name);
     }
 
-    setPluginUsage({ skipCondition });
+    setPluginUsage({ skipCondition, skipPopulate, skipPatch });
     return result;
   }
   return undefined;
