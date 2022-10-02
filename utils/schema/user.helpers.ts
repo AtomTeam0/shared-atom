@@ -47,7 +47,10 @@ export const patchInAggregation = async (options: {
             input: patchArray,
             as: "singlePatch",
             cond: {
-              $eq: [`$$singlePatch.${options.foreignIdProperty}`, "$_id"],
+              $eq: [
+                `$$singlePatch.${options.foreignIdProperty}`,
+                { $toString: "$_id" },
+              ],
             },
             limit: 1,
           },
@@ -85,7 +88,10 @@ export const patchBooleanInAggregation = async (options: {
     {
       $addFields: {
         [options.localBoolProperty]: {
-          $or: [{ $in: ["$_id", patchArray] }, options.defaultValue],
+          $or: [
+            { $in: [{ $toString: "$_id" }, patchArray] },
+            options.defaultValue,
+          ],
         },
       },
     },
