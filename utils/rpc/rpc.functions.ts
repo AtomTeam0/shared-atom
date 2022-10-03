@@ -19,7 +19,7 @@ export const RPCClientRequest = async (
     resetDepth,
     ...(userId && { userId }),
     ...(permission && { permission }),
-    ...(params && params),
+    params,
   });
 
   if (isError(response)) {
