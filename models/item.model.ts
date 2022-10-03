@@ -7,8 +7,6 @@ import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { AreaModel } from "./area.model";
 import { UnitModel } from "./unit.model";
 
-const mongooseFuzzySearching = require("mongoose-fuzzy-searching");
-
 const ItemSchema: mongoose.Schema = new mongoose.Schema(
   {
     title: {
@@ -117,7 +115,8 @@ ItemSchema.plugin(patchBooleanPlugin, {
   localBoolProperty: "isFavorite",
   defaultValue: false,
 });
-ItemSchema.plugin(mongooseFuzzySearching, { fields: ["title"] });
+
+ItemSchema.index({ title: 'text'}, {name: 'title-text-index'});
 
 export const ItemModel = mongoose.model<IItem & mongoose.Document>(
   "items",
