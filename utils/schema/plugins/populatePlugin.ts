@@ -30,7 +30,7 @@ export function populatePlugin(
       if (!(<any>global).depth) {
         (<any>global).depth = 1;
       }
-      if ((<any>global).depth <= 2) {
+      if ((<any>global).depth <= 3) {
         options.map((p) => this.populate(p.path));
         (<any>global).depth = (<any>global).depth + 1;
       }
