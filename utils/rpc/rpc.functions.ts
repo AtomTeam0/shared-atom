@@ -22,7 +22,7 @@ export const RPCClientRequest = async (
     params,
   });
 
-  if (isError(response)) {
+  if (isError(response.result)) {
     throw response.result;
   }
 
