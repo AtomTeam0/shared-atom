@@ -1,8 +1,6 @@
 import * as mongoose from "mongoose";
 import { IMyWiki } from "../interfaces/myWiki.interface";
 
-const mongooseFuzzySearching = require("mongoose-fuzzy-searching");
-
 const MyWikiSchema: mongoose.Schema = new mongoose.Schema(
   {
     word: {
@@ -29,9 +27,7 @@ const MyWikiSchema: mongoose.Schema = new mongoose.Schema(
   }
 );
 
-MyWikiSchema.plugin(mongooseFuzzySearching, {
-  fields: ["word", "description"],
-});
+MyWikiSchema.index({ word: "text", description: "text" }, { name: "description-word-text-index" });
 
 export const MyWikiModel = mongoose.model<IMyWiki & mongoose.Document>(
   "myWiki",
