@@ -32,12 +32,12 @@ export function patchObjectPlugin(
     }
   );
 
-  const enhanceItem = async (item: any) => ({
-    ...item._doc,
+  const enhanceDocument = async (doc: any) => ({
+    ...doc,
     ...((await userPatcher(
       options.foreignArrayProperty,
       options.foreignIdProperty,
-      String(item._id)
+      String(doc._id)
     )) || options.defaultValue),
   });
 
@@ -50,7 +50,7 @@ export function patchObjectPlugin(
         next: (err?: mongoose.CallbackError) => void
       ) {
         if (res) {
-          res._doc = await enhanceItem(res);
+          res._doc = await enhanceDocument(res._doc);
         }
         next();
       }
@@ -66,9 +66,11 @@ export function patchObjectPlugin(
         next: (err?: mongoose.CallbackError) => void
       ) {
         if (res) {
-          res.forEach(async (item) => {
-            item._doc = await enhanceItem(item);
-          });
+          await Promise.all(
+            res.map(async (item) => {
+              item._doc = await enhanceDocument(item._doc);
+            })
+          );
         }
         next();
       }
@@ -95,12 +97,12 @@ export function patchBooleanPlugin(
     }
   );
 
-  const enhanceItem = async (item: any) => ({
-    ...item._doc,
+  const enhanceDocument = async (doc: any) => ({
+    ...doc,
     [options.localBoolProperty]:
       (await userPatcherBoolean(
         options.foreignArrayProperty,
-        String(item._id)
+        String(doc._id)
       )) || options.defaultValue,
   });
 
@@ -113,7 +115,7 @@ export function patchBooleanPlugin(
         next: (err?: mongoose.CallbackError) => void
       ) {
         if (res) {
-          res._doc = await enhanceItem(res);
+          res._doc = await enhanceDocument(res._doc);
         }
         next();
       }
@@ -129,9 +131,11 @@ export function patchBooleanPlugin(
         next: (err?: mongoose.CallbackError) => void
       ) {
         if (res) {
-          res.forEach(async (item) => {
-            item._doc = await enhanceItem(item);
-          });
+          await Promise.all(
+            res.map(async (item) => {
+              item._doc = await enhanceDocument(item._doc);
+            })
+          );
         }
         next();
       }
