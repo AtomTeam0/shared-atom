@@ -116,7 +116,7 @@ ItemSchema.plugin(patchBooleanPlugin, {
   defaultValue: false,
 });
 
-ItemSchema.index({ title: 'text'}, {name: 'title-text-index'});
+ItemSchema.index({ title: "text" }, { name: "title-text-index" });
 
 export const ItemModel = mongoose.model<IItem & mongoose.Document>(
   "items",
