@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { setPluginUsage } from "../plugin.helpers";
+import { Permission } from "../../../enums/Permission";
 import { queryAllFunctionTypes } from "../schemaHelpers";
 
 export function conditionPlugin(
@@ -7,6 +7,7 @@ export function conditionPlugin(
   options: {
     propertyName: string;
     wantedVal: any;
+    bypassPermissions: Permission[];
   }
 ) {
   schema.pre(
@@ -15,22 +16,30 @@ export function conditionPlugin(
       this: mongoose.Aggregate<any>,
       next: mongoose.HookNextFunction
     ) {
-      if (!(<any>global).skipCondition) {
+      if (
+        !(
+          (<any>global).permission &&
+          options.bypassPermissions.includes((<any>global).permission)
+        )
+      ) {
         this.pipeline().unshift({
           $match: { [options.propertyName]: options.wantedVal },
         });
       }
-      setPluginUsage({ skipCondition: true });
       next();
     }
   );
 
   queryAllFunctionTypes.map((type: string) =>
     schema.pre(type, function (next: mongoose.HookNextFunction) {
-      if (!(<any>global).skipCondition) {
+      if (
+        !(
+          (<any>global).permission &&
+          options.bypassPermissions.includes((<any>global).permission)
+        )
+      ) {
         this.where({ [options.propertyName]: options.wantedVal });
       }
-      setPluginUsage({ skipCondition: true });
       next();
     })
   );

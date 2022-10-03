@@ -1,5 +1,6 @@
 import * as jayson from "jayson/promise";
 import * as Joi from "joi";
+import { IRPCPayload } from "../../interfaces/helpers/rpcPayload.interface";
 import { RPCFunctionError } from "../errors/validationError";
 import { defaultValidationOptions } from "../joi/joi.functions";
 import { initPluginUsage } from "../schema/plugin.helpers";
@@ -11,10 +12,11 @@ export const RPCClientRequest = async (
 ): Promise<any> => {
   console.log(`-- ${route} RPC request was called --`);
   const isError = (obj: any) => !!obj.name && !!obj.message && !!obj.status;
-  const { userId } = <any>global;
+  const { userId, permission } = <any>global;
 
   const response = await rpcClient.request(route, {
     ...(userId && { userId }),
+    ...(permission && { permission }),
     params,
   });
 
@@ -30,7 +32,7 @@ export const RPCServerRequest =
     managerFunction: (val?: any) => Promise<any>,
     validator?: Joi.ObjectSchema<any>
   ): any =>
-  async (payload: { userId?: string; params?: { [k: string]: any } }) => {
+  async (payload: IRPCPayload) => {
     if (validator) {
       const { error } = validator.validate(
         payload.params,
@@ -40,11 +42,7 @@ export const RPCServerRequest =
         return new RPCFunctionError(error);
       }
     }
-
-    if (payload.userId) {
-      (<any>global).userId = payload.userId;
-    }
-    initPluginUsage();
+    initPluginUsage(payload.userId, payload.permission);
 
     let result;
     try {

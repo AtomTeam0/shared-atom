@@ -12,7 +12,6 @@ import {
   queryManyFunctionTypes,
   querySingleFunctionTypes,
 } from "../schemaHelpers";
-import { setPluginUsage } from "../plugin.helpers";
 
 export function patchObjectPlugin(
   schema: mongoose.Schema,
@@ -28,13 +27,19 @@ export function patchObjectPlugin(
       this: mongoose.Aggregate<any>,
       next: mongoose.HookNextFunction
     ) {
-      if (!(<any>global).skipPatch) {
-        this.pipeline().unshift(...(await patchInAggregation(options)));
-      }
-      setPluginUsage({ skipPatch: true });
+      this.pipeline().unshift(...(await patchInAggregation(options)));
       next();
     }
   );
+
+  const enhanceItem = async (item: any) => ({
+    ...item._doc,
+    ...((await userPatcher(
+      options.foreignArrayProperty,
+      options.foreignIdProperty,
+      String(item._id)
+    )) || options.defaultValue),
+  });
 
   querySingleFunctionTypes.map((type: string) =>
     schema.post(
@@ -44,17 +49,9 @@ export function patchObjectPlugin(
         res: any,
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!(<any>global).skipPatch && !!res) {
-          res._doc = {
-            ...res._doc,
-            ...((await userPatcher(
-              options.foreignArrayProperty,
-              options.foreignIdProperty,
-              String(res._id)
-            )) || options.defaultValue),
-          };
+        if (res) {
+          res._doc = await enhanceItem(res);
         }
-        setPluginUsage({ skipPatch: true });
         next();
       }
     )
@@ -68,19 +65,11 @@ export function patchObjectPlugin(
         res: any[],
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!(<any>global).skipPatch && !!res) {
-          res = await Promise.all(
-            res.map(async (doc) => ({
-              ...doc,
-              ...((await userPatcher(
-                options.foreignArrayProperty,
-                options.foreignIdProperty,
-                String(doc._id)
-              )) || options.defaultValue),
-            }))
-          );
+        if (res) {
+          res.forEach(async (item) => {
+            item._doc = await enhanceItem(item);
+          });
         }
-        setPluginUsage({ skipPatch: true });
         next();
       }
     )
@@ -101,13 +90,19 @@ export function patchBooleanPlugin(
       this: mongoose.Aggregate<any>,
       next: mongoose.HookNextFunction
     ) {
-      if (!(<any>global).skipPatch) {
-        this.pipeline().unshift(...(await patchBooleanInAggregation(options)));
-      }
-      setPluginUsage({ skipPatch: true });
+      this.pipeline().unshift(...(await patchBooleanInAggregation(options)));
       next();
     }
   );
+
+  const enhanceItem = async (item: any) => ({
+    ...item._doc,
+    [options.localBoolProperty]:
+      (await userPatcherBoolean(
+        options.foreignArrayProperty,
+        String(item._id)
+      )) || options.defaultValue,
+  });
 
   querySingleFunctionTypes.map((type: string) =>
     schema.post(
@@ -117,17 +112,9 @@ export function patchBooleanPlugin(
         res: any,
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!(<any>global).skipPatch && !!res) {
-          res._doc = {
-            ...res._doc,
-            [options.localBoolProperty]:
-              (await userPatcherBoolean(
-                options.foreignArrayProperty,
-                String(res._id)
-              )) || options.defaultValue,
-          };
+        if (res) {
+          res._doc = await enhanceItem(res);
         }
-        setPluginUsage({ skipPatch: true });
         next();
       }
     )
@@ -141,19 +128,11 @@ export function patchBooleanPlugin(
         res: any[],
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!(<any>global).skipPatch && !!res) {
-          res = await Promise.all(
-            res.map(async (doc) => ({
-              ...doc,
-              [options.localBoolProperty]:
-                (await userPatcherBoolean(
-                  options.foreignArrayProperty,
-                  String(doc._id)
-                )) || options.defaultValue,
-            }))
-          );
+        if (res) {
+          res.forEach(async (item) => {
+            item._doc = await enhanceItem(item);
+          });
         }
-        setPluginUsage({ skipPatch: true });
         next();
       }
     )

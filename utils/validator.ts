@@ -8,7 +8,7 @@ import {
 } from "./errors/validationError";
 import { wrapAsyncMiddleware } from "./helpers/wrapper";
 import { UsersRPCService } from "./rpc/services/user.RPCservice";
-import { initPluginUsage, setPluginUsage } from "./schema/plugin.helpers";
+import { initPluginUsage } from "./schema/plugin.helpers";
 
 export const idExistsInDb = async (
   id: any | undefined,
@@ -22,19 +22,14 @@ export const idExistsInDb = async (
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { userId, ...pluginGlobal } = <any>global;
-    setPluginUsage({
-      skipCondition: true,
-      skipPopulate: true,
-      skipPatch: true,
-    });
+    const { deepness } = <any>global;
 
     const result = await getFunction(id);
     if (!result) {
       throw new IdNotFoundError(getFunction.name);
     }
 
-    setPluginUsage({ ...pluginGlobal });
+    (<any>global).deepness = deepness;
     return result;
   }
   return undefined;
@@ -82,8 +77,8 @@ export const validateUserAndPermission = (
     ) {
       return new PermissionError();
     }
-    (<any>global).userId = user.id;
-    initPluginUsage();
+
+    initPluginUsage(user.id, user.permission);
 
     try {
       await idExistsInDb(user.id, UsersRPCService.getUserById);

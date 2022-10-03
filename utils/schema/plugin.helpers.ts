@@ -1,26 +1,14 @@
-export const setPluginUsage = (options: {
-  skipCondition?: boolean;
-  skipPopulate?: boolean;
-  skipPatch?: boolean;
-}): void => {
-  (<any>global).skipCondition =
-    options.skipCondition !== undefined
-      ? options.skipCondition
-      : (<any>global).skipCondition;
-  (<any>global).skipPopulate =
-    options.skipPopulate !== undefined
-      ? options.skipPopulate
-      : (<any>global).skipPopulate;
-  (<any>global).skipPatch =
-    options.skipPatch !== undefined
-      ? options.skipPatch
-      : (<any>global).skipPatch;
-};
+import { Permission } from "../../enums/Permission";
 
-export const initPluginUsage = (): void => {
-  setPluginUsage({
-    skipCondition: false,
-    skipPopulate: false,
-    skipPatch: false,
-  });
+export const initPluginUsage = (
+  userId?: string,
+  permission?: Permission
+): void => {
+  if (userId) {
+    (<any>global).userId = userId;
+  }
+  if (permission) {
+    (<any>global).permission = permission;
+  }
+  (<any>global).deepness = 1;
 };
