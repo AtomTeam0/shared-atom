@@ -107,7 +107,7 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
 ItemSchema.plugin(conditionPlugin, {
   propertyName: "isActive",
   wantedVal: true,
-  permissions: [Permission.ADMIN, Permission.DIRECTOR],
+  bypassPermissions: [Permission.ADMIN, Permission.DIRECTOR],
 });
 ItemSchema.plugin(populatePlugin, [
   { path: "areas", ref: "areas" },
