@@ -8,16 +8,18 @@ import { initPluginUsage } from "../schema/plugin.helpers";
 export const RPCClientRequest = async (
   rpcClient: jayson.HttpClient,
   route: string,
-  params?: { [k: string]: any }
+  params?: { [k: string]: any },
+  resetDepth = true
 ): Promise<any> => {
   console.log(`-- ${route} RPC request was called --`);
   const isError = (obj: any) => !!obj.name && !!obj.message && !!obj.status;
   const { userId, permission } = <any>global;
 
   const response = await rpcClient.request(route, {
+    resetDepth,
     ...(userId && { userId }),
     ...(permission && { permission }),
-    params,
+    ...(params && params),
   });
 
   if (isError(response)) {
@@ -42,7 +44,7 @@ export const RPCServerRequest =
         return new RPCFunctionError(error);
       }
     }
-    initPluginUsage(payload.userId, payload.permission);
+    initPluginUsage(payload.resetDepth, payload.userId, payload.permission);
 
     let result;
     try {

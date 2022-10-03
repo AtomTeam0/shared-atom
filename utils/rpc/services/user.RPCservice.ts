@@ -13,6 +13,15 @@ export class UsersRPCService {
     return RPCClientRequest(UsersRPCService.rpcClient, "getUserById");
   }
 
+  static async getUserByIdMaintainDepth(): Promise<IUser> {
+    return RPCClientRequest(
+      UsersRPCService.rpcClient,
+      "getUserById",
+      undefined,
+      false
+    );
+  }
+
   static async getAmountOfUsers(): Promise<number> {
     return RPCClientRequest(UsersRPCService.rpcClient, "getAmountOfUsers");
   }

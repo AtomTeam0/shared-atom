@@ -4,4 +4,5 @@ export interface IRPCPayload {
   userId?: string;
   permission?: Permission;
   params?: { [k: string]: any };
+  resetDepth: boolean;
 }

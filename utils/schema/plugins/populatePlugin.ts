@@ -27,12 +27,12 @@ export function populatePlugin(
 
   queryAllFunctionTypes.map((type: string) =>
     schema.pre(type, function (next: mongoose.HookNextFunction) {
-      if (!(<any>global).deepness) {
-        (<any>global).deepness = 1;
+      if (!(<any>global).depth) {
+        (<any>global).depth = 1;
       }
-      if (!!(<any>global).deepness && (<any>global).deepness <= 2) {
+      if ((<any>global).depth <= 2) {
         options.map((p) => this.populate(p.path));
-        (<any>global).deepness = (<any>global).deepness + 1;
+        (<any>global).depth = (<any>global).depth + 1;
       }
       next();
     })

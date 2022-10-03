@@ -22,14 +22,14 @@ export const idExistsInDb = async (
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { deepness } = <any>global;
+    const { depth } = <any>global;
 
     const result = await getFunction(id);
     if (!result) {
       throw new IdNotFoundError(getFunction.name);
     }
 
-    (<any>global).deepness = deepness;
+    (<any>global).depth = depth;
     return result;
   }
   return undefined;
@@ -78,7 +78,7 @@ export const validateUserAndPermission = (
       return new PermissionError();
     }
 
-    initPluginUsage(user.id, user.permission);
+    initPluginUsage(true, user.id, user.permission);
 
     try {
       await idExistsInDb(user.id, UsersRPCService.getUserById);
