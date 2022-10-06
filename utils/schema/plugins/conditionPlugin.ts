@@ -17,6 +17,7 @@ export function conditionPlugin(
       next: mongoose.HookNextFunction
     ) {
       if (
+        !(<any>global).skipPlugins &&
         !(
           (<any>global).permission &&
           options.bypassPermissions.includes((<any>global).permission)
@@ -33,6 +34,7 @@ export function conditionPlugin(
   queryAllFunctionTypes.map((type: string) =>
     schema.pre(type, function (next: mongoose.HookNextFunction) {
       if (
+        !(<any>global).skipPlugins &&
         !(
           (<any>global).permission &&
           options.bypassPermissions.includes((<any>global).permission)

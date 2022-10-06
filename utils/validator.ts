@@ -21,8 +21,8 @@ export const idExistsInDb = async (
       throw new IdNotFoundError(getFunction.name);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { depth } = <any>global;
+    const { depth, skipPlugins } = <any>global;
+    (<any>global).skipPlugins = true;
 
     const result = await getFunction(id);
     if (!result) {
@@ -30,6 +30,7 @@ export const idExistsInDb = async (
     }
 
     (<any>global).depth = depth;
+    (<any>global).skipPlugins = skipPlugins;
     return result;
   }
   return undefined;
@@ -78,7 +79,7 @@ export const validateUserAndPermission = (
       return new PermissionError();
     }
 
-    initPluginUsage(true, user.id, user.permission);
+    initPluginUsage(user.id, user.permission);
 
     try {
       await idExistsInDb(user.id, UsersRPCService.getUserById);

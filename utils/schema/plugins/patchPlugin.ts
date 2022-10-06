@@ -27,7 +27,9 @@ export function patchObjectPlugin(
       this: mongoose.Aggregate<any>,
       next: mongoose.HookNextFunction
     ) {
-      this.pipeline().unshift(...(await patchInAggregation(options)));
+      if (!(<any>global).skipPlugins) {
+        this.pipeline().unshift(...(await patchInAggregation(options)));
+      }
       next();
     }
   );
@@ -49,7 +51,7 @@ export function patchObjectPlugin(
         res: any,
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (res) {
+        if (!(<any>global).skipPlugins && !!res) {
           res._doc = await enhanceDocument(res._doc);
         }
         next();
@@ -65,7 +67,7 @@ export function patchObjectPlugin(
         res: any[],
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (res) {
+        if (!(<any>global).skipPlugins && !!res) {
           await Promise.all(
             res.map(async (item) => {
               item._doc = await enhanceDocument(item._doc);
@@ -92,7 +94,9 @@ export function patchBooleanPlugin(
       this: mongoose.Aggregate<any>,
       next: mongoose.HookNextFunction
     ) {
-      this.pipeline().unshift(...(await patchBooleanInAggregation(options)));
+      if (!(<any>global).skipPlugins) {
+        this.pipeline().unshift(...(await patchBooleanInAggregation(options)));
+      }
       next();
     }
   );
@@ -114,7 +118,7 @@ export function patchBooleanPlugin(
         res: any,
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (res) {
+        if (!(<any>global).skipPlugins && !!res) {
           res._doc = await enhanceDocument(res._doc);
         }
         next();
@@ -130,7 +134,7 @@ export function patchBooleanPlugin(
         res: any[],
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (res) {
+        if (!(<any>global).skipPlugins && !!res) {
           await Promise.all(
             res.map(async (item) => {
               item._doc = await enhanceDocument(item._doc);

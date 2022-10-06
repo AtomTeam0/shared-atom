@@ -12,14 +12,16 @@ export function populatePlugin(
       next: mongoose.HookNextFunction
     ) {
       options.forEach((p) => {
-        this.pipeline().unshift({
-          $lookup: {
-            from: p.ref,
-            localField: p.path,
-            foreignField: "_id",
-            as: p.path,
-          },
-        });
+        if (!(<any>global).skipPlugins) {
+          this.pipeline().unshift({
+            $lookup: {
+              from: p.ref,
+              localField: p.path,
+              foreignField: "_id",
+              as: p.path,
+            },
+          });
+        }
       });
       next();
     }
@@ -30,7 +32,7 @@ export function populatePlugin(
       if (!(<any>global).depth) {
         (<any>global).depth = 1;
       }
-      if ((<any>global).depth <= 3) {
+      if (!(<any>global).skipPlugins && (<any>global).depth <= 3) {
         options.map((p) => this.populate(p.path));
         (<any>global).depth = (<any>global).depth + 1;
       }

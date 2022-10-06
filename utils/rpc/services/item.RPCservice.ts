@@ -11,13 +11,13 @@ export class ItemRPCService {
   });
 
   static async getItemById(itemId: string): Promise<IItem> {
-    return RPCClientRequest(ItemRPCService.rpcClient, "getItemById", {
+    return RPCClientRequest()(ItemRPCService.rpcClient, "getItemById", {
       itemId,
     });
   }
 
   static async getAreaById(areaId: string): Promise<IArea> {
-    return RPCClientRequest(ItemRPCService.rpcClient, "getAreaById", {
+    return RPCClientRequest()(ItemRPCService.rpcClient, "getAreaById", {
       areaId,
     });
   }

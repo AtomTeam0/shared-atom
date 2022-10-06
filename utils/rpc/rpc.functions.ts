@@ -5,28 +5,41 @@ import { RPCFunctionError } from "../errors/validationError";
 import { defaultValidationOptions } from "../joi/joi.functions";
 import { initPluginUsage } from "../schema/plugin.helpers";
 
-export const RPCClientRequest = async (
+export const RPCClientRequest = (
+  skipPlugins = true
+): ((
   rpcClient: jayson.HttpClient,
   route: string,
-  params?: { [k: string]: any },
-  resetDepth = true
-): Promise<any> => {
-  console.log(`-- ${route} RPC request was called --`);
-  const isError = (obj: any) => !!obj.name && !!obj.message && !!obj.status;
-  const { userId, permission } = <any>global;
+  params?:
+    | {
+        [k: string]: any;
+      }
+    | undefined
+) => Promise<any>) => {
+  const request = async (
+    rpcClient: jayson.HttpClient,
+    route: string,
+    params?: { [k: string]: any }
+  ): Promise<any> => {
+    console.log(`-- ${route} RPC request was called --`);
+    const isError = (obj: any) => !!obj.name && !!obj.message && !!obj.status;
+    const { userId, permission } = <any>global;
 
-  const response = await rpcClient.request(route, {
-    resetDepth,
-    ...(userId && { userId }),
-    ...(permission && { permission }),
-    params,
-  });
+    const response = await rpcClient.request(route, {
+      ...(userId && { userId }),
+      ...(permission && { permission }),
+      params,
+      skipPlugins,
+    });
 
-  if (isError(response.result)) {
-    throw response.result;
-  }
+    if (isError(response.result)) {
+      throw response.result;
+    }
 
-  return response.result;
+    return response.result;
+  };
+
+  return request;
 };
 
 export const RPCServerRequest =
@@ -44,7 +57,7 @@ export const RPCServerRequest =
         return new RPCFunctionError(error);
       }
     }
-    initPluginUsage(payload.resetDepth, payload.userId, payload.permission);
+    initPluginUsage(payload.userId, payload.permission, payload.skipPlugins);
 
     let result;
     try {

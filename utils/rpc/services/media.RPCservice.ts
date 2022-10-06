@@ -11,7 +11,7 @@ export class MediaRPCService {
   });
 
   static async getMediaById(mediaId: string): Promise<IMedia> {
-    return RPCClientRequest(MediaRPCService.rpcClient, "getMediaById", {
+    return RPCClientRequest(false)(MediaRPCService.rpcClient, "getMediaById", {
       mediaId,
     });
   }
@@ -19,8 +19,12 @@ export class MediaRPCService {
   static async getInfographicById(
     infographicId: string
   ): Promise<IInfographic> {
-    return RPCClientRequest(MediaRPCService.rpcClient, "getInfographicById", {
-      infographicId,
-    });
+    return RPCClientRequest(false)(
+      MediaRPCService.rpcClient,
+      "getInfographicById",
+      {
+        infographicId,
+      }
+    );
   }
 }

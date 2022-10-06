@@ -12,19 +12,23 @@ export class LessonRPCService {
   });
 
   static async getLessonById(lessonId: string): Promise<ILesson> {
-    return RPCClientRequest(LessonRPCService.rpcClient, "getLessonById", {
-      lessonId,
-    });
+    return RPCClientRequest(false)(
+      LessonRPCService.rpcClient,
+      "getLessonById",
+      {
+        lessonId,
+      }
+    );
   }
 
   static async getPakalById(pakalId: string): Promise<IPakal> {
-    return RPCClientRequest(LessonRPCService.rpcClient, "getPakalById", {
+    return RPCClientRequest(false)(LessonRPCService.rpcClient, "getPakalById", {
       pakalId,
     });
   }
 
   static async getChapterById(chapterId: string): Promise<IChapter> {
-    return RPCClientRequest(LessonRPCService.rpcClient, "getChapterById", {
+    return RPCClientRequest()(LessonRPCService.rpcClient, "getChapterById", {
       chapterId,
     });
   }

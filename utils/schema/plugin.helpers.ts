@@ -1,13 +1,12 @@
 import { Permission } from "../../enums/Permission";
 
 export const initPluginUsage = (
-  resetDepth: boolean,
   userId?: string,
-  permission?: Permission
+  permission?: Permission,
+  skipPlugins = false
 ): void => {
-  if (resetDepth) {
-    (<any>global).depth = 1;
-  }
+  (<any>global).depth = 1;
+  (<any>global).skipPlugins = skipPlugins;
   if (userId) {
     (<any>global).userId = userId;
   }
