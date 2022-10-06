@@ -27,7 +27,7 @@ const MyWikiSchema: mongoose.Schema = new mongoose.Schema(
   }
 );
 
-MyWikiSchema.index({ word: "text", description: "text" }, { name: "description-word-text-index" });
+MyWikiSchema.index({ word: "text", defenition: "text" }, { name: "defenition-word-text-index" });
 
 export const MyWikiModel = mongoose.model<IMyWiki & mongoose.Document>(
   "myWiki",
