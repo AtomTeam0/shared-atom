@@ -30,7 +30,7 @@ const MyWikiSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 MyWikiSchema.plugin(mongooseFuzzySearching, {
-  fields: ["word", "description"],
+  fields: ["word", "defenition"],
 });
 
 export const MyWikiModel = mongoose.model<IMyWiki & mongoose.Document>(
