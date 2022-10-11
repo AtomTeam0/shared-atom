@@ -12,7 +12,6 @@ import {
   queryManyFunctionTypes,
   querySingleFunctionTypes,
 } from "../schemaHelpers";
-import { setPluginUsage } from "../plugin.helpers";
 
 export function patchObjectPlugin(
   schema: mongoose.Schema,
@@ -28,13 +27,21 @@ export function patchObjectPlugin(
       this: mongoose.Aggregate<any>,
       next: mongoose.HookNextFunction
     ) {
-      if (!(<any>global).skipPatch) {
+      if (!(<any>global).skipPlugins) {
         this.pipeline().unshift(...(await patchInAggregation(options)));
       }
-      setPluginUsage({ skipPatch: true });
       next();
     }
   );
+
+  const enhanceDocument = async (doc: any) => ({
+    ...doc,
+    ...((await userPatcher(
+      options.foreignArrayProperty,
+      options.foreignIdProperty,
+      String(doc._id)
+    )) || options.defaultValue),
+  });
 
   querySingleFunctionTypes.map((type: string) =>
     schema.post(
@@ -44,17 +51,9 @@ export function patchObjectPlugin(
         res: any,
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!(<any>global).skipPatch && !!res) {
-          res._doc = {
-            ...res._doc,
-            ...((await userPatcher(
-              options.foreignArrayProperty,
-              options.foreignIdProperty,
-              String(res._id)
-            )) || options.defaultValue),
-          };
+        if (!(<any>global).skipPlugins && !!res) {
+          res._doc = await enhanceDocument(res._doc);
         }
-        setPluginUsage({ skipPatch: true });
         next();
       }
     )
@@ -68,19 +67,13 @@ export function patchObjectPlugin(
         res: any[],
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!(<any>global).skipPatch && !!res) {
-          res = await Promise.all(
-            res.map(async (doc) => ({
-              ...doc,
-              ...((await userPatcher(
-                options.foreignArrayProperty,
-                options.foreignIdProperty,
-                String(doc._id)
-              )) || options.defaultValue),
-            }))
+        if (!(<any>global).skipPlugins && !!res) {
+          await Promise.all(
+            res.map(async (item) => {
+              item._doc = await enhanceDocument(item._doc);
+            })
           );
         }
-        setPluginUsage({ skipPatch: true });
         next();
       }
     )
@@ -101,13 +94,21 @@ export function patchBooleanPlugin(
       this: mongoose.Aggregate<any>,
       next: mongoose.HookNextFunction
     ) {
-      if (!(<any>global).skipPatch) {
+      if (!(<any>global).skipPlugins) {
         this.pipeline().unshift(...(await patchBooleanInAggregation(options)));
       }
-      setPluginUsage({ skipPatch: true });
       next();
     }
   );
+
+  const enhanceDocument = async (doc: any) => ({
+    ...doc,
+    [options.localBoolProperty]:
+      (await userPatcherBoolean(
+        options.foreignArrayProperty,
+        String(doc._id)
+      )) || options.defaultValue,
+  });
 
   querySingleFunctionTypes.map((type: string) =>
     schema.post(
@@ -117,17 +118,9 @@ export function patchBooleanPlugin(
         res: any,
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!(<any>global).skipPatch && !!res) {
-          res._doc = {
-            ...res._doc,
-            [options.localBoolProperty]:
-              (await userPatcherBoolean(
-                options.foreignArrayProperty,
-                String(res._id)
-              )) || options.defaultValue,
-          };
+        if (!(<any>global).skipPlugins && !!res) {
+          res._doc = await enhanceDocument(res._doc);
         }
-        setPluginUsage({ skipPatch: true });
         next();
       }
     )
@@ -141,19 +134,13 @@ export function patchBooleanPlugin(
         res: any[],
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!(<any>global).skipPatch && !!res) {
-          res = await Promise.all(
-            res.map(async (doc) => ({
-              ...doc,
-              [options.localBoolProperty]:
-                (await userPatcherBoolean(
-                  options.foreignArrayProperty,
-                  String(doc._id)
-                )) || options.defaultValue,
-            }))
+        if (!(<any>global).skipPlugins && !!res) {
+          await Promise.all(
+            res.map(async (item) => {
+              item._doc = await enhanceDocument(item._doc);
+            })
           );
         }
-        setPluginUsage({ skipPatch: true });
         next();
       }
     )

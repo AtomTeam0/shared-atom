@@ -10,15 +10,15 @@ export class UsersRPCService {
   });
 
   static async getUserById(): Promise<IUser> {
-    return RPCClientRequest(UsersRPCService.rpcClient, "getUserById");
+    return RPCClientRequest()(UsersRPCService.rpcClient, "getUserById");
   }
 
   static async getAmountOfUsers(): Promise<number> {
-    return RPCClientRequest(UsersRPCService.rpcClient, "getAmountOfUsers");
+    return RPCClientRequest()(UsersRPCService.rpcClient, "getAmountOfUsers");
   }
 
   static async addLastWatched(itemId: string): Promise<IUser> {
-    return RPCClientRequest(UsersRPCService.rpcClient, "addLastWatched", {
+    return RPCClientRequest()(UsersRPCService.rpcClient, "addLastWatched", {
       itemId,
     });
   }

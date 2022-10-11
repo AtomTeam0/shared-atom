@@ -1,5 +1,4 @@
 import * as mongoose from "mongoose";
-import { setPluginUsage } from "../plugin.helpers";
 import { queryAllFunctionTypes } from "../schemaHelpers";
 
 export function populatePlugin(
@@ -13,7 +12,7 @@ export function populatePlugin(
       next: mongoose.HookNextFunction
     ) {
       options.forEach((p) => {
-        if (!(<any>global).skipPopulate) {
+        if (!(<any>global).skipPlugins) {
           this.pipeline().unshift({
             $lookup: {
               from: p.ref,
@@ -24,17 +23,19 @@ export function populatePlugin(
           });
         }
       });
-      setPluginUsage({ skipPopulate: true });
       next();
     }
   );
 
   queryAllFunctionTypes.map((type: string) =>
     schema.pre(type, function (next: mongoose.HookNextFunction) {
-      if (!(<any>global).skipPopulate) {
-        options.map((p) => this.populate(p.path));
+      if (!(<any>global).depth) {
+        (<any>global).depth = 1;
       }
-      setPluginUsage({ skipPopulate: true });
+      if (!(<any>global).skipPlugins && (<any>global).depth <= 3) {
+        options.map((p) => this.populate(p.path));
+        (<any>global).depth = (<any>global).depth + 1;
+      }
       next();
     })
   );

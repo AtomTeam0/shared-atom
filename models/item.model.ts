@@ -1,5 +1,6 @@
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
+import { Permission } from "../enums/Permission";
 import { IItem } from "../interfaces/item.interface";
 import { conditionPlugin } from "../utils/schema/plugins/conditionPlugin";
 import { patchBooleanPlugin } from "../utils/schema/plugins/patchPlugin";
@@ -104,6 +105,7 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
 ItemSchema.plugin(conditionPlugin, {
   propertyName: "isActive",
   wantedVal: true,
+  bypassPermissions: [Permission.ADMIN, Permission.DIRECTOR],
 });
 ItemSchema.plugin(populatePlugin, [
   { path: "areas", ref: "areas" },

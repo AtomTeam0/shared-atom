@@ -1,28 +1,45 @@
 import * as jayson from "jayson/promise";
 import * as Joi from "joi";
+import { IRPCPayload } from "../../interfaces/helpers/rpcPayload.interface";
 import { RPCFunctionError } from "../errors/validationError";
 import { defaultValidationOptions } from "../joi/joi.functions";
 import { initPluginUsage } from "../schema/plugin.helpers";
 
-export const RPCClientRequest = async (
+export const RPCClientRequest = (
+  skipPlugins = true
+): ((
   rpcClient: jayson.HttpClient,
   route: string,
-  params?: { [k: string]: any }
-): Promise<any> => {
-  console.log(`-- ${route} RPC request was called --`);
-  const isError = (obj: any) => !!obj.name && !!obj.message && !!obj.status;
-  const { userId } = <any>global;
+  params?:
+    | {
+        [k: string]: any;
+      }
+    | undefined
+) => Promise<any>) => {
+  const request = async (
+    rpcClient: jayson.HttpClient,
+    route: string,
+    params?: { [k: string]: any }
+  ): Promise<any> => {
+    console.log(`-- ${route} RPC request was called --`);
+    const isError = (obj: any) => !!obj.name && !!obj.message && !!obj.status;
+    const { userId, permission } = <any>global;
 
-  const response = await rpcClient.request(route, {
-    ...(userId && { userId }),
-    params,
-  });
+    const response = await rpcClient.request(route, {
+      ...(userId && { userId }),
+      ...(permission && { permission }),
+      params,
+      skipPlugins,
+    });
 
-  if (isError(response)) {
-    throw response.result;
-  }
+    if (isError(response.result)) {
+      throw response.result;
+    }
 
-  return response.result;
+    return response.result;
+  };
+
+  return request;
 };
 
 export const RPCServerRequest =
@@ -30,7 +47,7 @@ export const RPCServerRequest =
     managerFunction: (val?: any) => Promise<any>,
     validator?: Joi.ObjectSchema<any>
   ): any =>
-  async (payload: { userId?: string; params?: { [k: string]: any } }) => {
+  async (payload: IRPCPayload) => {
     if (validator) {
       const { error } = validator.validate(
         payload.params,
@@ -40,11 +57,7 @@ export const RPCServerRequest =
         return new RPCFunctionError(error);
       }
     }
-
-    if (payload.userId) {
-      (<any>global).userId = payload.userId;
-    }
-    initPluginUsage();
+    initPluginUsage(payload.userId, payload.permission, payload.skipPlugins);
 
     let result;
     try {
