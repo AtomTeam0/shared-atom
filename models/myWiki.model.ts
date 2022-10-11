@@ -1,5 +1,6 @@
 import * as mongoose from "mongoose";
 import { IMyWiki } from "../interfaces/myWiki.interface";
+import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 
 const MyWikiSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -27,10 +28,10 @@ const MyWikiSchema: mongoose.Schema = new mongoose.Schema(
   }
 );
 
-MyWikiSchema.index(
-  { word: "text", defenition: "text" },
-  { name: "defenition-word-text-index" }
-);
+MyWikiSchema.plugin(indexPlugin, {
+  propertyNames: ["word", "defenition"],
+});
+
 export const MyWikiModel = mongoose.model<IMyWiki & mongoose.Document>(
   "myWiki",
   MyWikiSchema

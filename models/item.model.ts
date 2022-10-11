@@ -3,6 +3,7 @@ import * as mongoose from "mongoose";
 import { Permission } from "../enums/Permission";
 import { IItem } from "../interfaces/item.interface";
 import { conditionPlugin } from "../utils/schema/plugins/conditionPlugin";
+import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { patchBooleanPlugin } from "../utils/schema/plugins/patchPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { AreaModel } from "./area.model";
@@ -117,8 +118,9 @@ ItemSchema.plugin(patchBooleanPlugin, {
   localBoolProperty: "isFavorite",
   defaultValue: false,
 });
-
-ItemSchema.index({ title: "text" }, { name: "title-text-index" });
+ItemSchema.plugin(indexPlugin, {
+  propertyNames: ["title"],
+});
 
 export const ItemModel = mongoose.model<IItem & mongoose.Document>(
   "items",
