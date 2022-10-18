@@ -16,27 +16,30 @@ export function patchObjectPlugin(
     defaultValue: { [k: string]: any };
   }
 ) {
-  // schema.pre(
-  //   "aggregate",
-  //   async function (
-  //     this: mongoose.Aggregate<any>,
-  //     next: mongoose.HookNextFunction
-  //   ) {
-  //     if (!(<any>global).skipPlugins) {
-  //       this.pipeline().unshift(...(await patchInAggregation(options)));
-  //     }
-  //     next();
-  //   }
-  // );
-
-  const enhanceDocument = async (doc: any) => ({
-    ...doc,
-    ...((await userPatcher(
+  const enhanceProperties = async (doc: any) =>
+    (await userPatcher(
       options.foreignArrayProperty,
       options.foreignIdProperty,
       String(doc._id)
-    )) || options.defaultValue),
-  });
+    )) || options.defaultValue;
+
+  schema.post(
+    "aggregate",
+    async function (
+      this: mongoose.Aggregate<any>,
+      res: any[],
+      next: (err?: mongoose.CallbackError) => void
+    ) {
+      if (!(<any>global).skipPlugins && !!res) {
+        await Promise.all(
+          res.map(async (item) => {
+            Object.assign(item, ...(await enhanceProperties(item)));
+          })
+        );
+      }
+      next();
+    }
+  );
 
   querySingleFunctionTypes.map((type: string) =>
     schema.post(
@@ -47,14 +50,14 @@ export function patchObjectPlugin(
         next: (err?: mongoose.CallbackError) => void
       ) {
         if (!(<any>global).skipPlugins && !!res) {
-          res._doc = await enhanceDocument(res._doc);
+          Object.assign(res._doc, ...(await enhanceProperties(res._doc)));
         }
         next();
       }
     )
   );
 
-  ["aggregate", ...queryManyFunctionTypes].map((type: string) =>
+  queryManyFunctionTypes.map((type: string) =>
     schema.post(
       type,
       async function (
@@ -65,7 +68,7 @@ export function patchObjectPlugin(
         if (!(<any>global).skipPlugins && !!res) {
           await Promise.all(
             res.map(async (item) => {
-              item._doc = await enhanceDocument(item._doc);
+              Object.assign(item._doc, ...(await enhanceProperties(item._doc)));
             })
           );
         }
@@ -83,27 +86,31 @@ export function patchBooleanPlugin(
     defaultValue: boolean;
   }
 ) {
-  // schema.pre(
-  //   "aggregate",
-  //   async function (
-  //     this: mongoose.Aggregate<any>,
-  //     next: mongoose.HookNextFunction
-  //   ) {
-  //     if (!(<any>global).skipPlugins) {
-  //       this.pipeline().unshift(...(await patchBooleanInAggregation(options)));
-  //     }
-  //     next();
-  //   }
-  // );
-
-  const enhanceDocument = async (doc: any) => ({
-    ...doc,
+  const enhanceBooleanProperty = async (doc: any) => ({
     [options.localBoolProperty]:
       (await userPatcherBoolean(
         options.foreignArrayProperty,
         String(doc._id)
       )) || options.defaultValue,
   });
+
+  schema.post(
+    "aggregate",
+    async function (
+      this: mongoose.Aggregate<any>,
+      res: any[],
+      next: (err?: mongoose.CallbackError) => void
+    ) {
+      if (!(<any>global).skipPlugins && !!res) {
+        await Promise.all(
+          res.map(async (item) => {
+            Object.assign(item, await enhanceBooleanProperty(item));
+          })
+        );
+      }
+      next();
+    }
+  );
 
   querySingleFunctionTypes.map((type: string) =>
     schema.post(
@@ -114,14 +121,14 @@ export function patchBooleanPlugin(
         next: (err?: mongoose.CallbackError) => void
       ) {
         if (!(<any>global).skipPlugins && !!res) {
-          res._doc = await enhanceDocument(res._doc);
+          Object.assign(res._doc, await enhanceBooleanProperty(res._doc));
         }
         next();
       }
     )
   );
 
-  ["aggregate", ...queryManyFunctionTypes].map((type: string) =>
+  queryManyFunctionTypes.map((type: string) =>
     schema.post(
       type,
       async function (
@@ -132,7 +139,7 @@ export function patchBooleanPlugin(
         if (!(<any>global).skipPlugins && !!res) {
           await Promise.all(
             res.map(async (item) => {
-              item._doc = await enhanceDocument(item._doc);
+              Object.assign(item._doc, await enhanceBooleanProperty(item._doc));
             })
           );
         }

@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
 import { FileTypes } from "../../../enums/helpers/FileTypes";
@@ -14,38 +15,31 @@ export function blobPlugin(
     fileType: FileTypes;
   }[]
 ) {
-  const enhanceProperty = async (
-    item: any,
-    property: {
-      propertyName: string;
-      fileType: FileTypes;
-    }
-  ) =>
-    item._doc[property.propertyName]
-      ? {
-          [property.propertyName]: await downloadBlob(
-            item._doc[property.propertyName],
-            property.fileType
-          ),
-        }
-      : {};
+  const enhanceProperties = async (item: any) =>
+    Promise.all(
+      options.map(async (p) =>
+        item._doc[p.propertyName]
+          ? {
+              [p.propertyName]: await downloadBlob(
+                item._doc[p.propertyName],
+                p.fileType
+              ),
+            }
+          : {}
+      )
+    );
 
   schema.post(
     "aggregate",
     async function (
       this: mongoose.Aggregate<any>,
-      res: any,
-      next: mongoose.HookNextFunction
+      res: any[],
+      next: (err?: mongoose.CallbackError) => void
     ) {
       if (!(<any>global).skipPlugins && !!res) {
         await Promise.all(
-          res.map(async (item: any) => {
-            Object.assign(
-              item._doc,
-              ...(await Promise.all(
-                options.map((p) => enhanceProperty(item, p))
-              ))
-            );
+          res.map(async (item) => {
+            Object.assign(item, ...(await enhanceProperties(item)));
           })
         );
       }
@@ -62,10 +56,7 @@ export function blobPlugin(
         next: (err?: mongoose.CallbackError) => void
       ) {
         if (!(<any>global).skipPlugins && !!res) {
-          Object.assign(
-            res._doc,
-            ...(await Promise.all(options.map((p) => enhanceProperty(res, p))))
-          );
+          Object.assign(res._doc, ...(await enhanceProperties(res._doc)));
         }
         next();
       }
@@ -83,12 +74,7 @@ export function blobPlugin(
         if (!(<any>global).skipPlugins && !!res) {
           await Promise.all(
             res.map(async (item: any) => {
-              Object.assign(
-                item._doc,
-                ...(await Promise.all(
-                  options.map((p) => enhanceProperty(item, p))
-                ))
-              );
+              Object.assign(item._doc, ...(await enhanceProperties(item._doc)));
             })
           );
         }
