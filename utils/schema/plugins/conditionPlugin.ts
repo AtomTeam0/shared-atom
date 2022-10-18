@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 import { Permission } from "../../../enums/Permission";
-import { queryAllFunctionTypes } from "../schemaHelpers";
+import { queryAllFunctionTypes } from "../helpers/schemaHelpers";
 
 export function conditionPlugin(
   schema: mongoose.Schema,

@@ -1,5 +1,5 @@
-import { IUser } from "../../interfaces/user.interface";
-import { UsersRPCService } from "../rpc/services/user.RPCservice";
+import { IUser } from "../../../interfaces/user.interface";
+import { UsersRPCService } from "../../rpc/services/user.RPCservice";
 
 export const getUserArray = async (
   foreignArrayProperty: keyof IUser & string
