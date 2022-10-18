@@ -24,6 +24,6 @@ export const joiBlobId = Joi.joiBlobId();
 export const joiMongoId = Joi.string().regex(/^[0-9a-fA-F]{24}$/);
 export const joiPersonalId = Joi.string().regex(/^[0-9]{9}$/);
 export const joiPdfURL = Joi.string().regex(/^(http.+)(\.pdf)$/);
-export const joiCoordinateAxis = Joi.number().regex(
+export const joiCoordinateAxis = Joi.string().regex(
   /^-?[0-9]{1,3}(?:\.[0-9]{1,15})?$/
 );
