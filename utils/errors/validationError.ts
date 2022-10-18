@@ -28,3 +28,9 @@ export class InvalidToken extends UserError {
     super("Invalid Token", 401);
   }
 }
+
+export class InvalidAnswersTestByUser extends ServerError {
+  constructor() {
+    super("Invalid answers array length", 403);
+  }
+}
