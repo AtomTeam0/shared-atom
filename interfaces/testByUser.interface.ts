@@ -13,12 +13,16 @@ export interface ITestByUserQuery {
   userId?: string;
 }
 
-export interface ITestUserless {
+export interface ITestByUser {
   test: string | ITest;
   item: string | IItem;
   grade: number;
+  user: string | IUser;
 }
 
-export interface ITestByUser extends ITestUserless {
-  user: string | IUser;
+export interface ITestUserAnswers {
+  test: string;
+  item: string;
+  answers: string[];
+  user?: string;
 }
