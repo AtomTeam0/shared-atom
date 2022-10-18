@@ -5,3 +5,13 @@ export interface IArea {
   name: AreaNames;
   image: string;
 }
+
+export interface ICoordinate {
+  coordinateX: number;
+  coordinateY: number;
+}
+
+export interface IAreaPolygon {
+  area: AreaNames;
+  coordinates: number[][];
+}
