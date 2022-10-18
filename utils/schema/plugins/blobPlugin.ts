@@ -15,13 +15,13 @@ export function blobPlugin(
     fileType: FileTypes;
   }[]
 ) {
-  const enhanceProperties = async (item: any) =>
+  const enhanceProperties = async (doc: any) =>
     Promise.all(
       options.map(async (p) =>
-        item._doc[p.propertyName]
+        doc[p.propertyName]
           ? {
               [p.propertyName]: await downloadBlob(
-                item._doc[p.propertyName],
+                doc[p.propertyName],
                 p.fileType
               ),
             }
