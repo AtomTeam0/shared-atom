@@ -24,4 +24,5 @@ export interface ITestUserAnswers {
   test: string;
   item: string;
   answers: string[];
+  user?: string;
 }
