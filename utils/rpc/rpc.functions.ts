@@ -3,7 +3,7 @@ import * as Joi from "joi";
 import { IRPCPayload } from "../../interfaces/helpers/rpcPayload.interface";
 import { RPCFunctionError } from "../errors/validationError";
 import { defaultValidationOptions } from "../joi/joi.functions";
-import { initPluginUsage } from "../schema/plugin.helpers";
+import { initPluginUsage } from "../schema/pluginHelpers";
 
 export const RPCClientRequest = (
   skipPlugins = true

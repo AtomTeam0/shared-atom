@@ -1,6 +1,8 @@
 import * as mongoose from "mongoose";
+import { FileTypes } from "../enums/helpers/FileTypes";
 import { WatchMode } from "../enums/WatchMode";
 import { IMedia } from "../interfaces/media.interface";
+import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 import { patchObjectPlugin } from "../utils/schema/plugins/patchPlugin";
 
 const MediaSchema: mongoose.Schema = new mongoose.Schema(
@@ -13,9 +15,13 @@ const MediaSchema: mongoose.Schema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    media: {
+    video: {
       type: String,
-      required: true,
+      required: false,
+    },
+    audio: {
+      type: String,
+      required: false,
     },
   },
   {
@@ -39,6 +45,16 @@ MediaSchema.plugin(patchObjectPlugin, {
   foreignIdProperty: "mediaId",
   defaultValue: { mode: WatchMode.UNREAD },
 });
+MediaSchema.plugin(blobPlugin, [
+  {
+    propertyName: "video",
+    fileType: FileTypes.MP4,
+  },
+  {
+    propertyName: "audio",
+    fileType: FileTypes.MP3,
+  },
+]);
 
 export const MediaModel = mongoose.model<IMedia & mongoose.Document>(
   "media",

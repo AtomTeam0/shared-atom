@@ -28,3 +28,9 @@ export class InvalidToken extends UserError {
     super("Invalid Token", 401);
   }
 }
+
+export class UnsupportedFileType extends UserError {
+  constructor() {
+    super("Cant upload this file type", 403);
+  }
+}

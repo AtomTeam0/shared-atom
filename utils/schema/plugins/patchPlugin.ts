@@ -2,16 +2,11 @@
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
 import { IUser } from "../../../interfaces/user.interface";
-import {
-  patchInAggregation,
-  userPatcher,
-  patchBooleanInAggregation,
-  userPatcherBoolean,
-} from "../user.helpers";
+import { userPatcher, userPatcherBoolean } from "../helpers/userHelpers";
 import {
   queryManyFunctionTypes,
   querySingleFunctionTypes,
-} from "../schemaHelpers";
+} from "../helpers/schemaHelpers";
 
 export function patchObjectPlugin(
   schema: mongoose.Schema,
@@ -21,18 +16,18 @@ export function patchObjectPlugin(
     defaultValue: { [k: string]: any };
   }
 ) {
-  schema.pre(
-    "aggregate",
-    async function (
-      this: mongoose.Aggregate<any>,
-      next: mongoose.HookNextFunction
-    ) {
-      if (!(<any>global).skipPlugins) {
-        this.pipeline().unshift(...(await patchInAggregation(options)));
-      }
-      next();
-    }
-  );
+  // schema.pre(
+  //   "aggregate",
+  //   async function (
+  //     this: mongoose.Aggregate<any>,
+  //     next: mongoose.HookNextFunction
+  //   ) {
+  //     if (!(<any>global).skipPlugins) {
+  //       this.pipeline().unshift(...(await patchInAggregation(options)));
+  //     }
+  //     next();
+  //   }
+  // );
 
   const enhanceDocument = async (doc: any) => ({
     ...doc,
@@ -59,7 +54,7 @@ export function patchObjectPlugin(
     )
   );
 
-  queryManyFunctionTypes.map((type: string) =>
+  ["aggregate", ...queryManyFunctionTypes].map((type: string) =>
     schema.post(
       type,
       async function (
@@ -88,18 +83,18 @@ export function patchBooleanPlugin(
     defaultValue: boolean;
   }
 ) {
-  schema.pre(
-    "aggregate",
-    async function (
-      this: mongoose.Aggregate<any>,
-      next: mongoose.HookNextFunction
-    ) {
-      if (!(<any>global).skipPlugins) {
-        this.pipeline().unshift(...(await patchBooleanInAggregation(options)));
-      }
-      next();
-    }
-  );
+  // schema.pre(
+  //   "aggregate",
+  //   async function (
+  //     this: mongoose.Aggregate<any>,
+  //     next: mongoose.HookNextFunction
+  //   ) {
+  //     if (!(<any>global).skipPlugins) {
+  //       this.pipeline().unshift(...(await patchBooleanInAggregation(options)));
+  //     }
+  //     next();
+  //   }
+  // );
 
   const enhanceDocument = async (doc: any) => ({
     ...doc,
@@ -126,7 +121,7 @@ export function patchBooleanPlugin(
     )
   );
 
-  queryManyFunctionTypes.map((type: string) =>
+  ["aggregate", ...queryManyFunctionTypes].map((type: string) =>
     schema.post(
       type,
       async function (

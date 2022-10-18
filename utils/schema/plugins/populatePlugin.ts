@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { queryAllFunctionTypes } from "../schemaHelpers";
+import { queryAllFunctionTypes } from "../helpers/schemaHelpers";
 
 export function populatePlugin(
   schema: mongoose.Schema,
@@ -11,8 +11,8 @@ export function populatePlugin(
       this: mongoose.Aggregate<any>,
       next: mongoose.HookNextFunction
     ) {
-      options.forEach((p) => {
-        if (!(<any>global).skipPlugins) {
+      if (!(<any>global).skipPlugins) {
+        options.forEach((p) => {
           this.pipeline().unshift({
             $lookup: {
               from: p.ref,
@@ -21,8 +21,8 @@ export function populatePlugin(
               as: p.path,
             },
           });
-        }
-      });
+        });
+      }
       next();
     }
   );

@@ -1,7 +1,9 @@
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
+import { FileTypes } from "../enums/helpers/FileTypes";
 import { Permission } from "../enums/Permission";
 import { IItem } from "../interfaces/item.interface";
+import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 import { conditionPlugin } from "../utils/schema/plugins/conditionPlugin";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { patchBooleanPlugin } from "../utils/schema/plugins/patchPlugin";
@@ -121,6 +123,12 @@ ItemSchema.plugin(patchBooleanPlugin, {
 ItemSchema.plugin(indexPlugin, {
   propertyNames: ["title"],
 });
+ItemSchema.plugin(blobPlugin, [
+  {
+    propertyName: "thumbNail",
+    fileType: FileTypes.IMAGE,
+  },
+]);
 
 export const ItemModel = mongoose.model<IItem & mongoose.Document>(
   "items",
