@@ -4,5 +4,6 @@ export interface IMedia extends IUserMediaPatch {
   id?: string;
   title: string;
   description: string;
-  media: string;
+  video?: string;
+  audio?: string;
 }

@@ -34,3 +34,9 @@ export class InvalidAnswersTestByUser extends ServerError {
     super("Invalid answers array length", 403);
   }
 }
+
+export class UnsupportedFileType extends UserError {
+  constructor() {
+    super("Cant upload this file type", 403);
+  }
+}

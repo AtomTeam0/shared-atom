@@ -1,6 +1,8 @@
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
+import { FileTypes } from "../enums/helpers/FileTypes";
 import { IUnit } from "../interfaces/unit.interface";
+import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 
 const UnitSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -28,6 +30,14 @@ const UnitSchema: mongoose.Schema = new mongoose.Schema(
     timestamps: { createdAt: false, updatedAt: false },
   }
 );
+
+// plugins
+UnitSchema.plugin(blobPlugin, [
+  {
+    propertyName: "image",
+    fileType: FileTypes.IMAGE,
+  },
+]);
 
 export const UnitModel = mongoose.model<IUnit & mongoose.Document>(
   "units",

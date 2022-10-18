@@ -2,16 +2,11 @@
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
 import { IUser } from "../../../interfaces/user.interface";
-import {
-  patchInAggregation,
-  userPatcher,
-  patchBooleanInAggregation,
-  userPatcherBoolean,
-} from "../user.helpers";
+import { userPatcher, userPatcherBoolean } from "../helpers/userHelpers";
 import {
   queryManyFunctionTypes,
   querySingleFunctionTypes,
-} from "../schemaHelpers";
+} from "../helpers/schemaHelpers";
 
 export function patchObjectPlugin(
   schema: mongoose.Schema,
@@ -21,27 +16,30 @@ export function patchObjectPlugin(
     defaultValue: { [k: string]: any };
   }
 ) {
-  schema.pre(
+  const enhanceProperties = async (doc: any) =>
+    (await userPatcher(
+      options.foreignArrayProperty,
+      options.foreignIdProperty,
+      String(doc._id)
+    )) || options.defaultValue;
+
+  schema.post(
     "aggregate",
     async function (
       this: mongoose.Aggregate<any>,
-      next: mongoose.HookNextFunction
+      res: any[],
+      next: (err?: mongoose.CallbackError) => void
     ) {
-      if (!(<any>global).skipPlugins) {
-        this.pipeline().unshift(...(await patchInAggregation(options)));
+      if (!(<any>global).skipPlugins && !!res) {
+        await Promise.all(
+          res.map(async (item) => {
+            Object.assign(item, ...(await enhanceProperties(item)));
+          })
+        );
       }
       next();
     }
   );
-
-  const enhanceDocument = async (doc: any) => ({
-    ...doc,
-    ...((await userPatcher(
-      options.foreignArrayProperty,
-      options.foreignIdProperty,
-      String(doc._id)
-    )) || options.defaultValue),
-  });
 
   querySingleFunctionTypes.map((type: string) =>
     schema.post(
@@ -52,7 +50,7 @@ export function patchObjectPlugin(
         next: (err?: mongoose.CallbackError) => void
       ) {
         if (!(<any>global).skipPlugins && !!res) {
-          res._doc = await enhanceDocument(res._doc);
+          Object.assign(res._doc, ...(await enhanceProperties(res._doc)));
         }
         next();
       }
@@ -70,7 +68,7 @@ export function patchObjectPlugin(
         if (!(<any>global).skipPlugins && !!res) {
           await Promise.all(
             res.map(async (item) => {
-              item._doc = await enhanceDocument(item._doc);
+              Object.assign(item._doc, ...(await enhanceProperties(item._doc)));
             })
           );
         }
@@ -88,27 +86,31 @@ export function patchBooleanPlugin(
     defaultValue: boolean;
   }
 ) {
-  schema.pre(
-    "aggregate",
-    async function (
-      this: mongoose.Aggregate<any>,
-      next: mongoose.HookNextFunction
-    ) {
-      if (!(<any>global).skipPlugins) {
-        this.pipeline().unshift(...(await patchBooleanInAggregation(options)));
-      }
-      next();
-    }
-  );
-
-  const enhanceDocument = async (doc: any) => ({
-    ...doc,
+  const enhanceBooleanProperty = async (doc: any) => ({
     [options.localBoolProperty]:
       (await userPatcherBoolean(
         options.foreignArrayProperty,
         String(doc._id)
       )) || options.defaultValue,
   });
+
+  schema.post(
+    "aggregate",
+    async function (
+      this: mongoose.Aggregate<any>,
+      res: any[],
+      next: (err?: mongoose.CallbackError) => void
+    ) {
+      if (!(<any>global).skipPlugins && !!res) {
+        await Promise.all(
+          res.map(async (item) => {
+            Object.assign(item, await enhanceBooleanProperty(item));
+          })
+        );
+      }
+      next();
+    }
+  );
 
   querySingleFunctionTypes.map((type: string) =>
     schema.post(
@@ -119,7 +121,7 @@ export function patchBooleanPlugin(
         next: (err?: mongoose.CallbackError) => void
       ) {
         if (!(<any>global).skipPlugins && !!res) {
-          res._doc = await enhanceDocument(res._doc);
+          Object.assign(res._doc, await enhanceBooleanProperty(res._doc));
         }
         next();
       }
@@ -137,7 +139,7 @@ export function patchBooleanPlugin(
         if (!(<any>global).skipPlugins && !!res) {
           await Promise.all(
             res.map(async (item) => {
-              item._doc = await enhanceDocument(item._doc);
+              Object.assign(item._doc, await enhanceBooleanProperty(item._doc));
             })
           );
         }

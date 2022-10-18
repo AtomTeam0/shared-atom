@@ -8,7 +8,7 @@ import {
 } from "./errors/validationError";
 import { wrapAsyncMiddleware } from "./helpers/wrapper";
 import { UsersRPCService } from "./rpc/services/user.RPCservice";
-import { initPluginUsage } from "./schema/plugin.helpers";
+import { initPluginUsage } from "./schema/helpers/pluginHelpers";
 
 export const idExistsInDb = async (
   id: any | undefined,

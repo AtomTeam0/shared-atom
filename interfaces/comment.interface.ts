@@ -1,8 +1,11 @@
 import { IUser } from "./user.interface";
 
-export interface IComment {
+export interface ICommentUserless {
   id?: string;
   createdAt: Date;
   comment: string;
-  userId: string | IUser;
+}
+
+export interface IComment extends ICommentUserless {
+  user: string | IUser;
 }
