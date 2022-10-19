@@ -14,7 +14,7 @@ const Joi = JoiBase.extend((joi: any) => ({
     if (!isValid) {
       return { value, errors: helpers.error("joiBlobId.invalid") };
     }
-    return isValid;
+    return value;
   },
 }));
 
