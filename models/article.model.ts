@@ -1,5 +1,7 @@
 import * as mongoose from "mongoose";
+import { FileTypes } from "../enums/helpers/FileTypes";
 import { IArticle } from "../interfaces/article.interface";
+import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { CommentModel } from "./comment.model";
 
@@ -44,7 +46,6 @@ const ArticleSchema: mongoose.Schema = new mongoose.Schema(
           required: true,
         },
       },
-      required: true,
     },
     category: {
       type: String,
@@ -78,6 +79,17 @@ const ArticleSchema: mongoose.Schema = new mongoose.Schema(
 
 // plugins
 ArticleSchema.plugin(populatePlugin, [{ path: "comments", ref: "comments" }]);
+ArticleSchema.plugin(blobPlugin, [
+  {
+    propertyName: "thumbnail",
+    fileType: FileTypes.IMAGE,
+  },
+  {
+    fatherProperty: "bestSoldier",
+    propertyName: "image",
+    fileType: FileTypes.IMAGE,
+  },
+]);
 
 export const ArticleModel = mongoose.model<IArticle & mongoose.Document>(
   "articles",

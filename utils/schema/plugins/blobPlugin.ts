@@ -11,6 +11,7 @@ import {
 export function blobPlugin(
   schema: mongoose.Schema,
   options: {
+    fatherProperty?: string;
     propertyName: string;
     fileType: FileTypes;
   }[]
@@ -18,13 +19,31 @@ export function blobPlugin(
   const modifyProperties = async (doc: any, isDownloadMode: boolean) => {
     const func = isDownloadMode ? downloadBlob : uploadBlob;
     return Promise.all(
-      options.map(async (p) =>
-        doc[p.propertyName]
+      options.map(async (property) => {
+        if (property.fatherProperty) {
+          return doc[property.fatherProperty] &&
+            doc[property.fatherProperty][property.propertyName]
+            ? {
+                ...doc[property.fatherProperty],
+                [property.fatherProperty]: {
+                  [property.propertyName]: await func(
+                    doc[property.fatherProperty][property.propertyName],
+                    property.fileType
+                  ),
+                },
+              }
+            : {};
+        }
+
+        return doc[property.propertyName]
           ? {
-              [p.propertyName]: await func(doc[p.propertyName], p.fileType),
+              [property.propertyName]: await func(
+                doc[property.propertyName],
+                property.fileType
+              ),
             }
-          : {}
-      )
+          : {};
+      })
     );
   };
 
