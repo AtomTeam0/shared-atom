@@ -1,5 +1,5 @@
 export enum Grade {
   SOLDIER = "soldier",
-  COMMANDOR = "commandor",
+  COMMANDER = "commander",
   OFFICER = "officer",
 }

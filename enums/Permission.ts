@@ -1,7 +1,7 @@
 export enum Permission {
   VIEWER = "viewer",
   EDITOR = "editor",
-  COMMANDOR = "commandor",
+  COMMANDER = "commander",
   ORGANIZER = "organizer",
   DIRECTOR = "director",
   ADMIN = "admin",
