@@ -20,6 +20,7 @@ const Joi = JoiBase.extend((joi: any) => ({
 
 export const joiEnum = (enumObj: { [k: string]: string }) =>
   Joi.string().valid(...Object.values(enumObj));
+export const joiBlob = Joi.any();
 export const joiBlobId = Joi.joiBlobId();
 export const joiMongoId = Joi.string().regex(/^[0-9a-fA-F]{24}$/);
 export const joiPersonalId = Joi.string().regex(/^[0-9]{9}$/);
