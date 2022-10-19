@@ -2,7 +2,7 @@
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
 import { FileTypes } from "../../../enums/helpers/FileTypes";
-import { downloadBlob } from "../helpers/blobHelpers";
+import { downloadBlob, uploadBlob } from "../helpers/blobHelpers";
 import {
   querySingleFunctionTypes,
   queryManyFunctionTypes,
@@ -15,19 +15,21 @@ export function blobPlugin(
     fileType: FileTypes;
   }[]
 ) {
-  const enhanceProperties = async (doc: any) =>
-    Promise.all(
+  const modifyProperties = async (doc: any, isDownloadMode: boolean) => {
+    const func = isDownloadMode ? downloadBlob : uploadBlob;
+    return Promise.all(
       options.map(async (p) =>
         doc[p.propertyName]
           ? {
-              [p.propertyName]: await downloadBlob(
-                doc[p.propertyName],
-                p.fileType
-              ),
+              [p.propertyName]: await func(doc[p.propertyName], p.fileType),
             }
           : {}
       )
     );
+  };
+
+  const enhanceProperties = (doc: any) => modifyProperties(doc, true);
+  const deformProperties = (doc: any) => modifyProperties(doc, false);
 
   schema.post(
     "aggregate",
@@ -81,5 +83,15 @@ export function blobPlugin(
         next();
       }
     )
+  );
+
+  schema.pre(
+    ["save", "init"],
+    async function (this: any, next: (err?: mongoose.CallbackError) => void) {
+      if (!(<any>global).skipPlugins) {
+        Object.assign(this, ...(await deformProperties(this)));
+      }
+      next();
+    }
   );
 }

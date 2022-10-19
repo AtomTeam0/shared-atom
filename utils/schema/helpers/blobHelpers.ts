@@ -45,18 +45,23 @@ const getBlockBlobClient = (
   }
 
   const containerClient = getBlobClient().getContainerClient(containerName);
-  return containerClient.getBlockBlobClient(blobName);
+  return {
+    blockBlobClient: containerClient.getBlockBlobClient(blobName),
+    blobName,
+  };
 };
 
 export const uploadBlob = async (data: any, fileType: FileTypes) => {
-  await getBlockBlobClient(fileType).upload(data);
+  const { blockBlobClient, blobName } = getBlockBlobClient(fileType);
+  await blockBlobClient.upload(data);
+  return blobName;
 };
 
 export const downloadBlob = async (blobId: any, fileType: FileTypes) => {
-  const downloadBlockBlobResponse = await getBlockBlobClient(
+  const { blockBlobClient } = getBlockBlobClient(
     fileType,
     calcBlobName(blobId, fileType)
-  ).download(0);
-
+  );
+  const downloadBlockBlobResponse = await blockBlobClient.download(0);
   return downloadBlockBlobResponse.readableStreamBody;
 };
