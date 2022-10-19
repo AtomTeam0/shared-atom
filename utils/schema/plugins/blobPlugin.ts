@@ -31,6 +31,31 @@ export function blobPlugin(
   const enhanceProperties = (doc: any) => modifyProperties(doc, true);
   const deformProperties = (doc: any) => modifyProperties(doc, false);
 
+  schema.pre(
+    "save",
+    async function (this: any, next: (err?: mongoose.CallbackError) => void) {
+      Object.assign(this, ...(await deformProperties(this)));
+      next();
+    }
+  );
+
+  schema.pre(
+    ["updateOne", "findOneAndUpdate"],
+    async function (
+      this: mongoose.Query<any, any>,
+      next: (err?: mongoose.CallbackError) => void
+    ) {
+      const updateObj = this.getUpdate();
+      this.setUpdate(
+        Object.assign(
+          updateObj as object,
+          ...(await deformProperties(updateObj))
+        )
+      );
+      next();
+    }
+  );
+
   schema.post(
     "aggregate",
     async function (
@@ -83,15 +108,5 @@ export function blobPlugin(
         next();
       }
     )
-  );
-
-  schema.pre(
-    ["save", "init"],
-    async function (this: any, next: (err?: mongoose.CallbackError) => void) {
-      if (!(<any>global).skipPlugins) {
-        Object.assign(this, ...(await deformProperties(this)));
-      }
-      next();
-    }
   );
 }
