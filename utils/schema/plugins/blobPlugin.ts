@@ -21,18 +21,22 @@ export function blobPlugin(
     return Promise.all(
       options.map(async (property) => {
         if (property.fatherProperty) {
-          return doc[property.fatherProperty] &&
-            doc[property.fatherProperty][property.propertyName]
-            ? {
-                ...doc[property.fatherProperty],
-                [property.fatherProperty]: {
-                  [property.propertyName]: await func(
-                    doc[property.fatherProperty][property.propertyName],
-                    property.fileType
-                  ),
-                },
-              }
-            : {};
+          const father = doc[property.fatherProperty];
+          if (father) {
+            const nested = father[property.propertyName];
+            return nested
+              ? {
+                  [property.fatherProperty]: {
+                    ...father,
+                    [property.propertyName]: await func(
+                      nested,
+                      property.fileType
+                    ),
+                  },
+                }
+              : {};
+          }
+          return {};
         }
 
         return doc[property.propertyName]
