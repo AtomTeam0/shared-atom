@@ -5,7 +5,7 @@ import { UnsupportedFileType } from "../../errors/validationError";
 
 const AZURE_ACCOUNT_NAME = process.env.AZURE_ACCOUNT_NAME || "";
 const AZURE_ACCOUNT_KEY = process.env.AZURE_ACCOUNT_KEY || "";
-const AZURE_STORAGE_CONNECTION_STRING = `DefaultEndpointsProtocol=https;AccountName=${AZURE_ACCOUNT_NAME};AccountKey=${AZURE_ACCOUNT_KEY};`;
+const AZURE_STORAGE_CONNECTION_STRING = `DefaultEndpointsProtocol=https;AccountName=${AZURE_ACCOUNT_NAME};AccountKey=${AZURE_ACCOUNT_KEY};EndpointSuffix=core.windows.net`;
 const IMAGE_CONTAINER_NAME = process.env.IMAGE_CONTAINER_NAME || "images";
 const MP3_CONTAINER_NAME = process.env.MP3_CONTAINER_NAME || "mp3's";
 const MP4_CONTAINER_NAME = process.env.MP4_CONTAINER_NAME || "mp4's";
