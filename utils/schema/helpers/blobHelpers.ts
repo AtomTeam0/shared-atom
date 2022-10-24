@@ -1,17 +1,19 @@
-import { BlobServiceClient } from "@azure/storage-blob";
 import { v4 as uuidv4 } from "uuid";
-import { FileTypes } from "../../../enums/helpers/FileTypes";
-import { UnsupportedFileType } from "../../errors/validationError";
+import { DefaultAzureCredential } from "@azure/identity";
+import {
+  BlobServiceClient,
+  generateBlobSASQueryParameters,
+  SASProtocol,
+  BlobSASPermissions,
+} from "@azure/storage-blob";
+import {
+  FileTypes,
+  getContainerNameByFileType,
+} from "../../../enums/helpers/FileTypes";
 
 const AZURE_ACCOUNT_NAME = process.env.AZURE_ACCOUNT_NAME || "";
 const AZURE_ACCOUNT_KEY = process.env.AZURE_ACCOUNT_KEY || "";
 const AZURE_STORAGE_CONNECTION_STRING = `DefaultEndpointsProtocol=https;AccountName=${AZURE_ACCOUNT_NAME};AccountKey=${AZURE_ACCOUNT_KEY};EndpointSuffix=core.windows.net`;
-const IMAGE_CONTAINER_NAME = process.env.IMAGE_CONTAINER_NAME || "images";
-const MP3_CONTAINER_NAME = process.env.MP3_CONTAINER_NAME || "mp3's";
-const MP4_CONTAINER_NAME = process.env.MP4_CONTAINER_NAME || "mp4's";
-
-const calcBlobName = (blobId: any, fileType: FileTypes) =>
-  `${blobId}.${fileType}`;
 
 const getBlobClient = () => {
   if ((<any>global).blobClient) {
@@ -26,43 +28,58 @@ const getBlobClient = () => {
   return blobClient;
 };
 
-const getBlockBlobClient = (
-  fileType: FileTypes,
-  blobName = calcBlobName(uuidv4(), fileType)
+const createSasUrl = async (
+  accountName: string,
+  containerName: string,
+  blobName: string
 ) => {
-  let containerName;
-  switch (fileType) {
-    case FileTypes.IMAGE:
-      containerName = IMAGE_CONTAINER_NAME;
-      break;
-    case FileTypes.MP3:
-      containerName = MP3_CONTAINER_NAME;
-      break;
-    case FileTypes.MP4:
-      containerName = MP4_CONTAINER_NAME;
-      break;
-    default:
-      throw new UnsupportedFileType();
-  }
+  const HOUR = 60 * 60 * 1000;
+  const NOW = new Date();
 
-  const containerClient = getBlobClient().getContainerClient(containerName);
-  return {
-    blockBlobClient: containerClient.getBlockBlobClient(blobName),
+  const HOUR_BEFORE_NOW = new Date(NOW.valueOf() - HOUR);
+  const HOUR_AFTER_NOW = new Date(NOW.valueOf() + HOUR);
+
+  const blobServiceClient = new BlobServiceClient(
+    `https://${accountName}.blob.core.windows.net`,
+    new DefaultAzureCredential()
+  );
+
+  const userDelegationKey = await blobServiceClient.getUserDelegationKey(
+    HOUR_BEFORE_NOW,
+    HOUR_AFTER_NOW
+  );
+
+  const blobPermissionsForAnonymousUser = "r";
+
+  const sasOptions = {
     blobName,
+    containerName,
+    permissions: BlobSASPermissions.parse(blobPermissionsForAnonymousUser),
+    protocol: SASProtocol.HttpsAndHttp,
+    startsOn: HOUR_BEFORE_NOW,
+    expiresOn: HOUR_AFTER_NOW,
   };
+
+  const sasToken = generateBlobSASQueryParameters(
+    sasOptions,
+    userDelegationKey,
+    accountName
+  ).toString();
+
+  return `https://${accountName}.blob.core.windows.net/${containerName}/${blobName}?${sasToken}`;
 };
 
 export const uploadBlob = async (data: any, fileType: FileTypes) => {
-  const { blockBlobClient, blobName } = getBlockBlobClient(fileType);
-  await blockBlobClient.upload(data);
+  const containerName = getContainerNameByFileType(fileType);
+  const blobName = uuidv4();
+  const containerClient = getBlobClient().getContainerClient(containerName);
+  await containerClient.getBlockBlobClient(blobName).upload(data);
   return blobName;
 };
 
-export const downloadBlob = async (blobId: any, fileType: FileTypes) => {
-  const { blockBlobClient } = getBlockBlobClient(
-    fileType,
-    calcBlobName(blobId, fileType)
+export const downloadBlob = async (blobId: any, fileType: FileTypes) =>
+  createSasUrl(
+    AZURE_ACCOUNT_NAME,
+    getContainerNameByFileType(fileType),
+    blobId
   );
-  const downloadBlockBlobResponse = await blockBlobClient.download(0);
-  return downloadBlockBlobResponse.readableStreamBody;
-};
