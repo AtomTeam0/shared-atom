@@ -9,6 +9,7 @@ import {
 import {
   FileTypes,
   getContainerNameByFileType,
+  getMimeTypeByFileType,
 } from "../../../enums/helpers/FileTypes";
 
 const AZURE_ACCOUNT_NAME = process.env.AZURE_ACCOUNT_NAME || "";
@@ -69,11 +70,32 @@ const createSasUrl = async (
   return `https://${accountName}.blob.core.windows.net/${containerName}/${blobName}?${sasToken}`;
 };
 
-export const uploadBlob = async (data: any, fileType: FileTypes) => {
+const base64ToBlob = (base64Data: string, fileType: FileTypes) => {
+  const sliceSize = 1024;
+  const byteCharacters = Buffer.from(base64Data, "base64").toString();
+  const bytesLength = byteCharacters.length;
+  const slicesCount = Math.ceil(bytesLength / sliceSize);
+  const byteArrays = new Array(slicesCount);
+
+  for (let sliceIndex = 0; sliceIndex < slicesCount; ++sliceIndex) {
+    const begin = sliceIndex * sliceSize;
+    const end = Math.min(begin + sliceSize, bytesLength);
+
+    const bytes = new Array(end - begin);
+    for (let offset = begin, i = 0; offset < end; ++i, ++offset) {
+      bytes[i] = byteCharacters[offset].charCodeAt(0);
+    }
+    byteArrays[sliceIndex] = new Uint8Array(bytes);
+  }
+  return new Blob(byteArrays, { type: getMimeTypeByFileType(fileType) });
+};
+
+export const uploadBlob = async (base64Data: string, fileType: FileTypes) => {
   const containerName = getContainerNameByFileType(fileType);
   const blobName = uuidv4();
   const containerClient = getBlobClient().getContainerClient(containerName);
-  await containerClient.getBlockBlobClient(blobName).upload(data);
+  const blob = base64ToBlob(base64Data, fileType);
+  await containerClient.getBlockBlobClient(blobName).upload(blob);
   return blobName;
 };
 
