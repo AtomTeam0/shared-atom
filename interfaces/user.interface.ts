@@ -36,5 +36,4 @@ export interface IUser {
 export interface IUserUpdater extends IUser {
   toggleFavorite?: string;
   toggleEmployee?: string;
-  addLastWatched?: string;
 }
