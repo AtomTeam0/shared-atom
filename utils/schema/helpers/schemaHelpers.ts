@@ -12,3 +12,7 @@ export const queryAllFunctionTypes = [
   ...querySingleFunctionTypes,
   ...queryManyFunctionTypes,
 ];
+
+export const preCreationFunctionType = "save";
+
+export const preUpdateFunctionType = "findOneAndUpdate";

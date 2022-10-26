@@ -6,6 +6,8 @@ import { downloadBlob, uploadBlob } from "../helpers/blobHelpers";
 import {
   querySingleFunctionTypes,
   queryManyFunctionTypes,
+  preCreationFunctionType,
+  preUpdateFunctionType,
 } from "../helpers/schemaHelpers";
 
 export function blobPlugin(
@@ -55,7 +57,7 @@ export function blobPlugin(
   const deformProperties = (doc: any) => modifyProperties(doc, false);
 
   schema.pre(
-    "save",
+    preCreationFunctionType,
     async function (this: any, next: (err?: mongoose.CallbackError) => void) {
       Object.assign(this, ...(await deformProperties(this)));
       next();
@@ -63,7 +65,7 @@ export function blobPlugin(
   );
 
   schema.pre(
-    ["updateOne", "findOneAndUpdate"],
+    preUpdateFunctionType,
     async function (
       this: mongoose.Query<any, any>,
       next: (err?: mongoose.CallbackError) => void
