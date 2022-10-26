@@ -12,7 +12,14 @@ export interface ILastWatchedQuery {
   section: Section;
   areaId: string;
 }
+export interface IUserChapterPatch {
+  mode?: WatchMode;
+}
 
+export interface IUserMediaPatch {
+  mode?: WatchMode;
+  note?: string;
+}
 export interface IUser {
   id?: string;
   firstName: string;
@@ -26,11 +33,8 @@ export interface IUser {
   chapters: { chapterId: string; mode: WatchMode }[];
 }
 
-export interface IUserChapterPatch {
-  mode?: WatchMode;
-}
-
-export interface IUserMediaPatch {
-  mode?: WatchMode;
-  note?: string;
+export interface IUserUpdater extends IUser {
+  toggleFavorite?: string;
+  toggleEmployee?: string;
+  addLastWatched?: string;
 }
