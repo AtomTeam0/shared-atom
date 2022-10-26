@@ -1,10 +1,10 @@
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
 import { WatchMode } from "../enums/WatchMode";
-import { IItem } from "../interfaces/item.interface";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { UserModel } from "./user.model";
 import { ItemModel } from "./item.model";
+import { IMission } from "../interfaces/mission.interface";
 
 const MissionSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -57,7 +57,7 @@ MissionSchema.plugin(populatePlugin, [
   { path: "item", ref: "items" },
 ]);
 
-export const MissionModel = mongoose.model<IItem & mongoose.Document>(
+export const MissionModel = mongoose.model<IMission & mongoose.Document>(
   "missions",
   MissionSchema
 );
