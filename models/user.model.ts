@@ -2,6 +2,7 @@ import * as mongoose from "mongoose";
 import { Permission } from "../enums/Permission";
 import { WatchMode } from "../enums/WatchMode";
 import { IUser } from "../interfaces/user.interface";
+import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { AreaModel } from "./area.model";
 import { ChapterModel } from "./chapter.model";
@@ -109,6 +110,9 @@ UserSchema.plugin(populatePlugin, [
   { path: "lastWatched", ref: "items" },
   { path: "employees", ref: "users" },
 ]);
+UserSchema.plugin(indexPlugin, {
+  propertyNames: ["firstName", "lastName", "personalId"],
+});
 
 export const UserModel = mongoose.model<IUser & mongoose.Document>(
   "users",

@@ -5,6 +5,10 @@ import { IArea } from "./area.interface";
 import { IItem } from "./item.interface";
 
 export interface IUserQuery {
+  search: string;
+}
+
+export interface ILastWatchedQuery {
   section: Section;
   areaId: string;
 }
