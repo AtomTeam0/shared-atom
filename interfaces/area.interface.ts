@@ -3,7 +3,7 @@ import { AreaNames } from "../enums/AreaNames";
 export interface IArea {
   id?: string;
   name: AreaNames;
-  image: object | string;
+  image: string;
 }
 
 export interface ICoordinate {

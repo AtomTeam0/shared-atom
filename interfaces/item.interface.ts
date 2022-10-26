@@ -28,7 +28,7 @@ export interface IItem {
   corps: Corp[];
   grade: Grade;
   contentType: ContentType;
-  thumbNail: object | string;
+  thumbNail: string;
   contentId: string;
   areas: string[] | IArea[];
   unit: string | IUnit;
