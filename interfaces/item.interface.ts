@@ -12,7 +12,7 @@ export interface IItemQuery {
   category?: Category;
   contentType?: ContentType;
   isAll?: boolean;
-  title?: string;
+  search?: string;
 }
 
 export interface IItem {
