@@ -3,7 +3,8 @@ import * as Joi from "joi";
 import { Request } from "express";
 import { wrapValidator } from "../helpers/wrapper";
 import { PermissionError } from "../errors/generalError";
-import { IPermissionSchema } from "./permissionSchema.iterface";
+import { IPermissionSchema } from "./permissionSchema.interface";
+import { Permission } from "../../enums/Permission";
 
 export const defaultValidationOptions: Joi.ValidationOptions = {
   abortEarly: false,
@@ -44,7 +45,9 @@ export const validateRequestByPermission = (
   allValidations: IPermissionSchema[]
 ) => {
   const wantedValidation = allValidations.find((validation) =>
-    validation.permissions.includes((<any>global).permission)
+    [Permission.ADMIN, ...validation.permissions].includes(
+      (<any>global).permission
+    )
   );
   if (wantedValidation) {
     return validateRequest(wantedValidation.schema);
