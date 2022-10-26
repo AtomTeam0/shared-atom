@@ -41,12 +41,12 @@ export const validateRequest = (
 
 export const validateRequestByPermission = (
   allValidations: {
-    permission: Permissions[];
+    permissions: Permissions[];
     schema: Joi.ObjectSchema<any>;
   }[]
 ) => {
   const wantedValidation = allValidations.find((validation) =>
-    validation.permission.includes((<any>global).permission)
+    validation.permissions.includes((<any>global).permission)
   );
   if (wantedValidation) {
     return validateRequest(wantedValidation.schema);
