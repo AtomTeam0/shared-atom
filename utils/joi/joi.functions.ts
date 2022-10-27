@@ -25,8 +25,9 @@ const normalizeRequest = (req: any, value: any): void => {
 
 export const validateRequest = (
   schema: Joi.ObjectSchema<any>,
-  options: Joi.ValidationOptions = defaultValidationOptions
-) => {
+  options: Joi.ValidationOptions = defaultValidationOptions,
+  doesWrap = true
+): any => {
   const validator = async (req: Request): Promise<void> => {
     const { error, value } = schema.unknown().validate(req, options);
     if (error) {
@@ -38,19 +39,24 @@ export const validateRequest = (
     }
   };
 
-  return wrapValidator(validator);
+  return doesWrap ? wrapValidator(validator) : validator;
 };
 
 export const validateRequestByPermission = (
-  allValidations: IPermissionSchema[]
+  allValidations: IPermissionSchema[],
+  options: Joi.ValidationOptions = defaultValidationOptions
 ) => {
-  const wantedValidation = allValidations.find((validation) =>
-    [Permission.ADMIN, ...validation.permissions].includes(
-      (<any>global).permission
-    )
-  );
-  if (wantedValidation) {
-    return validateRequest(wantedValidation.schema);
-  }
-  throw new PermissionError();
+  const validator = async (req: Request): Promise<void> => {
+    const wantedValidation = allValidations.find((validation) =>
+      [Permission.ADMIN, ...validation.permissions].includes(
+        (<any>global).permission
+      )
+    );
+    if (wantedValidation) {
+      await validateRequest(wantedValidation.schema, options, false)(req);
+    } else {
+      throw new PermissionError();
+    }
+  };
+  return wrapValidator(validator);
 };
