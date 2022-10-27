@@ -23,7 +23,7 @@ export function blobPlugin(
     porpertyName: string,
     fatherProperty?: string
   ) => {
-    const wantedId = query.get("_id");
+    const wantedId = query.getFilter()._id;
     const { skipPlugins } = <any>global;
     (<any>global).skipPlugins = true;
     const oldDoc = await query.model.findById(wantedId).exec();
