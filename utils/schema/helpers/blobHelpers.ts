@@ -90,16 +90,29 @@ const base64ToBlob = (base64Data: string, fileType: FileTypes) => {
   return new Blob(byteArrays, { type: getMimeTypeByFileType(fileType) });
 };
 
-export const uploadBlob = async (base64Data: string, fileType: FileTypes) => {
+const uploadBlob = async (
+  base64Data: string,
+  fileType: FileTypes,
+  blobName?: string
+) => {
   const containerName = getContainerNameByFileType(fileType);
-  const blobName = uuidv4();
   const containerClient = getBlobClient().getContainerClient(containerName);
   const blob = base64ToBlob(base64Data, fileType);
-  await containerClient.getBlockBlobClient(blobName).upload(blob);
-  return blobName;
+  const blobNameForBlok = blobName || uuidv4();
+  await containerClient.getBlockBlobClient(blobNameForBlok).upload(blob);
+  return blobNameForBlok;
 };
 
-export const downloadBlob = async (blobId: any, fileType: FileTypes) =>
+export const createBlob = async (base64Data: string, fileType: FileTypes) =>
+  uploadBlob(base64Data, fileType, uuidv4());
+
+export const updateBlob = async (
+  base64Data: string,
+  fileType: FileTypes,
+  blobName: string
+) => uploadBlob(base64Data, fileType, blobName);
+
+export const downloadBlob = async (blobId: string, fileType: FileTypes) =>
   createSasUrl(
     AZURE_ACCOUNT_NAME,
     getContainerNameByFileType(fileType),
