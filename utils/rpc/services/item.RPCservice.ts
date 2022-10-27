@@ -1,5 +1,5 @@
 import * as jayson from "jayson/promise";
-import { IArea } from "../../../interfaces/area.interface";
+import { IArea, ICoordinate } from "../../../interfaces/area.interface";
 import { IItem } from "../../../interfaces/item.interface";
 import { RPCconfig } from "../rpc.config";
 import { RPCClientRequest } from "../rpc.functions";
@@ -19,6 +19,12 @@ export class ItemRPCService {
   static async getAreaById(areaId: string): Promise<IArea> {
     return RPCClientRequest()(ItemRPCService.rpcClient, "getAreaById", {
       areaId,
+    });
+  }
+
+  static async getRelevantArea(coordinate: ICoordinate): Promise<IArea> {
+    return RPCClientRequest()(ItemRPCService.rpcClient, "getRelevantArea", {
+      coordinate,
     });
   }
 }
