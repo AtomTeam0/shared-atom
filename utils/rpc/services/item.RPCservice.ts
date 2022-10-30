@@ -24,7 +24,7 @@ export class ItemRPCService {
 
   static async getRelevantArea(coordinate: ICoordinate): Promise<IArea> {
     return RPCClientRequest()(ItemRPCService.rpcClient, "getRelevantArea", {
-      coordinate,
+      ...coordinate,
     });
   }
 }
