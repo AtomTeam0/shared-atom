@@ -38,7 +38,7 @@ export function blobPlugin(
 
   const modifyProperties = async (
     doc: any,
-    blobAction: (...args: any[]) => void
+    blobAction: (...args: any) => void
   ) =>
     Promise.all(
       options.map(async (property) => {

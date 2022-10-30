@@ -44,7 +44,7 @@ export const RPCClientRequest = (
 
 export const RPCServerRequest =
   (
-    managerFunction: (val?: any) => Promise<any>,
+    managerFunction: (...args: any) => Promise<any>,
     validator?: Joi.ObjectSchema<any>
   ): any =>
   async (payload: IRPCPayload) => {
