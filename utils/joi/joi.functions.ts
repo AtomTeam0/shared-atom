@@ -47,15 +47,22 @@ export const validateRequestByPermission = (
   options: Joi.ValidationOptions = defaultValidationOptions
 ) => {
   const validator = async (req: Request): Promise<void> => {
-    const wantedValidation = allValidations.find((validation) =>
-      [Permission.ADMIN, ...validation.permissions].includes(
-        (<any>global).permission
-      )
-    );
-    if (wantedValidation) {
-      await validateRequest(wantedValidation.schema, options, false)(req);
+    if ((<any>global).permission === Permission.ADMIN) {
+      const adminSchema = Object.assign(
+        {},
+        ...allValidations.map(
+          (validation: IPermissionSchema) => validation.schema
+        )
+      );
+      await validateRequest(adminSchema, options, false)(req);
     } else {
-      throw new PermissionError();
+      const wantedValidation = allValidations.find((validation) =>
+        validation.permissions.includes((<any>global).permission)
+      );
+      if (!wantedValidation) {
+        throw new PermissionError();
+      }
+      await validateRequest(wantedValidation.schema, options, false)(req);
     }
   };
   return wrapValidator(validator);
