@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { queryAllFunctionTypes } from "../helpers/schemaHelpers";
+import { postGetAllFunctionTypes } from "../helpers/schemaHelpers";
 
 export function populatePlugin(
   schema: mongoose.Schema,
@@ -27,7 +27,7 @@ export function populatePlugin(
     }
   );
 
-  queryAllFunctionTypes.map((type: string) =>
+  postGetAllFunctionTypes.map((type: string) =>
     schema.pre(type, function (next: mongoose.HookNextFunction) {
       if (!(<any>global).depth) {
         (<any>global).depth = 1;

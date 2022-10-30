@@ -4,8 +4,8 @@ import * as mongoose from "mongoose";
 import { FileTypes } from "../../../enums/helpers/FileTypes";
 import { createBlob, downloadBlob, updateBlob } from "../helpers/blobHelpers";
 import {
-  querySingleFunctionTypes,
-  queryManyFunctionTypes,
+  postGetSingleFunctionTypes,
+  postGetManyFunctionTypes,
   preCreationFunctionType,
   preUpdateFunctionType,
 } from "../helpers/schemaHelpers";
@@ -160,7 +160,7 @@ export function blobPlugin(
     }
   );
 
-  querySingleFunctionTypes.map((type: string) =>
+  postGetSingleFunctionTypes.map((type: string) =>
     schema.post(
       type,
       async function (
@@ -176,7 +176,7 @@ export function blobPlugin(
     )
   );
 
-  queryManyFunctionTypes.map((type: string) =>
+  postGetManyFunctionTypes.map((type: string) =>
     schema.post(
       type,
       async function (

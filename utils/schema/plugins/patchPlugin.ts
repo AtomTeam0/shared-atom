@@ -4,8 +4,8 @@ import * as mongoose from "mongoose";
 import { IUser } from "../../../interfaces/user.interface";
 import { userPatcher, userPatcherBoolean } from "../helpers/userHelpers";
 import {
-  queryManyFunctionTypes,
-  querySingleFunctionTypes,
+  postGetManyFunctionTypes,
+  postGetSingleFunctionTypes,
 } from "../helpers/schemaHelpers";
 
 export function patchObjectPlugin(
@@ -41,7 +41,7 @@ export function patchObjectPlugin(
     }
   );
 
-  querySingleFunctionTypes.map((type: string) =>
+  postGetSingleFunctionTypes.map((type: string) =>
     schema.post(
       type,
       async function (
@@ -57,7 +57,7 @@ export function patchObjectPlugin(
     )
   );
 
-  queryManyFunctionTypes.map((type: string) =>
+  postGetManyFunctionTypes.map((type: string) =>
     schema.post(
       type,
       async function (
@@ -112,7 +112,7 @@ export function patchBooleanPlugin(
     }
   );
 
-  querySingleFunctionTypes.map((type: string) =>
+  postGetSingleFunctionTypes.map((type: string) =>
     schema.post(
       type,
       async function (
@@ -128,7 +128,7 @@ export function patchBooleanPlugin(
     )
   );
 
-  queryManyFunctionTypes.map((type: string) =>
+  postGetManyFunctionTypes.map((type: string) =>
     schema.post(
       type,
       async function (

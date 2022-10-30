@@ -1,4 +1,8 @@
-export const querySingleFunctionTypes = [
+export const preCreationFunctionType = "save";
+
+export const preUpdateFunctionType = "findOneAndUpdate";
+
+export const postGetSingleFunctionTypes = [
   "findOne",
   "findOneAndDelete",
   "findOneAndRemove",
@@ -6,13 +10,9 @@ export const querySingleFunctionTypes = [
   "updateOne",
 ];
 
-export const queryManyFunctionTypes = ["count", "find", "update", "updateMany"];
+export const postGetManyFunctionTypes = ["count", "find", "update"];
 
-export const queryAllFunctionTypes = [
-  ...querySingleFunctionTypes,
-  ...queryManyFunctionTypes,
+export const postGetAllFunctionTypes = [
+  ...postGetSingleFunctionTypes,
+  ...postGetManyFunctionTypes,
 ];
-
-export const preCreationFunctionType = "save";
-
-export const preUpdateFunctionType = "findOneAndUpdate";
