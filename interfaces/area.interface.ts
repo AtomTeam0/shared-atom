@@ -7,8 +7,8 @@ export interface IArea {
 }
 
 export interface ICoordinate {
-  coordinateX: number;
-  coordinateY: number;
+  coordinateX: string;
+  coordinateY: string;
 }
 
 export interface IAreaPolygon {
