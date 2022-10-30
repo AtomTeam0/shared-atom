@@ -3,9 +3,6 @@ import { Request } from "express";
 import { wrapValidator } from "../helpers/wrapper";
 import { PermissionError } from "../errors/generalError";
 import { IPermissionSchema } from "./permissionSchema.interface";
-import { Permission } from "../../enums/Permission";
-
-const merge = require("lodash.merge");
 
 export const defaultValidationOptions: Joi.ValidationOptions = {
   abortEarly: false,
@@ -48,22 +45,13 @@ export const validateRequestByPermission = (
   options: Joi.ValidationOptions = defaultValidationOptions
 ) => {
   const validator = async (req: Request): Promise<void> => {
-    let schema: any;
-    if ((<any>global).permission === Permission.ADMIN) {
-      schema = Joi.object();
-      allValidations.map((validation: IPermissionSchema) =>
-        merge(schema, validation.schema)
-      );
-    } else {
-      const wantedValidation = allValidations.find((validation) =>
-        validation.permissions.includes((<any>global).permission)
-      );
-      if (!wantedValidation) {
-        throw new PermissionError();
-      }
-      schema = wantedValidation.schema;
+    const wantedValidation = allValidations.find((validation) =>
+      validation.permissions.includes((<any>global).permission)
+    );
+    if (!wantedValidation) {
+      throw new PermissionError();
     }
-    await validateRequest(schema, options, false)(req);
+    await validateRequest(wantedValidation.schema, options, false)(req);
   };
   return wrapValidator(validator);
 };
