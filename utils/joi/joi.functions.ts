@@ -1,10 +1,11 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import * as Joi from "joi";
 import { Request } from "express";
 import { wrapValidator } from "../helpers/wrapper";
 import { PermissionError } from "../errors/generalError";
 import { IPermissionSchema } from "./permissionSchema.interface";
 import { Permission } from "../../enums/Permission";
+
+const merge = require("lodash.merge");
 
 export const defaultValidationOptions: Joi.ValidationOptions = {
   abortEarly: false,
@@ -48,11 +49,9 @@ export const validateRequestByPermission = (
 ) => {
   const validator = async (req: Request): Promise<void> => {
     if ((<any>global).permission === Permission.ADMIN) {
-      const adminSchema = Object.assign(
-        {},
-        ...allValidations.map(
-          (validation: IPermissionSchema) => validation.schema
-        )
+      const adminSchema = Joi.object();
+      allValidations.map((validation: IPermissionSchema) =>
+        merge(adminSchema, validation.schema)
       );
       await validateRequest(adminSchema, options, false)(req);
     } else {
