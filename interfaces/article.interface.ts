@@ -10,6 +10,10 @@ interface IBestSoldier {
   image: string;
 }
 
+export interface IArticleQuery {
+  category?: Category;
+}
+
 export interface IArticle {
   id?: string;
   createdAt: Date;
