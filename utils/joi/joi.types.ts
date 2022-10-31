@@ -138,6 +138,9 @@ export const joiEnum = (enumObj: { [k: string]: string }) =>
 export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
   Joi.joiMongoId().getByIdFunc(getByIdFunc);
 
+export const joiMongoIdArray = (getByIdFunc?: (id: string) => any) =>
+  Joi.joiMongoIdArray().getByIdFunc(getByIdFunc);
+
 export const joiBlob = Joi.joiBlob();
 
 export const joiPersonalId = Joi.string().regex(personalIdRegex);
