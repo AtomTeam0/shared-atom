@@ -22,7 +22,8 @@ export const RPCClientRequest = (
     params?: { [k: string]: any }
   ): Promise<any> => {
     console.log(`-- ${route} RPC request was called --`);
-    const isError = (obj: any) => !!obj.name && !!obj.message && !!obj.status;
+    const isError = (obj: any) =>
+      !!obj && !!obj.name && !!obj.message && !!obj.status;
     const { userId, permission } = <any>global;
 
     const response = await rpcClient.request(route, {
