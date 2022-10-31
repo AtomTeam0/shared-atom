@@ -21,11 +21,11 @@ export const RPCClientRequest = (
     route: string,
     params?: { [k: string]: any }
   ): Promise<any> => {
-    console.log(`-- ${route} RPC request was called --`);
     const isError = (obj: any) =>
-      !!obj && !!obj.name && !!obj.message && !!obj.status;
+      obj ? !!obj.name && !!obj.message && !!obj.status : false;
     const { userId, permission } = <any>global;
 
+    console.log(`-- ${route} RPC request was called --`);
     const response = await rpcClient.request(route, {
       ...(userId && { userId }),
       ...(permission && { permission }),
@@ -46,22 +46,17 @@ export const RPCClientRequest = (
 export const RPCServerRequest =
   (
     managerFunction: (...args: any) => Promise<any>,
-    validator?: Joi.ObjectSchema<any>
+    schemaValidation?: Joi.ObjectSchema<any>
   ): any =>
   async (payload: IRPCPayload) => {
-    if (validator) {
-      const { error } = validator.validate(
-        payload.params,
-        defaultValidationOptions
-      );
-      if (error) {
-        return new RPCFunctionError(error);
-      }
-    }
-    initPluginUsage(payload.userId, payload.permission, payload.skipPlugins);
-
     let result;
     try {
+      if (schemaValidation) {
+        await schemaValidation
+          .unknown()
+          .validateAsync(payload.params, defaultValidationOptions);
+      }
+      initPluginUsage(payload.userId, payload.permission, payload.skipPlugins);
       result = await managerFunction(
         ...(payload.params ? Object.values(payload.params) : [])
       );
