@@ -1,5 +1,9 @@
 import { IArea } from "./area.interface";
 
+export interface INewsQuery {
+  area: string;
+}
+
 export interface INews {
   id?: string;
   createdAt: Date;

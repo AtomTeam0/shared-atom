@@ -5,7 +5,7 @@ import { IMedia } from "./media.interface";
 import { IPakal } from "./pakal.interface";
 
 export interface IContentQuery {
-  itemId: string;
+  item: string;
   contentId: string;
   contentType: ContentType;
 }

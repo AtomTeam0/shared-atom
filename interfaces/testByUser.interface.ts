@@ -9,8 +9,8 @@ export interface ITestResult {
 }
 
 export interface ITestByUserQuery {
-  testId?: string;
-  userId?: string;
+  test?: string;
+  user?: string;
 }
 
 export interface ITestByUser {

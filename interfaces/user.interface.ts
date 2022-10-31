@@ -9,8 +9,8 @@ export interface IUserQuery {
 }
 
 export interface ILastWatchedQuery {
+  area: string;
   section: Section;
-  areaId: string;
 }
 export interface IUserChapterPatch {
   mode?: WatchMode;
