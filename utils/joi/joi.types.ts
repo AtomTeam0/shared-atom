@@ -58,7 +58,10 @@ const mongoIdExtention: JoiBase.ExtensionFactory = (joi: any) => ({
       error = helpers.error("joiMongoId.invalid");
     } else if (helpers.schema.$_getFlag("func")) {
       try {
+        const { skipPlugins } = <any>global;
+        (<any>global).skipPlugins = true;
         const res = await helpers.schema.$_getFlag("func")(value);
+        (<any>global).skipPlugins = skipPlugins;
         if (!res) {
           error = helpers.error("joiMongoId.notFound");
         }
@@ -107,9 +110,12 @@ const mongoIdArrayExtention: JoiBase.ExtensionFactory = (joi: any) => ({
       error = helpers.error("joiMongoIdArray.invalid");
     } else if (helpers.schema.$_getFlag("func")) {
       try {
+        const { skipPlugins } = <any>global;
+        (<any>global).skipPlugins = true;
         const res = await Promise.all(
           value.map(async (id: string) => helpers.schema.$_getFlag("func")(id))
         );
+        (<any>global).skipPlugins = skipPlugins;
         if (res.some((result: any) => !result)) {
           error = helpers.error("joiMongoIdArray.notFound");
         }

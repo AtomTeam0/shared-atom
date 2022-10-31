@@ -2,64 +2,9 @@ import { Request, Response, NextFunction } from "express";
 import { Permission } from "../enums/Permission";
 import { IUser } from "../interfaces/user.interface";
 import { AuthenticationError, PermissionError } from "./errors/generalError";
-import {
-  IdArrayNotFoundError,
-  IdNotFoundError,
-} from "./errors/validationError";
 import { wrapAsyncMiddleware } from "./helpers/wrapper";
 import { UsersRPCService } from "./rpc/services/user.RPCservice";
 import { initPluginUsage } from "./schema/helpers/pluginHelpers";
-
-export const idExistsInDb = async (
-  id: any | undefined,
-  getFunction: (id: string) => Promise<any>
-) => {
-  const isString = (value: unknown) => typeof value === "string";
-
-  if (id) {
-    if (!isString(id)) {
-      throw new IdNotFoundError(getFunction.name);
-    }
-
-    const { depth, skipPlugins } = <any>global;
-    (<any>global).skipPlugins = true;
-
-    const result = await getFunction(id);
-    if (!result) {
-      throw new IdNotFoundError(getFunction.name);
-    }
-
-    (<any>global).depth = depth;
-    (<any>global).skipPlugins = skipPlugins;
-    return result;
-  }
-  return undefined;
-};
-
-export const idArrayExistsInDb = async (
-  idArray: any[] | undefined,
-  getFunction: (id: string) => Promise<any>
-) => {
-  const isNonEmptyArrayOfStrings = (value: unknown): value is string[] =>
-    Array.isArray(value) &&
-    value.length > 0 &&
-    value.every((item) => typeof item === "string");
-
-  if (idArray) {
-    if (!isNonEmptyArrayOfStrings(idArray)) {
-      throw new IdArrayNotFoundError(getFunction.name);
-    }
-    const results = await Promise.all(
-      idArray.map(async (id: string) => getFunction(id))
-    );
-    if (results.some((result: any) => !result)) {
-      throw new IdArrayNotFoundError(getFunction.name);
-    }
-
-    return results;
-  }
-  return undefined;
-};
 
 export const validateUserAndPermission = (
   permissions: Permission[] = [...Object.values(Permission)]
@@ -82,7 +27,7 @@ export const validateUserAndPermission = (
     initPluginUsage(user.id, user.permission);
 
     try {
-      await idExistsInDb(user.id, UsersRPCService.getUserById);
+      await UsersRPCService.getUserById(user.id);
     } catch (err) {
       return err;
     }
