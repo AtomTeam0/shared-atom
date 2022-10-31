@@ -56,7 +56,7 @@ const mongoIdExtention: JoiBase.ExtensionFactory = (joi: any) => ({
     const isValid = mongoIdRegex.test(value);
     if (!isValid) {
       error = helpers.error("joiMongoId.invalid");
-    } else {
+    } else if (helpers.schema.$_getFlag("func")) {
       try {
         const res = await helpers.schema.$_getFlag("func")(value);
         if (!res) {
@@ -105,7 +105,7 @@ const mongoIdArrayExtention: JoiBase.ExtensionFactory = (joi: any) => ({
     );
     if (!isValid) {
       error = helpers.error("joiMongoIdArray.invalid");
-    } else {
+    } else if (helpers.schema.$_getFlag("func")) {
       try {
         const res = await Promise.all(
           value.map(async (id: string) => helpers.schema.$_getFlag("func")(id))
@@ -135,7 +135,7 @@ const Joi = JoiBase.extend(
 export const joiEnum = (enumObj: { [k: string]: string }) =>
   Joi.string().valid(...Object.values(enumObj));
 
-export const joiMongoId = (getByIdFunc: (val: string) => any) =>
+export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
   Joi.joiMongoId().getByIdFunc(getByIdFunc);
 
 export const joiBlob = Joi.joiBlob();
