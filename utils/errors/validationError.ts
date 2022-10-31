@@ -5,15 +5,36 @@ export class RPCFunctionError extends ServerError {
     super(`RPC function error${err && `: ${err.message}`}`, 400);
   }
 }
+export class InvalidMongoIdError extends UserError {
+  constructor(propertyName?: string) {
+    super(
+      `id given is not a valid mongo id${
+        propertyName ? ` (${propertyName})` : ""
+      }`,
+      403
+    );
+  }
+}
+
 export class IdNotFoundError extends UserError {
-  constructor(funcName: string) {
-    super(`id given in ${funcName} is not found in the db`, 404);
+  constructor(propertyName?: string) {
+    super(
+      `id given is note found in the db${
+        propertyName ? ` (${propertyName})` : ""
+      }`,
+      404
+    );
   }
 }
 
 export class IdArrayNotFoundError extends UserError {
-  constructor(funcName: string) {
-    super(`one or more id's given in ${funcName} is not found in the db`, 404);
+  constructor(propertyName?: string) {
+    super(
+      `one or more id's given are not found in the db${
+        propertyName ? ` (${propertyName})` : ""
+      }`,
+      404
+    );
   }
 }
 

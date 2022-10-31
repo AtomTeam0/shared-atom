@@ -1,9 +1,12 @@
-import * as JoiBase from "joi";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
+import * as Joi from "joi";
+import {
+  IdNotFoundError,
+  InvalidMongoIdError,
+} from "../errors/validationError";
 
 // regex
-const base64regex =
-  /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
-
 const mongoIdRegex = /^[0-9a-fA-F]{24}$/;
 
 const personalIdRegex = /^[0-9]{9}$/;
@@ -12,142 +15,33 @@ const pdfURLRegex = /^(http.+)(\.pdf)$/;
 
 const coordinateAxisRegex = /^-?[0-9]{1,3}(?:\.[0-9]{1,15})?$/;
 
-// extentions
-const blobExtention: JoiBase.ExtensionFactory = (joi: any) => ({
-  type: "joiBlob",
-  base: joi.string(),
-  messages: {
-    "joiBlob.invalid": "{{#label}} must be a base64 string",
-  },
-  validate(value, helpers) {
-    const isValid = base64regex.test(value);
-    if (!isValid) {
-      return { value, errors: helpers.error("joiBlob.invalid") };
-    }
-    return { value };
-  },
-});
-
-const mongoIdExtention: JoiBase.ExtensionFactory = (joi: any) => ({
-  type: "joiMongoId",
-  base: joi.string(),
-  messages: {
-    "joiMongoId.invalid": "{{#label}} must be a mongo id string",
-    "joiMongoId.notFound": "{{#label}} was not found in the db",
-  },
-  rules: {
-    getByIdFunc: {
-      multi: true,
-      method(func) {
-        return this.$_setFlag("func", func);
-      },
-      args: [
-        {
-          name: "func",
-          ref: true,
-          assert: (value) => typeof value === "function",
-          message: "must be a function",
-        },
-      ],
-    },
-  },
-  async validate(value, helpers) {
-    let error;
-    const isValid = mongoIdRegex.test(value);
-    if (!isValid) {
-      error = helpers.error("joiMongoId.invalid");
-    } else if (helpers.schema.$_getFlag("func")) {
-      try {
+// exported types
+export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
+  Joi.string().external(async (value: string | undefined, helpers: any) => {
+    if (value) {
+      const isValid = mongoIdRegex.test(value);
+      if (!isValid) {
+        throw new InvalidMongoIdError();
+      } else if (getByIdFunc) {
         const { skipPlugins } = <any>global;
         (<any>global).skipPlugins = true;
-        const res = await helpers.schema.$_getFlag("func")(value);
+        const res = await getByIdFunc(value);
         (<any>global).skipPlugins = skipPlugins;
         if (!res) {
-          error = helpers.error("joiMongoId.notFound");
+          throw new IdNotFoundError();
         }
-      } catch (err) {
-        error = err;
       }
     }
+    return value;
+  });
 
-    if (error) {
-      return { value, errors: error };
-    }
-    return { value };
-  },
-});
+export const joiMongoIdArray = (getByIdFunc?: (id: string) => any) =>
+  Joi.array().items(joiMongoId(getByIdFunc));
 
-const mongoIdArrayExtention: JoiBase.ExtensionFactory = (joi: any) => ({
-  type: "joiMongoIdArray",
-  base: joi.array().items(joi.string()),
-  messages: {
-    "joiMongoIdArray.invalid": "{{#label}} all items must be a mongo id string",
-    "joiMongoIdArray.notFound":
-      "one or more id`s from {{#label}} was not found in the db",
-  },
-  rules: {
-    getByIdFunc: {
-      multi: true,
-      method(func) {
-        return this.$_setFlag("func", func);
-      },
-      args: [
-        {
-          name: "func",
-          ref: true,
-          assert: (value) => typeof value === "function",
-          message: "must be a function",
-        },
-      ],
-    },
-  },
-  async validate(value, helpers) {
-    let error;
-    const isValid = value.every((singleVal: string) =>
-      mongoIdRegex.test(singleVal)
-    );
-    if (!isValid) {
-      error = helpers.error("joiMongoIdArray.invalid");
-    } else if (helpers.schema.$_getFlag("func")) {
-      try {
-        const { skipPlugins } = <any>global;
-        (<any>global).skipPlugins = true;
-        const res = await Promise.all(
-          value.map(async (id: string) => helpers.schema.$_getFlag("func")(id))
-        );
-        (<any>global).skipPlugins = skipPlugins;
-        if (res.some((result: any) => !result)) {
-          error = helpers.error("joiMongoIdArray.notFound");
-        }
-      } catch (err) {
-        error = err;
-      }
-    }
-
-    if (error) {
-      return { value, errors: error };
-    }
-    return { value };
-  },
-});
-
-const Joi = JoiBase.extend(
-  blobExtention,
-  mongoIdExtention,
-  mongoIdArrayExtention
-);
-
-// exported types
 export const joiEnum = (enumObj: { [k: string]: string }) =>
   Joi.string().valid(...Object.values(enumObj));
 
-export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
-  Joi.joiMongoId().getByIdFunc(getByIdFunc);
-
-export const joiMongoIdArray = (getByIdFunc?: (id: string) => any) =>
-  Joi.joiMongoIdArray().getByIdFunc(getByIdFunc);
-
-export const joiBlob = Joi.joiBlob();
+export const joiBlob = Joi.string().base64();
 
 export const joiPersonalId = Joi.string().regex(personalIdRegex);
 

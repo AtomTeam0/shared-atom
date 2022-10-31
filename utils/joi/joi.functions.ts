@@ -27,11 +27,7 @@ export const validateRequest = (
   doesWrap = true
 ): any => {
   const validator = async (req: Request): Promise<void> => {
-    const { error, value } = schema.unknown().validate(req, options);
-    if (error) {
-      throw error;
-    }
-
+    const value = await schema.unknown().validateAsync(req, options);
     if (options.convert) {
       normalizeRequest(req, value);
     }
