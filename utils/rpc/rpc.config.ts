@@ -15,4 +15,8 @@ export const RPCconfig = {
     rpcPort: +(process.env.APPLICATION_RPC_PORT || 5000),
     rpcHostname: process.env.ITEM_COMPOSITOR_RPC_HOST || "localhost",
   },
+  newsService: {
+    rpcPort: +(process.env.APPLICATION_RPC_PORT || 5000),
+    rpcHostname: process.env.NEWS_COMPOSITOR_RPC_HOST || "localhost",
+  },
 };

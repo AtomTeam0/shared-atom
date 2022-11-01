@@ -14,6 +14,7 @@ import {
 } from "./utils/errors/errorHandler";
 import { initLogger } from "./utils/helpers/logger";
 import { IServerConfig } from "./interfaces/helpers/serverConfig.interface";
+import { SocketServer } from "./utils/schema/helpers/socketHelpers";
 
 export class Server {
   public app: express.Application;
@@ -27,15 +28,17 @@ export class Server {
   public static bootstrap(
     config: IServerConfig,
     router: Router,
-    RpcServer?: jayson.Server
+    RpcServer?: jayson.Server,
+    isSocket = false
   ): Server {
-    return new Server(config, router, RpcServer);
+    return new Server(config, router, RpcServer, isSocket);
   }
 
   private constructor(
     config: IServerConfig,
     router: Router,
-    RpcServer?: jayson.Server
+    RpcServer?: jayson.Server,
+    isSocket = false
   ) {
     // handle express
     this.app = express();
@@ -71,6 +74,11 @@ export class Server {
           "RPC server started"
         );
       });
+    }
+
+    if (isSocket) {
+      const socket = new SocketServer(this.server);
+      console.log(`socket server running - ${socket}`);
     }
   }
 
