@@ -26,16 +26,16 @@ export class SocketServer {
     }
   }
 
-  public static updateSocketRoom(
-    joinRoomId: string,
-    leaveRoomId: string
-  ): void {
+  public static updateSocketRoom(roomOptions: {
+    joinRoomId: string;
+    leaveRoomId: string;
+  }): void {
     const socket = SocketServer.socketIOServer?.sockets.sockets.get(
       (<any>global).userId
     );
     if (socket) {
-      socket?.leave(leaveRoomId);
-      socket?.join(joinRoomId);
+      socket?.leave(roomOptions.leaveRoomId);
+      socket?.join(roomOptions.joinRoomId);
     }
   }
 }
