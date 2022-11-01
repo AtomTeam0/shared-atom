@@ -26,10 +26,10 @@ export class SocketServer {
     }
   }
 
-  public static updateSocketRoom(roomOptions: {
+  public static async updateSocketRoom(roomOptions: {
     joinRoomId: string;
     leaveRoomId: string;
-  }): void {
+  }): Promise<void> {
     const socket = SocketServer.socketIOServer?.sockets.sockets.get(
       (<any>global).userId
     );
