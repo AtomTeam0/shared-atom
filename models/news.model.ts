@@ -1,6 +1,7 @@
 import * as mongoose from "mongoose";
 import { INews } from "../interfaces/news.interface";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
+import { socketPlugin } from "../utils/schema/plugins/socketPlugin";
 import { AreaModel } from "./area.model";
 
 const NewsSchema: mongoose.Schema = new mongoose.Schema(
@@ -34,6 +35,11 @@ NewsSchema.index({ createdAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 7 });
 
 // plugins
 NewsSchema.plugin(populatePlugin, [{ path: "area", ref: "areas" }]);
+NewsSchema.plugin(socketPlugin, {
+  eventName: "createNews",
+  roomNameProperty: "area",
+  innerRoomNameProperty: "name",
+});
 
 export const NewsModel = mongoose.model<INews & mongoose.Document>(
   "news",
