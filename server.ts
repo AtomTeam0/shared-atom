@@ -14,7 +14,9 @@ import {
 } from "./utils/errors/errorHandler";
 import { initLogger } from "./utils/helpers/logger";
 import { IServerConfig } from "./interfaces/helpers/serverConfig.interface";
-import { SocketServer } from "./utils/schema/helpers/socketHelpers";
+import { setSocketServer } from "./utils/schema/helpers/socketHelpers";
+
+const contextService = require("request-context");
 
 export class Server {
   public app: express.Application;
@@ -45,6 +47,7 @@ export class Server {
     this.config = config;
     this.logger = initLogger(config);
     this.configureMiddlewares();
+    this.app.use(contextService.middleware("global"));
     this.app.use(router);
     this.initializeErrorHandler();
     this.server = http.createServer(this.app);
@@ -77,8 +80,7 @@ export class Server {
     }
 
     if (isSocket) {
-      const socket = new SocketServer(this.server);
-      console.log(`socket server running - ${socket}`);
+      setSocketServer(this.server);
     }
   }
 

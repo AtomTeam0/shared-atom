@@ -11,21 +11,24 @@ import {
   getContainerNameByFileType,
   getMimeTypeByFileType,
 } from "../../../enums/helpers/FileTypes";
+import { Global } from "../../../enums/helpers/Global";
+
+const contextService = require("request-context");
 
 const AZURE_ACCOUNT_NAME = process.env.AZURE_ACCOUNT_NAME || "";
 const AZURE_ACCOUNT_KEY = process.env.AZURE_ACCOUNT_KEY || "";
 const AZURE_STORAGE_CONNECTION_STRING = `DefaultEndpointsProtocol=https;AccountName=${AZURE_ACCOUNT_NAME};AccountKey=${AZURE_ACCOUNT_KEY};EndpointSuffix=core.windows.net`;
 
 const getBlobClient = () => {
-  if ((<any>global).blobClient) {
-    return (<any>global).blobClient;
+  if (contextService.get(Global.BLOB_CLIENT)) {
+    return contextService.get(Global.BLOB_CLIENT);
   }
 
   const blobClient = BlobServiceClient.fromConnectionString(
     AZURE_STORAGE_CONNECTION_STRING
   );
 
-  (<any>global).blobClient = blobClient;
+  contextService.set(Global.BLOB_CLIENT, blobClient);
   return blobClient;
 };
 

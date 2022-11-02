@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 import * as Joi from "joi";
+import { Global } from "../../enums/helpers/Global";
 import {
   IdNotFoundError,
   InvalidMongoIdError,
 } from "../errors/validationError";
+
+const contextService = require("request-context");
 
 // regex
 const mongoIdRegex = /^[0-9a-fA-F]{24}$/;
@@ -23,10 +26,10 @@ export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
       if (!isValid) {
         throw new InvalidMongoIdError();
       } else if (getByIdFunc) {
-        const { skipPlugins } = <any>global;
-        (<any>global).skipPlugins = true;
+        const skipPlugins = contextService.get(Global.SKIP_PLUGINS);
+        contextService.set(Global.SKIP_PLUGINS, true);
         const res = await getByIdFunc(value);
-        (<any>global).skipPlugins = skipPlugins;
+        contextService.set(Global.SKIP_PLUGINS, skipPlugins);
         if (!res) {
           throw new IdNotFoundError();
         }

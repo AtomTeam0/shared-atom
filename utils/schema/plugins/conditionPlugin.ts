@@ -1,6 +1,9 @@
 import * as mongoose from "mongoose";
+import { Global } from "../../../enums/helpers/Global";
 import { Permission } from "../../../enums/Permission";
 import { postGetAllFunctionTypes } from "../helpers/schemaHelpers";
+
+const contextService = require("request-context");
 
 export function conditionPlugin(
   schema: mongoose.Schema,
@@ -17,10 +20,12 @@ export function conditionPlugin(
       next: mongoose.HookNextFunction
     ) {
       if (
-        !(<any>global).skipPlugins &&
+        !contextService.get(Global.SKIP_PLUGINS) &&
         !(
-          (<any>global).permission &&
-          options.bypassPermissions.includes((<any>global).permission)
+          contextService.get(Global.PERMISSION) &&
+          options.bypassPermissions.includes(
+            contextService.get(Global.PERMISSION)
+          )
         )
       ) {
         this.pipeline().unshift({
@@ -34,10 +39,12 @@ export function conditionPlugin(
   postGetAllFunctionTypes.map((type: string) =>
     schema.pre(type, function (next: mongoose.HookNextFunction) {
       if (
-        !(<any>global).skipPlugins &&
+        !contextService.get(Global.SKIP_PLUGINS) &&
         !(
-          (<any>global).permission &&
-          options.bypassPermissions.includes((<any>global).permission)
+          contextService.get(Global.PERMISSION) &&
+          options.bypassPermissions.includes(
+            contextService.get(Global.PERMISSION)
+          )
         )
       ) {
         this.where({ [options.propertyName]: options.wantedVal });

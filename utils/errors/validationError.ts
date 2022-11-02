@@ -19,7 +19,7 @@ export class InvalidMongoIdError extends UserError {
 export class IdNotFoundError extends UserError {
   constructor(propertyName?: string) {
     super(
-      `id given is note found in the db${
+      `id given is not found in the db${
         propertyName ? ` (${propertyName})` : ""
       }`,
       404

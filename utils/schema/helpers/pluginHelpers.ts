@@ -1,16 +1,19 @@
+import { Global } from "../../../enums/helpers/Global";
 import { Permission } from "../../../enums/Permission";
+
+const contextService = require("request-context");
 
 export const initPluginUsage = (
   userId?: string,
   permission?: Permission,
   skipPlugins = false
 ): void => {
-  (<any>global).depth = 1;
-  (<any>global).skipPlugins = skipPlugins;
+  contextService.set(Global.DEPTH, 1);
+  contextService.set(Global.SKIP_PLUGINS, skipPlugins);
   if (userId) {
-    (<any>global).userId = userId;
+    contextService.set(Global.USERID, userId);
   }
   if (permission) {
-    (<any>global).permission = permission;
+    contextService.set(Global.PERMISSION, permission);
   }
 };

@@ -3,6 +3,9 @@ import { Request } from "express";
 import { wrapValidator } from "../helpers/wrapper";
 import { PermissionError } from "../errors/generalError";
 import { IPermissionSchema } from "./permissionSchema.interface";
+import { Global } from "../../enums/helpers/Global";
+
+const contextService = require("request-context");
 
 export const defaultValidationOptions: Joi.ValidationOptions = {
   abortEarly: false,
@@ -42,7 +45,7 @@ export const validateRequestByPermission = (
 ) => {
   const validator = async (req: Request): Promise<void> => {
     const wantedValidation = allValidations.find((validation) =>
-      validation.permissions.includes((<any>global).permission)
+      validation.permissions.includes(contextService.get(Global.PERMISSION))
     );
     if (!wantedValidation) {
       throw new PermissionError();
