@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 import { preCreationFunctionType } from "../helpers/schemaHelpers";
-import { SocketServer } from "../helpers/socketHelpers";
+import { emitEvent } from "../helpers/socketHelpers";
 
 export function socketPlugin(
   schema: mongoose.Schema,
@@ -14,7 +14,7 @@ export function socketPlugin(
     preCreationFunctionType,
     async function (this: any, next: (err?: mongoose.CallbackError) => void) {
       if (options.roomNameProperty) {
-        SocketServer.emitEvent(
+        emitEvent(
           options.eventName,
           this,
           options.innerRoomNameProperty
@@ -22,7 +22,7 @@ export function socketPlugin(
             : this[options.roomNameProperty]
         );
       } else {
-        SocketServer.emitEvent(options.eventName, this);
+        emitEvent(options.eventName, this);
       }
       next();
     }
