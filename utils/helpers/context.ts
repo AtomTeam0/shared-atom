@@ -1,16 +1,6 @@
-import * as express from "express";
 import { Global } from "../../enums/helpers/Global";
 
 const context = require("node-execution-context");
-
-export const contextMiddleware = (
-  error: Error,
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
-  context.run(next, {});
-};
 
 export const createContext = (
   defaultVal: Partial<Record<Global, unknown>> = {}
