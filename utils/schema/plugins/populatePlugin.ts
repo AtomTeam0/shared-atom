@@ -32,13 +32,13 @@ export function populatePlugin(
 
   postGetAllFunctionTypes.map((type: string) =>
     schema.pre(type, function (next: mongoose.HookNextFunction) {
-      const depth = contextService.get(Global.DEPTH);
-      if (!depth) {
-        contextService.set(Global.DEPTH, 1);
-      }
-      if (!contextService.get(Global.SKIP_PLUGINS) && depth <= 3) {
-        options.map((p) => this.populate(p.path));
-        contextService.set(Global.DEPTH, depth + 1);
+      if (!contextService.get(Global.SKIP_PLUGINS)) {
+        options.map((p) =>
+          this.populate({
+            path: p.path,
+            options: { options: { _depth: 1, maxDepth: 3 } },
+          })
+        );
       }
       next();
     })

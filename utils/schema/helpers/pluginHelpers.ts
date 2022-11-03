@@ -8,7 +8,6 @@ export const initPluginUsage = (
   permission?: Permission,
   skipPlugins = false
 ): void => {
-  contextService.set(Global.DEPTH, 1);
   contextService.set(Global.SKIP_PLUGINS, skipPlugins);
   if (userId) {
     contextService.set(Global.USERID, userId);
