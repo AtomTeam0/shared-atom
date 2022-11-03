@@ -6,8 +6,9 @@ import {
   IdNotFoundError,
   InvalidMongoIdError,
 } from "../errors/validationError";
+import { getContext, setContext } from "../helpers/context";
 
-const contextService = require("request-context");
+const context = require("node-execution-context");
 
 // regex
 const mongoIdRegex = /^[0-9a-fA-F]{24}$/;
@@ -26,10 +27,10 @@ export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
       if (!isValid) {
         throw new InvalidMongoIdError();
       } else if (getByIdFunc) {
-        const skipPlugins = contextService.get(Global.SKIP_PLUGINS);
-        contextService.set(Global.SKIP_PLUGINS, true);
+        const skipPlugins = getContext(Global.SKIP_PLUGINS);
+        setContext({ skipPlugins: true });
         const res = await getByIdFunc(value);
-        contextService.set(Global.SKIP_PLUGINS, skipPlugins);
+        setContext({ skipPlugins });
         if (!res) {
           throw new IdNotFoundError();
         }

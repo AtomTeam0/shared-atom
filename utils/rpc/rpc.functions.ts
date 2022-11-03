@@ -2,8 +2,8 @@ import * as jayson from "jayson/promise";
 import * as Joi from "joi";
 import { IRPCPayload } from "../../interfaces/helpers/rpcPayload.interface";
 import { RPCFunctionError } from "../errors/validationError";
+import { createContext } from "../helpers/context";
 import { defaultValidationOptions } from "../joi/joi.functions";
-import { initPluginUsage } from "../schema/helpers/pluginHelpers";
 
 export const RPCClientRequest = (
   skipPlugins = true
@@ -56,7 +56,11 @@ export const RPCServerRequest =
           .unknown()
           .validateAsync(payload.params, defaultValidationOptions);
       }
-      initPluginUsage(payload.userId, payload.permission, payload.skipPlugins);
+      createContext({
+        ...(payload.userId && { userId: payload.userId }),
+        ...(payload.permission && { permission: payload.permission }),
+        skipPlugins: payload.skipPlugins,
+      });
       result = await managerFunction(
         ...(payload.params ? Object.values(payload.params) : [])
       );

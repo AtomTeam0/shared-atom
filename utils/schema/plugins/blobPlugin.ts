@@ -3,6 +3,7 @@
 import * as mongoose from "mongoose";
 import { FileTypes } from "../../../enums/helpers/FileTypes";
 import { Global } from "../../../enums/helpers/Global";
+import { getContext, setContext } from "../../helpers/context";
 import { createBlob, downloadBlob, updateBlob } from "../helpers/blobHelpers";
 import {
   postGetSingleFunctionTypes,
@@ -10,8 +11,6 @@ import {
   preCreationFunctionType,
   preUpdateFunctionType,
 } from "../helpers/schemaHelpers";
-
-const contextService = require("request-context");
 
 export function blobPlugin(
   schema: mongoose.Schema,
@@ -27,10 +26,10 @@ export function blobPlugin(
     fatherProperty?: string
   ) => {
     const wantedId = query.getFilter()._id;
-    const skipPlugins = contextService.get(Global.SKIP_PLUGINS);
-    contextService.set(Global.SKIP_PLUGINS, true);
+    const skipPlugins = getContext(Global.SKIP_PLUGINS);
+    setContext({ skipPlugins: true });
     const oldDoc = await query.model.findById(wantedId).exec();
-    contextService.set(Global.SKIP_PLUGINS, skipPlugins);
+    setContext({ skipPlugins });
     if (oldDoc) {
       return fatherProperty
         ? oldDoc[fatherProperty][porpertyName]
@@ -152,7 +151,7 @@ export function blobPlugin(
       res: any[],
       next: (err?: mongoose.CallbackError) => void
     ) {
-      if (!contextService.get(Global.SKIP_PLUGINS) && !!res) {
+      if (!getContext(Global.SKIP_PLUGINS) && !!res) {
         await Promise.all(
           res.map(async (item) => {
             Object.assign(item, ...(await downloadProperties(item)));
@@ -171,7 +170,7 @@ export function blobPlugin(
         res: any,
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!contextService.get(Global.SKIP_PLUGINS) && !!res) {
+        if (!getContext(Global.SKIP_PLUGINS) && !!res) {
           Object.assign(res._doc, ...(await downloadProperties(res._doc)));
         }
         next();
@@ -187,7 +186,7 @@ export function blobPlugin(
         res: any[],
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!contextService.get(Global.SKIP_PLUGINS) && !!res) {
+        if (!getContext(Global.SKIP_PLUGINS) && !!res) {
           await Promise.all(
             res.map(async (item: any) => {
               Object.assign(

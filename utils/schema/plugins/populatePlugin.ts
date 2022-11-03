@@ -1,8 +1,7 @@
 import * as mongoose from "mongoose";
 import { Global } from "../../../enums/helpers/Global";
+import { getContext } from "../../helpers/context";
 import { postGetAllFunctionTypes } from "../helpers/schemaHelpers";
-
-const contextService = require("request-context");
 
 export function populatePlugin(
   schema: mongoose.Schema,
@@ -14,7 +13,7 @@ export function populatePlugin(
       this: mongoose.Aggregate<any>,
       next: mongoose.HookNextFunction
     ) {
-      if (!contextService.get(Global.SKIP_PLUGINS)) {
+      if (!getContext(Global.SKIP_PLUGINS)) {
         options.forEach((p) => {
           this.pipeline().unshift({
             $lookup: {
@@ -32,7 +31,7 @@ export function populatePlugin(
 
   postGetAllFunctionTypes.map((type: string) =>
     schema.pre(type, function (next: mongoose.HookNextFunction) {
-      if (!contextService.get(Global.SKIP_PLUGINS)) {
+      if (!getContext(Global.SKIP_PLUGINS)) {
         options.map((p) =>
           this.populate({
             path: p.path,
