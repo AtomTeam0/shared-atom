@@ -1,3 +1,4 @@
+import { Global } from "../../../enums/helpers/Global";
 import { IUser } from "../../../interfaces/user.interface";
 import { getContext } from "../../helpers/context";
 import { UsersRPCService } from "../../rpc/services/user.RPCservice";

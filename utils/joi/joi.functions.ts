@@ -4,6 +4,7 @@ import { wrapValidator } from "../helpers/wrapper";
 import { PermissionError } from "../errors/generalError";
 import { IPermissionSchema } from "./permissionSchema.interface";
 import { getContext } from "../helpers/context";
+import { Global } from "../../enums/helpers/Global";
 
 export const defaultValidationOptions: Joi.ValidationOptions = {
   abortEarly: false,
