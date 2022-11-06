@@ -7,6 +7,7 @@
     "@azure/storage-blob": "^12.11.0",
     "@joi/date": "^2.1.0",
     "body-parser": "^1.20.0",
+    "continuation-local-storage": "^3.2.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.18.1",
@@ -15,7 +16,6 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.15",
     "morgan": "^1.10.0",
-    "node-execution-context": "^3.1.0",
     "socket.io": "^4.5.3",
     "uuid": "^9.0.0",
     "winston": "^3.8.1"

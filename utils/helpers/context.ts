@@ -1,15 +1,21 @@
 import { Global } from "../../enums/helpers/Global";
 
-const context = require("node-execution-context");
+const context = require("continuation-local-storage");
 
-export const createContext = (
-  defaultVal: Partial<Record<Global, unknown>> = {}
-) => {
-  context.create(defaultVal);
+const nameSpace = "global";
+
+export const createContext = () => {
+  context.createNamespace();
 };
 
-export const getContext = (property: Global): any => context.get()[property];
+export const getContext = (property: Global): any => {
+  const session = context.getNamespace(nameSpace);
+  return session && session.get(property);
+};
 
-export const setContext = (obj: Partial<Record<Global, unknown>>): void => {
-  context.set({ ...context.get(), ...obj });
+export const setContext = (property: Global, value: any): void => {
+  const session = context.getNamespace(nameSpace);
+  if (session) {
+    session.set(property, value);
+  }
 };

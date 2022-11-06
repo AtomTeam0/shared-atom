@@ -27,9 +27,9 @@ export function blobPlugin(
   ) => {
     const wantedId = query.getFilter()._id;
     const skipPlugins = getContext(Global.SKIP_PLUGINS);
-    setContext({ skipPlugins: true });
+    setContext(Global.SKIP_PLUGINS, true);
     const oldDoc = await query.model.findById(wantedId).exec();
-    setContext({ skipPlugins });
+    setContext(Global.SKIP_PLUGINS, skipPlugins);
     if (oldDoc) {
       return fatherProperty
         ? oldDoc[fatherProperty][porpertyName]

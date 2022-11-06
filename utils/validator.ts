@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from "express";
+import { Global } from "../enums/helpers/Global";
 import { Permission } from "../enums/Permission";
 import { IUser } from "../interfaces/user.interface";
 import { AuthenticationError, PermissionError } from "./errors/generalError";
-import { setContext } from "./helpers/context";
+import { createContext, setContext } from "./helpers/context";
 import { wrapAsyncMiddleware } from "./helpers/wrapper";
 import { UsersRPCService } from "./rpc/services/user.RPCservice";
 
@@ -24,7 +25,9 @@ export const validateUserAndPermission = (
       return new PermissionError();
     }
 
-    setContext({ userId: user.id, permission: user.permission });
+    createContext();
+    setContext(Global.USERID, user.id);
+    setContext(Global.PERMISSION, user.permission);
 
     try {
       await UsersRPCService.getUserById(user.id);
