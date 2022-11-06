@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 import { Global } from "../../../enums/helpers/Global";
-import { getContext } from "../../helpers/context";
+import { getContext, setContext } from "../../helpers/context";
 import { postGetAllFunctionTypes } from "../helpers/schemaHelpers";
 
 export function populatePlugin(
@@ -31,13 +31,10 @@ export function populatePlugin(
 
   postGetAllFunctionTypes.map((type: string) =>
     schema.pre(type, function (next: mongoose.HookNextFunction) {
-      if (!getContext(Global.SKIP_PLUGINS)) {
-        options.map((p) =>
-          this.populate({
-            path: p.path,
-            options: { options: { _depth: 1, maxDepth: 3 } },
-          })
-        );
+      const depth = getContext(Global.DEPTH);
+      if (!getContext(Global.SKIP_PLUGINS) && depth <= 3) {
+        options.map((p) => this.populate(p.path));
+        setContext(Global.DEPTH, depth + 1);
       }
       next();
     })

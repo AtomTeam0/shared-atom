@@ -58,9 +58,11 @@ export const RPCServerRequest =
             .unknown()
             .validateAsync(payload.params, defaultValidationOptions);
         }
+
         setContext(Global.USERID, payload.userId);
         setContext(Global.PERMISSION, payload.permission);
         setContext(Global.SKIP_PLUGINS, payload.skipPlugins);
+
         result = await managerFunction(
           ...(payload.params ? Object.values(payload.params) : [])
         );
