@@ -3,7 +3,7 @@ import * as Joi from "joi";
 import { Global } from "../../enums/helpers/Global";
 import { IRPCPayload } from "../../interfaces/helpers/rpcPayload.interface";
 import { RPCFunctionError } from "../errors/validationError";
-import { createContext, setContext } from "../helpers/context";
+import { runWithContext, setContext } from "../helpers/context";
 import { defaultValidationOptions } from "../joi/joi.functions";
 
 export const RPCClientRequest = (
@@ -49,24 +49,24 @@ export const RPCServerRequest =
     managerFunction: (...args: any) => Promise<any>,
     schemaValidation?: Joi.ObjectSchema<any>
   ): any =>
-  async (payload: IRPCPayload) => {
-    let result;
-    try {
-      if (schemaValidation) {
-        await schemaValidation
-          .unknown()
-          .validateAsync(payload.params, defaultValidationOptions);
+  async (payload: IRPCPayload) =>
+    runWithContext(async () => {
+      let result;
+      try {
+        if (schemaValidation) {
+          await schemaValidation
+            .unknown()
+            .validateAsync(payload.params, defaultValidationOptions);
+        }
+        setContext(Global.USERID, payload.userId);
+        setContext(Global.PERMISSION, payload.permission);
+        setContext(Global.SKIP_PLUGINS, payload.skipPlugins);
+        result = await managerFunction(
+          ...(payload.params ? Object.values(payload.params) : [])
+        );
+      } catch (error: any) {
+        return new RPCFunctionError(error);
       }
-      createContext();
-      setContext(Global.USERID, payload.userId);
-      setContext(Global.PERMISSION, payload.permission);
-      setContext(Global.SKIP_PLUGINS, payload.skipPlugins);
-      result = await managerFunction(
-        ...(payload.params ? Object.values(payload.params) : [])
-      );
-    } catch (error: any) {
-      return new RPCFunctionError(error);
-    }
 
-    return result;
-  };
+      return result;
+    });

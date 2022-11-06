@@ -15,7 +15,7 @@ import {
 import { initLogger } from "./utils/helpers/logger";
 import { IServerConfig } from "./interfaces/helpers/serverConfig.interface";
 import { setSocketServer } from "./utils/schema/helpers/socketHelpers";
-import { createContext } from "./utils/helpers/context";
+import { runWithContextMiddleWare } from "./utils/helpers/context";
 
 export class Server {
   public app: express.Application;
@@ -46,17 +46,7 @@ export class Server {
     this.config = config;
     this.logger = initLogger(config);
     this.configureMiddlewares();
-    this.app.use(
-      (
-        error: Error,
-        req: express.Request,
-        res: express.Response,
-        next: express.NextFunction
-      ) => {
-        createContext();
-        next();
-      }
-    );
+    this.app.use(runWithContextMiddleWare);
     this.app.use(router);
     this.initializeErrorHandler();
     this.server = http.createServer(this.app);
