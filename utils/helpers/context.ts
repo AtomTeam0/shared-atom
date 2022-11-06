@@ -5,7 +5,7 @@ const context = require("continuation-local-storage");
 const nameSpace = "global";
 
 export const createContext = () => {
-  context.createNamespace();
+  context.createNamespace(nameSpace);
 };
 
 export const getContext = (property: Global): any => {
