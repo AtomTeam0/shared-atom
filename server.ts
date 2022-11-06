@@ -46,7 +46,7 @@ export class Server {
     this.config = config;
     this.logger = initLogger(config);
     this.configureMiddlewares();
-    this.app.use(runWithContextMiddleWare);
+    this.app.use(runWithContextMiddleWare());
     this.app.use(router);
     this.initializeErrorHandler();
     this.server = http.createServer(this.app);
