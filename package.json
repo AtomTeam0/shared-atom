@@ -7,7 +7,7 @@
     "@azure/storage-blob": "^12.11.0",
     "@joi/date": "^2.1.0",
     "body-parser": "^1.20.0",
-    "continuation-local-storage": "^3.2.1",
+    "cls-hooked": "^4.2.2",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.18.1",

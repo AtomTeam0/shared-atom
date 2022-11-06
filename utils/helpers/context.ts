@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { Global } from "../../enums/helpers/Global";
 import { wrapAsyncMiddleware } from "./wrapper";
 
-const context = require("continuation-local-storage");
+const context = require("cls-hooked");
 
 const nameSpace = "global";
 const session = context.createNamespace(nameSpace);
