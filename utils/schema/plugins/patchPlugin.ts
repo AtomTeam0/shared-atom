@@ -7,6 +7,8 @@ import {
   postGetManyFunctionTypes,
   postGetSingleFunctionTypes,
 } from "../helpers/schemaHelpers";
+import { getContext } from "../../helpers/context";
+import { Global } from "../../../enums/helpers/Global";
 
 export function patchObjectPlugin(
   schema: mongoose.Schema,
@@ -30,7 +32,7 @@ export function patchObjectPlugin(
       res: any[],
       next: (err?: mongoose.CallbackError) => void
     ) {
-      if (!(<any>global).skipPlugins && !!res) {
+      if (!getContext(Global.SKIP_PLUGINS) && !!res) {
         await Promise.all(
           res.map(async (item) => {
             Object.assign(item, ...(await enhanceProperties(item)));
@@ -49,7 +51,7 @@ export function patchObjectPlugin(
         res: any,
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!(<any>global).skipPlugins && !!res) {
+        if (!getContext(Global.SKIP_PLUGINS) && !!res) {
           Object.assign(res._doc, ...(await enhanceProperties(res._doc)));
         }
         next();
@@ -65,7 +67,7 @@ export function patchObjectPlugin(
         res: any[],
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!(<any>global).skipPlugins && !!res) {
+        if (!getContext(Global.SKIP_PLUGINS) && !!res) {
           await Promise.all(
             res.map(async (item) => {
               Object.assign(item._doc, ...(await enhanceProperties(item._doc)));
@@ -101,7 +103,7 @@ export function patchBooleanPlugin(
       res: any[],
       next: (err?: mongoose.CallbackError) => void
     ) {
-      if (!(<any>global).skipPlugins && !!res) {
+      if (!getContext(Global.SKIP_PLUGINS) && !!res) {
         await Promise.all(
           res.map(async (item) => {
             Object.assign(item, await enhanceBooleanProperty(item));
@@ -120,7 +122,7 @@ export function patchBooleanPlugin(
         res: any,
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!(<any>global).skipPlugins && !!res) {
+        if (!getContext(Global.SKIP_PLUGINS) && !!res) {
           Object.assign(res._doc, await enhanceBooleanProperty(res._doc));
         }
         next();
@@ -136,7 +138,7 @@ export function patchBooleanPlugin(
         res: any[],
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!(<any>global).skipPlugins && !!res) {
+        if (!getContext(Global.SKIP_PLUGINS) && !!res) {
           await Promise.all(
             res.map(async (item) => {
               Object.assign(item._doc, await enhanceBooleanProperty(item._doc));

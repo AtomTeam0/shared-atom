@@ -16,16 +16,17 @@ const AZURE_ACCOUNT_NAME = process.env.AZURE_ACCOUNT_NAME || "";
 const AZURE_ACCOUNT_KEY = process.env.AZURE_ACCOUNT_KEY || "";
 const AZURE_STORAGE_CONNECTION_STRING = `DefaultEndpointsProtocol=https;AccountName=${AZURE_ACCOUNT_NAME};AccountKey=${AZURE_ACCOUNT_KEY};EndpointSuffix=core.windows.net`;
 
+let blobClient: BlobServiceClient;
+
 const getBlobClient = () => {
-  if ((<any>global).blobClient) {
-    return (<any>global).blobClient;
+  if (blobClient) {
+    return blobClient;
   }
 
-  const blobClient = BlobServiceClient.fromConnectionString(
+  blobClient = BlobServiceClient.fromConnectionString(
     AZURE_STORAGE_CONNECTION_STRING
   );
 
-  (<any>global).blobClient = blobClient;
   return blobClient;
 };
 
@@ -99,7 +100,9 @@ const uploadBlob = async (
   const containerClient = getBlobClient().getContainerClient(containerName);
   const blob = base64ToBlob(base64Data, fileType);
   const blobNameForBlok = blobName || uuidv4();
-  await containerClient.getBlockBlobClient(blobNameForBlok).upload(blob);
+  await containerClient
+    .getBlockBlobClient(blobNameForBlok)
+    .upload(blob, Buffer.byteLength(base64Data));
   return blobNameForBlok;
 };
 

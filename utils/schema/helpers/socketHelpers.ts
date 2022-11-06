@@ -1,41 +1,36 @@
 import { Server } from "socket.io";
 import * as http from "http";
+import { getContext } from "../../helpers/context";
+import { Global } from "../../../enums/helpers/Global";
 
-export class SocketServer {
-  private static socketIOServer: Server | undefined = undefined;
+let socketServer: Server;
 
-  constructor(server: http.Server) {
-    // eslint-disable-next-line no-constructor-return
-    if (SocketServer.socketIOServer) return SocketServer.socketIOServer;
-    SocketServer.socketIOServer = new Server(server, {
-      cors: { origin: "*", methods: ["GET", "PUT", "POST"] },
-    });
+export const setSocketServer = (server: http.Server) => {
+  socketServer = new Server(server, {
+    cors: { origin: "*", methods: ["GET", "PUT", "POST"] },
+  });
+  socketServer.engine.generateId = () => getContext(Global.USERID);
+};
 
-    SocketServer.socketIOServer.engine.generateId = () => (<any>global).userId;
+export const emitEvent = (
+  eventName: string,
+  data?: any,
+  roomName?: string
+): void => {
+  if (roomName) {
+    socketServer.to(roomName).emit(eventName, data);
+  } else {
+    socketServer.emit(eventName, data);
   }
+};
 
-  public static emitEvent(
-    eventName: string,
-    data?: any,
-    roomName?: string
-  ): void {
-    if (roomName) {
-      SocketServer.socketIOServer?.to(roomName).emit(eventName, data);
-    } else {
-      SocketServer.socketIOServer?.emit(eventName, data);
-    }
+export const updateSocketRoom = async (roomOptions: {
+  joinRoomId: string;
+  leaveRoomId: string;
+}): Promise<void> => {
+  const socket = socketServer.sockets.sockets.get(getContext(Global.USERID));
+  if (socket) {
+    socket?.leave(roomOptions.leaveRoomId);
+    socket?.join(roomOptions.joinRoomId);
   }
-
-  public static async updateSocketRoom(roomOptions: {
-    joinRoomId: string;
-    leaveRoomId: string;
-  }): Promise<void> {
-    const socket = SocketServer.socketIOServer?.sockets.sockets.get(
-      (<any>global).userId
-    );
-    if (socket) {
-      socket?.leave(roomOptions.leaveRoomId);
-      socket?.join(roomOptions.joinRoomId);
-    }
-  }
-}
+};
