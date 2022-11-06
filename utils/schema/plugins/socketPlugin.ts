@@ -12,7 +12,11 @@ export function socketPlugin(
 ) {
   schema.post(
     preCreationFunctionType,
-    async function (this: any, next: (err?: mongoose.CallbackError) => void) {
+    async function (
+      this: any,
+      res: any[],
+      next: (err?: mongoose.CallbackError) => void
+    ) {
       if (options.roomNameProperty) {
         SocketServer.emitEvent(
           options.eventName,
