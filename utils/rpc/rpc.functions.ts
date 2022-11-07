@@ -3,7 +3,7 @@ import * as Joi from "joi";
 import { Global } from "../../enums/helpers/Global";
 import { IRPCPayload } from "../../interfaces/helpers/rpcPayload.interface";
 import { RPCFunctionError } from "../errors/validationError";
-import { runWithContext, setContext } from "../helpers/context";
+import { getContext, runWithContext, setContext } from "../helpers/context";
 import { defaultValidationOptions } from "../joi/joi.functions";
 
 export const RPCClientRequest = (
@@ -24,14 +24,15 @@ export const RPCClientRequest = (
   ): Promise<any> => {
     const isError = (obj: any) =>
       obj ? !!obj.name && !!obj.message && !!obj.status : false;
-    const { userId, permission } = <any>global;
+    const userId = getContext(Global.USERID);
+    const permission = getContext(Global.PERMISSION);
 
     console.log(`-- ${route} RPC request was called --`);
     const response = await rpcClient.request(route, {
       ...(userId && { userId }),
       ...(permission && { permission }),
-      params,
       skipPlugins,
+      params,
     });
 
     if (isError(response.result)) {

@@ -17,7 +17,7 @@ export const runWithContext = (callBack: any) =>
   session.runAndReturn(() => {
     setContext(Global.SKIP_PLUGINS, false);
     setContext(Global.DEPTH, 1);
-    callBack();
+    return callBack();
   });
 
 export const runWithContextMiddleWare = () =>
