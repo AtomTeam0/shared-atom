@@ -122,7 +122,9 @@ export function blobPlugin(
   schema.pre(
     preCreationFunctionType,
     async function (this: any, next: (err?: mongoose.CallbackError) => void) {
-      Object.assign(this, ...(await createProperties(this)));
+      if (!getContext(Global.SKIP_PLUGINS)) {
+        Object.assign(this, ...(await createProperties(this)));
+      }
       next();
     }
   );
@@ -133,13 +135,15 @@ export function blobPlugin(
       this: mongoose.Query<any, any>,
       next: (err?: mongoose.CallbackError) => void
     ) {
-      const updateObj = this.getUpdate();
-      this.setUpdate(
-        Object.assign(
-          updateObj as object,
-          ...(await updateProperties(updateObj, this))
-        )
-      );
+      if (!getContext(Global.SKIP_PLUGINS)) {
+        const updateObj = this.getUpdate();
+        this.setUpdate(
+          Object.assign(
+            updateObj as object,
+            ...(await updateProperties(updateObj, this))
+          )
+        );
+      }
       next();
     }
   );
