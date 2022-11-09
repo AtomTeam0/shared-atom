@@ -4,14 +4,10 @@ export interface IArea {
   id?: string;
   name: AreaNames;
   image: string;
+  polygon: number[][];
 }
 
 export interface ICoordinate {
   coordinateX: string;
   coordinateY: string;
-}
-
-export interface IAreaPolygon {
-  area: AreaNames;
-  coordinates: number[][];
 }

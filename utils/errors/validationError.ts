@@ -61,3 +61,9 @@ export class UnsupportedFileType extends UserError {
     super("Cant upload this file type", 403);
   }
 }
+
+export class InvalidPoligon extends UserError {
+  constructor() {
+    super("new polygon cannot intesect with existing area`s polygon", 403);
+  }
+}
