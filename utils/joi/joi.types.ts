@@ -43,14 +43,16 @@ export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
 
 export const joiPoligon = (getAreasFunc: () => Promise<IArea[]>) =>
   Joi.string().external(async (value: [[string]] | undefined, helpers: any) => {
-    if (value && value.length) {
-      const isValid = value.every(
-        (coordinateArray: string[]) =>
-          coordinateArray.length === 2 &&
-          coordinateArray.every((coordinate: string) =>
-            coordinateAxisRegex.test(coordinate)
-          )
-      );
+    if (value) {
+      const isValid =
+        value.length &&
+        value.every(
+          (coordinateArray: string[]) =>
+            coordinateArray.length === 2 &&
+            coordinateArray.every((coordinate: string) =>
+              coordinateAxisRegex.test(coordinate)
+            )
+        );
       if (!isValid) {
         throw new InvalidPoligon();
       }
