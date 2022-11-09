@@ -7,6 +7,7 @@ import {
   IdNotFoundError,
   InvalidMongoIdError,
   InvalidPoligon,
+  PoligonIntersectionError,
 } from "../errors/validationError";
 import { getContext, setContext } from "../helpers/context";
 import { IArea } from "../../interfaces/area.interface";
@@ -40,20 +41,30 @@ export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
     return value;
   });
 
-export const joiPoligon = (getAreasFunc: () => IArea[]) =>
+export const joiPoligon = (getAreasFunc: () => Promise<IArea[]>) =>
   Joi.string().external(async (value: [[string]] | undefined, helpers: any) => {
-    if (value) {
-      const coordinatesAsNumbers = value.map((coordinateArray: [string]) =>
-        coordinateArray.map((coordinate: string) => +coordinate)
+    if (value && value.length) {
+      const isValid = value.every(
+        (coordinateArray: string[]) =>
+          coordinateArray.length === 2 &&
+          coordinateArray.every((coordinate: string) =>
+            coordinateAxisRegex.test(coordinate)
+          )
       );
-      const givenPolygon = turf.polygon([coordinatesAsNumbers]);
-      const areasToCheck = await getAreasFunc();
-      const isValid = areasToCheck.every((area: IArea) => {
+      if (!isValid) {
+        throw new InvalidPoligon();
+      }
+      const givenPolygon = turf.polygon([
+        value.map((coordinateArray: [string]) =>
+          coordinateArray.map((coordinate: string) => +coordinate)
+        ),
+      ]);
+      const isIntersecting = (await getAreasFunc()).some((area: IArea) => {
         const areaPolygon = turf.polygon([area.polygon]);
         return !turf.intersect(givenPolygon, areaPolygon);
       });
-      if (!isValid) {
-        throw new InvalidPoligon();
+      if (isIntersecting) {
+        throw new PoligonIntersectionError();
       }
     }
     return value;

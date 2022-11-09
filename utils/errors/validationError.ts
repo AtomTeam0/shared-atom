@@ -8,7 +8,7 @@ export class RPCFunctionError extends ServerError {
 export class InvalidMongoIdError extends UserError {
   constructor(propertyName?: string) {
     super(
-      `id given is not a valid mongo id${
+      `Id given is not a valid mongo id${
         propertyName ? ` (${propertyName})` : ""
       }`,
       403
@@ -19,7 +19,7 @@ export class InvalidMongoIdError extends UserError {
 export class IdNotFoundError extends UserError {
   constructor(propertyName?: string) {
     super(
-      `id given is not found in the db${
+      `Id given is not found in the db${
         propertyName ? ` (${propertyName})` : ""
       }`,
       404
@@ -30,7 +30,7 @@ export class IdNotFoundError extends UserError {
 export class IdArrayNotFoundError extends UserError {
   constructor(propertyName?: string) {
     super(
-      `one or more id's given are not found in the db${
+      `One or more id's given are not found in the db${
         propertyName ? ` (${propertyName})` : ""
       }`,
       404
@@ -64,6 +64,15 @@ export class UnsupportedFileType extends UserError {
 
 export class InvalidPoligon extends UserError {
   constructor() {
-    super("new polygon cannot intesect with existing area`s polygon", 403);
+    super(
+      "Poligon must be formated this way: [[coordinateX, coordinateY]]",
+      403
+    );
+  }
+}
+
+export class PoligonIntersectionError extends UserError {
+  constructor() {
+    super("New polygon cannot intesect with existing area`s polygon", 403);
   }
 }
