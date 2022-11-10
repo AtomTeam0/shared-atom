@@ -111,9 +111,9 @@ ItemSchema.plugin(conditionPlugin, {
   bypassPermissions: [Permission.ADMIN, Permission.DIRECTOR],
 });
 ItemSchema.plugin(populatePlugin, [
-  { path: "areas", ref: "areas" },
+  { path: "areas", ref: "areas", isArray: true },
   { path: "unit", ref: "units" },
-  { path: "similarItems", ref: "items" },
+  { path: "similarItems", ref: "items", isArray: true },
 ]);
 ItemSchema.plugin(patchBooleanPlugin, {
   foreignArrayProperty: "favorites",

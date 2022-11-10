@@ -1,12 +1,58 @@
 import * as mongoose from "mongoose";
 import { Global } from "../../../enums/helpers/Global";
 import { getContext, setContext } from "../../helpers/context";
-import { postGetAllFunctionTypes } from "../helpers/schemaHelpers";
+import {
+  postGetAllFunctionTypes,
+  preCreationFunctionType,
+  preUpdateFunctionType,
+} from "../helpers/schemaHelpers";
 
 export function populatePlugin(
   schema: mongoose.Schema,
-  options: { path: string; ref: string }[]
+  options: { path: string; ref: string; isArray?: boolean }[]
 ) {
+  schema.pre(
+    preCreationFunctionType,
+    async function (this: any, next: (err?: mongoose.CallbackError) => void) {
+      if (!getContext(Global.SKIP_PLUGINS)) {
+        Object.assign(
+          this,
+          options.map(
+            (p) =>
+              this[p.path] &&
+              (p.isArray
+                ? this[p.path].map((innerId: string) =>
+                    mongoose.Types.ObjectId(innerId)
+                  )
+                : mongoose.Types.ObjectId(this[p.path]))
+          )
+        );
+      }
+      next();
+    }
+  );
+
+  schema.pre(
+    preUpdateFunctionType,
+    async function (this: any, next: (err?: mongoose.CallbackError) => void) {
+      if (!getContext(Global.SKIP_PLUGINS)) {
+        Object.assign(
+          this,
+          options.map(
+            (p) =>
+              this[p.path] &&
+              (p.isArray
+                ? this[p.path].map((innerId: string) =>
+                    mongoose.Types.ObjectId(innerId)
+                  )
+                : mongoose.Types.ObjectId(this[p.path]))
+          )
+        );
+      }
+      next();
+    }
+  );
+
   schema.pre(
     "aggregate",
     async function (

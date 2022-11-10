@@ -52,8 +52,8 @@ const LessonSchema: mongoose.Schema = new mongoose.Schema(
 
 // plugins
 LessonSchema.plugin(populatePlugin, [
-  { path: "chapters", ref: "chapters" },
-  { path: "preKnowledge", ref: "items" },
+  { path: "chapters", ref: "chapters", isArray: true },
+  { path: "preKnowledge", ref: "items", isArray: true },
   { path: "test", ref: "tests" },
 ]);
 

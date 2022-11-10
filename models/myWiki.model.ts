@@ -28,6 +28,7 @@ const MyWikiSchema: mongoose.Schema = new mongoose.Schema(
   }
 );
 
+// plugins
 MyWikiSchema.plugin(indexPlugin, {
   propertyNames: ["word", "defenition"],
 });

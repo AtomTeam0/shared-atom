@@ -78,7 +78,9 @@ const ArticleSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-ArticleSchema.plugin(populatePlugin, [{ path: "comments", ref: "comments" }]);
+ArticleSchema.plugin(populatePlugin, [
+  { path: "comments", ref: "comments", isArray: true },
+]);
 ArticleSchema.plugin(blobPlugin, [
   {
     propertyName: "thumbnail",

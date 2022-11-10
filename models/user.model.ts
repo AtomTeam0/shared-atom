@@ -106,9 +106,9 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
 // plugins
 UserSchema.plugin(populatePlugin, [
   { path: "area", ref: "areas" },
-  { path: "favorites", ref: "items" },
-  { path: "lastWatched", ref: "items" },
-  { path: "employees", ref: "users" },
+  { path: "favorites", ref: "items", isArray: true },
+  { path: "lastWatched", ref: "items", isArray: true },
+  { path: "employees", ref: "users", isArray: true },
 ]);
 UserSchema.plugin(indexPlugin, {
   propertyNames: ["firstName", "lastName", "personalId"],
