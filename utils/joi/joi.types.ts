@@ -42,35 +42,37 @@ export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
   });
 
 export const joiPoligon = (getAreasFunc: () => Promise<IArea[]>) =>
-  Joi.string().external(async (value: [[string]] | undefined, helpers: any) => {
-    if (value) {
-      const isValid =
-        value.length &&
-        value.every(
-          (coordinateArray: string[]) =>
-            coordinateArray.length === 2 &&
-            coordinateArray.every((coordinate: string) =>
-              coordinateAxisRegex.test(coordinate)
-            )
-        );
-      if (!isValid) {
-        throw new InvalidPoligon();
+  Joi.array()
+    .items(Joi.array().items(Joi.string()))
+    .external(async (value: [[string]] | undefined, helpers: any) => {
+      if (value) {
+        const isValid =
+          value.length &&
+          value.every(
+            (coordinateArray: string[]) =>
+              coordinateArray.length === 2 &&
+              coordinateArray.every((coordinate: string) =>
+                coordinateAxisRegex.test(coordinate)
+              )
+          );
+        if (!isValid) {
+          throw new InvalidPoligon();
+        }
+        const givenPolygon = turf.polygon([
+          value.map((coordinateArray: [string]) =>
+            coordinateArray.map((coordinate: string) => +coordinate)
+          ),
+        ]);
+        const isIntersecting = (await getAreasFunc()).some((area: IArea) => {
+          const areaPolygon = turf.polygon([area.polygon]);
+          return !turf.intersect(givenPolygon, areaPolygon);
+        });
+        if (isIntersecting) {
+          throw new PoligonIntersectionError();
+        }
       }
-      const givenPolygon = turf.polygon([
-        value.map((coordinateArray: [string]) =>
-          coordinateArray.map((coordinate: string) => +coordinate)
-        ),
-      ]);
-      const isIntersecting = (await getAreasFunc()).some((area: IArea) => {
-        const areaPolygon = turf.polygon([area.polygon]);
-        return !turf.intersect(givenPolygon, areaPolygon);
-      });
-      if (isIntersecting) {
-        throw new PoligonIntersectionError();
-      }
-    }
-    return value;
-  });
+      return value;
+    });
 
 export const joiMongoIdArray = (getByIdFunc?: (id: string) => any) =>
   Joi.array().items(joiMongoId(getByIdFunc));
@@ -78,7 +80,7 @@ export const joiMongoIdArray = (getByIdFunc?: (id: string) => any) =>
 export const joiEnum = (enumObj: { [k: string]: string }) =>
   Joi.string().valid(...Object.values(enumObj));
 
-export const joiBlob = Joi.string().base64();
+export const joiBlob = Joi.string().base64({ paddingRequired: false });
 
 export const joiPersonalId = Joi.string().regex(personalIdRegex);
 
