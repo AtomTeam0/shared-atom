@@ -8,6 +8,5 @@ export interface IArea {
 }
 
 export interface ICoordinate {
-  coordinateX: string;
-  coordinateY: string;
+  coordinate: number[];
 }
