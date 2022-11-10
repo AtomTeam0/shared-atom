@@ -17,14 +17,15 @@ export function populatePlugin(
       if (!getContext(Global.SKIP_PLUGINS)) {
         Object.assign(
           this,
-          options.map(
+          ...options.map(
             (p) =>
-              this[p.path] &&
-              (p.isArray
-                ? this[p.path].map((innerId: string) =>
-                    mongoose.Types.ObjectId(innerId)
-                  )
-                : mongoose.Types.ObjectId(this[p.path]))
+              this[p.path] && {
+                [p.path]: p.isArray
+                  ? this[p.path].map((innerId: string) =>
+                      mongoose.Types.ObjectId(innerId)
+                    )
+                  : mongoose.Types.ObjectId(this[p.path]),
+              }
           )
         );
       }
@@ -38,14 +39,15 @@ export function populatePlugin(
       if (!getContext(Global.SKIP_PLUGINS)) {
         Object.assign(
           this,
-          options.map(
+          ...options.map(
             (p) =>
-              this[p.path] &&
-              (p.isArray
-                ? this[p.path].map((innerId: string) =>
-                    mongoose.Types.ObjectId(innerId)
-                  )
-                : mongoose.Types.ObjectId(this[p.path]))
+              this[p.path] && {
+                [p.path]: p.isArray
+                  ? this[p.path].map((innerId: string) =>
+                      mongoose.Types.ObjectId(innerId)
+                    )
+                  : mongoose.Types.ObjectId(this[p.path]),
+              }
           )
         );
       }
