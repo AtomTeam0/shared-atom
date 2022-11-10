@@ -6,7 +6,7 @@ import { Global } from "../../enums/helpers/Global";
 import {
   IdNotFoundError,
   InvalidMongoIdError,
-  InvalidPoligon,
+  InvalidCoordinate,
   PoligonIntersectionError,
 } from "../errors/validationError";
 import { getContext, setContext } from "../helpers/context";
@@ -43,24 +43,24 @@ export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
 
 export const joiPoligon = (getAreasFunc: () => Promise<IArea[]>) =>
   Joi.array()
-    .items(Joi.array().items(Joi.string()))
-    .external(async (value: [[string]] | undefined, helpers: any) => {
+    .items(Joi.array().items(Joi.number()))
+    .external(async (value: number[][] | undefined, helpers: any) => {
       if (value) {
         const isValid =
           value.length &&
           value.every(
-            (coordinateArray: string[]) =>
+            (coordinateArray: number[]) =>
               coordinateArray.length === 2 &&
-              coordinateArray.every((coordinate: string) =>
-                coordinateAxisRegex.test(coordinate)
+              coordinateArray.every((coordinate: number) =>
+                coordinateAxisRegex.test(coordinate.toString())
               )
           );
         if (!isValid) {
-          throw new InvalidPoligon();
+          throw new InvalidCoordinate();
         }
         const givenPolygon = turf.polygon([
-          value.map((coordinateArray: [string]) =>
-            coordinateArray.map((coordinate: string) => +coordinate)
+          value.map((coordinateArray: number[]) =>
+            coordinateArray.map((coordinate: number) => +coordinate)
           ),
         ]);
         const isIntersecting = (await getAreasFunc()).some((area: IArea) => {
@@ -74,6 +74,22 @@ export const joiPoligon = (getAreasFunc: () => Promise<IArea[]>) =>
       return value;
     });
 
+export const joiCoordinate = Joi.array()
+  .items(Joi.number())
+  .external(async (value: number[] | undefined, helpers: any) => {
+    if (value) {
+      const isValid =
+        value.length === 2 &&
+        value.every((coordinateAxis: number) =>
+          coordinateAxisRegex.test(coordinateAxis.toString())
+        );
+      if (!isValid) {
+        throw new InvalidCoordinate();
+      }
+    }
+    return value;
+  });
+
 export const joiMongoIdArray = (getByIdFunc?: (id: string) => any) =>
   Joi.array().items(joiMongoId(getByIdFunc));
 
@@ -85,5 +101,3 @@ export const joiBlob = Joi.string().base64({ paddingRequired: false });
 export const joiPersonalId = Joi.string().regex(personalIdRegex);
 
 export const joiPdfURL = Joi.string().regex(pdfURLRegex);
-
-export const joiCoordinateAxis = Joi.string().regex(coordinateAxisRegex);

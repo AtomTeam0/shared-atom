@@ -62,10 +62,10 @@ export class UnsupportedFileType extends UserError {
   }
 }
 
-export class InvalidPoligon extends UserError {
+export class InvalidCoordinate extends UserError {
   constructor() {
     super(
-      "Poligon must be formated this way: [[coordinateX, coordinateY]]",
+      "Coordinate must be formated this way: [coordinateX, coordinateY] as two numbers",
       403
     );
   }
