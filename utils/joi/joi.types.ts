@@ -65,7 +65,7 @@ export const joiPoligon = (getAreasFunc: () => Promise<IArea[]>) =>
         ]);
         const isIntersecting = (await getAreasFunc()).some((area: IArea) => {
           const areaPolygon = turf.polygon([area.polygon]);
-          return !turf.intersect(givenPolygon, areaPolygon);
+          return !!turf.intersect(givenPolygon, areaPolygon);
         });
         if (isIntersecting) {
           throw new PoligonIntersectionError();
