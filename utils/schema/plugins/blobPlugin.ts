@@ -22,7 +22,7 @@ export function blobPlugin(
 ) {
   const getOldBlobId = async (
     query: mongoose.Query<any, any>,
-    porpertyName: string,
+    propertyName: string,
     fatherProperty?: string
   ) => {
     const wantedId = query.getFilter()._id;
@@ -32,8 +32,8 @@ export function blobPlugin(
     setContext(Global.SKIP_PLUGINS, skipPlugins);
     if (oldDoc) {
       return fatherProperty
-        ? oldDoc[fatherProperty][porpertyName]
-        : oldDoc[porpertyName];
+        ? oldDoc[fatherProperty][propertyName]
+        : oldDoc[propertyName];
     }
     return undefined;
   };
