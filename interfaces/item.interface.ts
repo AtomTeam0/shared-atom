@@ -15,6 +15,11 @@ export interface IItemQuery {
   search?: string;
 }
 
+export interface IMinimalItem {
+  title: string;
+  contentType: ContentType;
+}
+
 export interface IItem {
   id?: string;
   updatedAt: Date;

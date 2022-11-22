@@ -19,7 +19,6 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
     },
     views: {
       type: Number,
@@ -37,7 +36,6 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
     },
     timeToRead: {
       type: Number,
-      required: true,
     },
     isActive: {
       type: Boolean,
@@ -46,24 +44,19 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
     },
     areas: {
       type: [mongoose.Types.ObjectId],
-      required: true,
       ref: AreaModel,
     },
     sections: {
       type: [String],
-      required: true,
     },
     categories: {
       type: [String],
-      required: true,
     },
     corps: {
       type: [String],
-      required: true,
     },
     grade: {
       type: String,
-      required: true,
     },
     contentType: {
       type: String,
@@ -71,7 +64,6 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
     },
     unit: {
       type: mongoose.Types.ObjectId,
-      required: true,
       ref: UnitModel,
     },
     similarItems: {
@@ -82,11 +74,9 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
     },
     thumbNail: {
       type: String,
-      required: true,
     },
     contentId: {
       type: String,
-      required: true,
     },
   },
   {
