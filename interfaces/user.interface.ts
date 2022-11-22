@@ -24,6 +24,7 @@ export interface IUser {
   id?: string;
   firstName: string;
   lastName: string;
+  createdAt: Date;
   permission: Permission;
   area: string | IArea;
   favorites: string[] | IItem[];

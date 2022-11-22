@@ -99,7 +99,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
 
     versionKey: false,
     id: true,
-    timestamps: { createdAt: false, updatedAt: false },
+    timestamps: { createdAt: true, updatedAt: false },
   }
 );
 

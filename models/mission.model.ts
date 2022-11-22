@@ -15,6 +15,10 @@ const MissionSchema: mongoose.Schema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    startDate: {
+      type: Date,
+      required: true,
+    },
     status: {
       type: String,
       required: true,
@@ -33,6 +37,7 @@ const MissionSchema: mongoose.Schema = new mongoose.Schema(
     item: {
       type: mongoose.Types.ObjectId,
       ref: ItemModel,
+      required: true,
     },
   },
   {
@@ -46,7 +51,7 @@ const MissionSchema: mongoose.Schema = new mongoose.Schema(
 
     versionKey: false,
     id: true,
-    timestamps: { createdAt: true, updatedAt: false },
+    timestamps: { createdAt: false, updatedAt: false },
   }
 );
 
