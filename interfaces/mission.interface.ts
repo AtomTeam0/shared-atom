@@ -13,7 +13,6 @@ export interface IMissionCreator {
   notes?: string;
   startDate: Date;
   complitionDate: Date;
-  director: string | IUser;
   editor: string | IUser;
 }
 
@@ -22,7 +21,7 @@ export interface IMission {
   notes?: string;
   startDate: Date;
   complitionDate: Date;
-  status: WatchMode;
+  status?: WatchMode;
   director: string | IUser;
   editor: string | IUser;
   item: string | IItem;
