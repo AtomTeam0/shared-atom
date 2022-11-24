@@ -17,11 +17,11 @@ export class ItemRPCService {
     });
   }
 
-  static async createMinimalItem(
+  static async createMissionItem(
     title: string,
     contentType: ContentType
   ): Promise<IItem> {
-    return RPCClientRequest()(ItemRPCService.rpcClient, "createMinimalItem", {
+    return RPCClientRequest()(ItemRPCService.rpcClient, "createMissionItem", {
       title,
       contentType,
     });

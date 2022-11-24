@@ -16,7 +16,7 @@ export interface IItemQuery {
   search?: string;
 }
 
-export interface IMinimalItem {
+export interface IMissionItem {
   title: string;
   contentType: ContentType;
   editedBy: string | IUser;
