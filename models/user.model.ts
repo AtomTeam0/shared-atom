@@ -6,7 +6,6 @@ import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { AreaModel } from "./area.model";
 import { ChapterModel } from "./chapter.model";
-import { ItemModel } from "./item.model";
 import { MediaModel } from "./media.model";
 
 const UserSchema: mongoose.Schema = new mongoose.Schema(
@@ -37,13 +36,13 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
     favorites: {
       type: [mongoose.Types.ObjectId],
       required: true,
-      ref: ItemModel,
+      ref: "items",
       default: [],
     },
     lastWatched: {
       type: [mongoose.Types.ObjectId],
       required: true,
-      ref: ItemModel,
+      ref: "items",
       items: { uniqueItems: true },
       default: [],
     },

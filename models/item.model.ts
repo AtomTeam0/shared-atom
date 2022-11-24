@@ -10,7 +10,6 @@ import { patchBooleanPlugin } from "../utils/schema/plugins/patchPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { AreaModel } from "./area.model";
 import { UnitModel } from "./unit.model";
-import { UserModel } from "./user.model";
 
 const ItemSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -70,7 +69,7 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
     },
     editedBy: {
       type: mongoose.Types.ObjectId,
-      ref: UserModel,
+      ref: "users",
     },
     areas: {
       type: [mongoose.Types.ObjectId],
