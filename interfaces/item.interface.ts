@@ -30,6 +30,7 @@ export interface IItem {
   views: number;
   priority: number;
   isActive: boolean;
+  isByMission: boolean;
   sections: Section[];
   categories: Category[];
   corps: Corp[];

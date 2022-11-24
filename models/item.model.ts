@@ -43,6 +43,11 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
       default: false,
     },
+    isByMission: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
     sections: {
       type: [String],
     },
