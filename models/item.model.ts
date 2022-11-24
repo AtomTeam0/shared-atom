@@ -10,6 +10,7 @@ import { patchBooleanPlugin } from "../utils/schema/plugins/patchPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { AreaModel } from "./area.model";
 import { UnitModel } from "./unit.model";
+import { UserModel } from "./user.model";
 
 const ItemSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -42,10 +43,6 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
       default: false,
     },
-    areas: {
-      type: [mongoose.Types.ObjectId],
-      ref: AreaModel,
-    },
     sections: {
       type: [String],
     },
@@ -65,6 +62,14 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
     unit: {
       type: mongoose.Types.ObjectId,
       ref: UnitModel,
+    },
+    editedBy: {
+      type: mongoose.Types.ObjectId,
+      ref: UserModel,
+    },
+    areas: {
+      type: [mongoose.Types.ObjectId],
+      ref: AreaModel,
     },
     similarItems: {
       type: [mongoose.Types.ObjectId],

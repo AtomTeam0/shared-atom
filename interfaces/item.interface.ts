@@ -5,6 +5,7 @@ import { Grade } from "../enums/Grade";
 import { Section } from "../enums/Section";
 import { IArea } from "./area.interface";
 import { IUnit } from "./unit.interface";
+import { IUser } from "./user.interface";
 
 export interface IItemQuery {
   areaId?: string;
@@ -18,6 +19,7 @@ export interface IItemQuery {
 export interface IMinimalItem {
   title: string;
   contentType: ContentType;
+  editedBy: string | IUser;
 }
 
 export interface IItem {
@@ -35,6 +37,7 @@ export interface IItem {
   contentType: ContentType;
   thumbNail: string;
   contentId: string;
+  editedBy: string | IUser;
   areas: string[] | IArea[];
   unit: string | IUnit;
   similarItems: string[] | IItem[];
