@@ -6,8 +6,9 @@ import { Global } from "../../enums/helpers/Global";
 import {
   IdNotFoundError,
   InvalidMongoIdError,
-  InvalidCoordinate,
   PoligonIntersectionError,
+  InvalidCoordinateError,
+  InvalidWeekNumError,
 } from "../errors/validationError";
 import { getContext, setContext } from "../helpers/context";
 import { IArea } from "../../interfaces/area.interface";
@@ -56,7 +57,7 @@ export const joiPoligon = (getAreasFunc: () => Promise<IArea[]>) =>
               )
           );
         if (!isValid) {
-          throw new InvalidCoordinate();
+          throw new InvalidCoordinateError();
         }
         const givenPolygon = turf.polygon([
           value.map((coordinateArray: number[]) =>
@@ -84,7 +85,7 @@ export const joiCoordinate = Joi.array()
           coordinateAxisRegex.test(coordinateAxis.toString())
         );
       if (!isValid) {
-        throw new InvalidCoordinate();
+        throw new InvalidCoordinateError();
       }
     }
     return value;
@@ -96,7 +97,7 @@ export const joiWeekNum = Joi.number()
     if (value) {
       const isValid = value >= 1 && value <= 52;
       if (!isValid) {
-        throw new InvalidCoordinate();
+        throw new InvalidWeekNumError();
       }
       const numOfDays = 1 + (value - 1) * 7; // 1st of January + 7 days for each week
       const currentYear = new Date().getFullYear(); // returns the current year

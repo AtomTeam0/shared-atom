@@ -62,12 +62,18 @@ export class UnsupportedFileType extends UserError {
   }
 }
 
-export class InvalidCoordinate extends UserError {
+export class InvalidCoordinateError extends UserError {
   constructor() {
     super(
       "Coordinate must be formated this way: [coordinateX, coordinateY] as two numbers",
       403
     );
+  }
+}
+
+export class InvalidWeekNumError extends UserError {
+  constructor() {
+    super("weekNum must be in range 1-52", 403);
   }
 }
 
