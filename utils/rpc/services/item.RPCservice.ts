@@ -19,11 +19,13 @@ export class ItemRPCService {
 
   static async createMissionItem(
     title: string,
-    contentType: ContentType
+    contentType: ContentType,
+    priority?: number
   ): Promise<IItem> {
     return RPCClientRequest()(ItemRPCService.rpcClient, "createMissionItem", {
       title,
       contentType,
+      priority,
     });
   }
 

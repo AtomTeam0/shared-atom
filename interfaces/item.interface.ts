@@ -19,7 +19,7 @@ export interface IItemQuery {
 export interface IMissionItem {
   title: string;
   contentType: ContentType;
-  priority: number;
+  priority?: number;
   editedBy: string | IUser;
 }
 
