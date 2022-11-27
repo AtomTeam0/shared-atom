@@ -101,3 +101,5 @@ export const joiBlob = Joi.string().base64({ paddingRequired: false });
 export const joiPersonalId = Joi.string().regex(personalIdRegex);
 
 export const joiPdfURL = Joi.string().regex(pdfURLRegex);
+
+export const joiWeekNum = Joi.number().integer().min(1).max(52);
