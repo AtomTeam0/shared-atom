@@ -14,6 +14,7 @@ export interface IMissionQuery {
 export interface IMissionCreator {
   title: string;
   contentType: ContentType;
+  priority?: number;
   notes?: string;
   startDate: Date;
   complitionDate: Date;
