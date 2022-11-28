@@ -1,8 +1,7 @@
-import { Permission } from "../../enums/Permission";
+import { IUser } from "../user.interface";
 
 export interface IRPCPayload {
-  userId?: string;
-  permission?: Permission;
+  user?: IUser;
   params?: { [k: string]: any };
   skipPlugins: boolean;
 }

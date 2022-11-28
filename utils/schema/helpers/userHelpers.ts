@@ -1,12 +1,11 @@
 import { Global } from "../../../enums/helpers/Global";
 import { IUser } from "../../../interfaces/user.interface";
 import { getContext } from "../../helpers/context";
-import { UsersRPCService } from "../../rpc/services/user.RPCservice";
 
 export const getUserArray = async (
   foreignArrayProperty: keyof IUser & string
 ): Promise<Array<any[]>> => {
-  const user = await UsersRPCService.getUserById(getContext(Global.USERID));
+  const user = getContext(Global.USER);
   if (!user) {
     return [];
   }

@@ -24,13 +24,11 @@ export const RPCClientRequest = (
   ): Promise<any> => {
     const isError = (obj: any) =>
       obj ? !!obj.name && !!obj.message && !!obj.status : false;
-    const userId = getContext(Global.USERID);
-    const permission = getContext(Global.PERMISSION);
+    const user = getContext(Global.USER);
 
     console.log(`-- ${route} RPC request was called --`);
     const response = await rpcClient.request(route, {
-      ...(userId && { userId }),
-      ...(permission && { permission }),
+      ...(user ? { user } : {}),
       skipPlugins,
       params,
     });
@@ -60,8 +58,7 @@ export const RPCServerRequest =
             .validateAsync(payload.params, defaultValidationOptions);
         }
 
-        setContext(Global.USERID, payload.userId);
-        setContext(Global.PERMISSION, payload.permission);
+        setContext(Global.USER, payload.user);
         setContext(Global.SKIP_PLUGINS, payload.skipPlugins);
 
         result = await managerFunction(

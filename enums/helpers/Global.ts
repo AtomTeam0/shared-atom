@@ -1,5 +1,4 @@
 export enum Global {
-  USERID = "userId",
-  PERMISSION = "permission",
+  USER = "user",
   SKIP_PLUGINS = "skipPlugins",
 }
