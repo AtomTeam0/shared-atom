@@ -14,7 +14,7 @@ export interface IItemQuery {
   contentType?: ContentType;
   isAll?: boolean;
   search?: string;
-  isActive?: string;
+  isActive?: boolean;
 }
 
 export interface IMissionItem {

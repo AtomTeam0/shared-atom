@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { Global } from "../../enums/helpers/Global";
+import { Permission } from "../../enums/Permission";
 import { wrapAsyncMiddleware } from "./wrapper";
 
 const context = require("cls-hooked");
@@ -27,3 +28,7 @@ export const runWithContextMiddleWare = () =>
     async (_req: Request, _res: Response, next: NextFunction) =>
       runWithContext(next)
   );
+
+export const isDirector = () =>
+  getContext(Global.PERMISSION) === Permission.DIRECTOR ||
+  getContext(Global.PERMISSION) === Permission.ADMIN;
