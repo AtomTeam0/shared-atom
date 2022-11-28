@@ -1,6 +1,5 @@
 import * as mongoose from "mongoose";
-import { Global } from "../../../enums/helpers/Global";
-import { getContext, setContext } from "../../helpers/context";
+import { shouldSkipPlugins } from "../../helpers/context";
 import {
   postGetAllFunctionTypes,
   preCreationFunctionType,
@@ -14,7 +13,7 @@ export function populatePlugin(
   schema.pre(
     preCreationFunctionType,
     async function (this: any, next: (err?: mongoose.CallbackError) => void) {
-      if (!getContext(Global.SKIP_PLUGINS)) {
+      if (!shouldSkipPlugins()) {
         Object.assign(
           this,
           ...options.map(
@@ -36,7 +35,7 @@ export function populatePlugin(
   schema.pre(
     preUpdateFunctionType,
     async function (this: any, next: (err?: mongoose.CallbackError) => void) {
-      if (!getContext(Global.SKIP_PLUGINS)) {
+      if (!shouldSkipPlugins()) {
         Object.assign(
           this,
           ...options.map(
@@ -61,7 +60,7 @@ export function populatePlugin(
       this: mongoose.Aggregate<any>,
       next: mongoose.HookNextFunction
     ) {
-      if (!getContext(Global.SKIP_PLUGINS)) {
+      if (!shouldSkipPlugins()) {
         options.forEach((p) => {
           this.pipeline().unshift({
             $lookup: {
@@ -79,10 +78,10 @@ export function populatePlugin(
 
   postGetAllFunctionTypes.map((type: string) =>
     schema.pre(type, function (next: mongoose.HookNextFunction) {
-      const depth = getContext(Global.DEPTH);
-      if (!getContext(Global.SKIP_PLUGINS) && depth <= 3) {
-        options.map((p) => this.populate(p.path));
-        setContext(Global.DEPTH, depth + 1);
+      if (!shouldSkipPlugins()) {
+        options.map((p) =>
+          this.populate({ path: p.path, options: { _recursed: true } })
+        );
       }
       next();
     })

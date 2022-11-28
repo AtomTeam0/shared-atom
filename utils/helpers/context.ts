@@ -13,10 +13,12 @@ export const setContext = (property: Global, value: any): void => {
   session.set(property, value);
 };
 
+export const shouldSkipPlugins = (): any =>
+  session.active ? getContext(Global.SKIP_PLUGINS) : false;
+
 export const runWithContext = (callBack: any) =>
   session.runAndReturn(() => {
     setContext(Global.SKIP_PLUGINS, false);
-    setContext(Global.DEPTH, 1);
     return callBack();
   });
 

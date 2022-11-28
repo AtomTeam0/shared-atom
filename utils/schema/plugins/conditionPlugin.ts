@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import { Global } from "../../../enums/helpers/Global";
 import { Permission } from "../../../enums/Permission";
-import { getContext } from "../../helpers/context";
+import { getContext, shouldSkipPlugins } from "../../helpers/context";
 import { postGetAllFunctionTypes } from "../helpers/schemaHelpers";
 
 export function conditionPlugin(
@@ -19,7 +19,7 @@ export function conditionPlugin(
       next: mongoose.HookNextFunction
     ) {
       if (
-        !getContext(Global.SKIP_PLUGINS) &&
+        !shouldSkipPlugins() &&
         !(
           getContext(Global.PERMISSION) &&
           options.bypassPermissions.includes(getContext(Global.PERMISSION))
@@ -36,7 +36,7 @@ export function conditionPlugin(
   postGetAllFunctionTypes.map((type: string) =>
     schema.pre(type, function (next: mongoose.HookNextFunction) {
       if (
-        !getContext(Global.SKIP_PLUGINS) &&
+        !shouldSkipPlugins() &&
         !(
           getContext(Global.PERMISSION) &&
           options.bypassPermissions.includes(getContext(Global.PERMISSION))

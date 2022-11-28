@@ -3,7 +3,11 @@
 import * as mongoose from "mongoose";
 import { FileTypes } from "../../../enums/helpers/FileTypes";
 import { Global } from "../../../enums/helpers/Global";
-import { getContext, setContext } from "../../helpers/context";
+import {
+  getContext,
+  setContext,
+  shouldSkipPlugins,
+} from "../../helpers/context";
 import { createBlob, downloadBlob, updateBlob } from "../helpers/blobHelpers";
 import {
   postGetSingleFunctionTypes,
@@ -122,7 +126,7 @@ export function blobPlugin(
   schema.pre(
     preCreationFunctionType,
     async function (this: any, next: (err?: mongoose.CallbackError) => void) {
-      if (!getContext(Global.SKIP_PLUGINS)) {
+      if (!shouldSkipPlugins()) {
         Object.assign(this, ...(await createProperties(this)));
       }
       next();
@@ -135,7 +139,7 @@ export function blobPlugin(
       this: mongoose.Query<any, any>,
       next: (err?: mongoose.CallbackError) => void
     ) {
-      if (!getContext(Global.SKIP_PLUGINS)) {
+      if (!shouldSkipPlugins()) {
         const updateObj = this.getUpdate();
         this.setUpdate(
           Object.assign(
@@ -155,7 +159,7 @@ export function blobPlugin(
       res: any[],
       next: (err?: mongoose.CallbackError) => void
     ) {
-      if (!getContext(Global.SKIP_PLUGINS) && !!res) {
+      if (!shouldSkipPlugins() && !!res) {
         await Promise.all(
           res.map(async (item) => {
             Object.assign(item, ...(await downloadProperties(item)));
@@ -174,7 +178,7 @@ export function blobPlugin(
         res: any,
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!getContext(Global.SKIP_PLUGINS) && !!res) {
+        if (!shouldSkipPlugins() && !!res) {
           Object.assign(res._doc, ...(await downloadProperties(res._doc)));
         }
         next();
@@ -190,7 +194,7 @@ export function blobPlugin(
         res: any[],
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!getContext(Global.SKIP_PLUGINS) && !!res) {
+        if (!shouldSkipPlugins() && !!res) {
           await Promise.all(
             res.map(async (item: any) => {
               Object.assign(
