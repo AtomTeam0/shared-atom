@@ -25,11 +25,9 @@ export const validateUserAndPermission = (
       return new PermissionError();
     }
 
-    setContext(Global.USERID, user.id);
-    setContext(Global.PERMISSION, user.permission);
-
     try {
-      await UsersRPCService.getUserById(user.id);
+      const userFromDb = await UsersRPCService.getUserById(user.id);
+      setContext(Global.USER, userFromDb);
     } catch (err) {
       return err;
     }
