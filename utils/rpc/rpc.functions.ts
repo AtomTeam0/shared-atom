@@ -28,7 +28,7 @@ export const RPCClientRequest = (
 
     console.log(`-- ${route} RPC request was called --`);
     const response = await rpcClient.request(route, {
-      ...(user ? { user } : {}),
+      ...(user && { user }),
       skipPlugins,
       params,
     });
