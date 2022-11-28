@@ -12,9 +12,10 @@ export interface IItemQuery {
   section?: Section;
   category?: Category;
   contentType?: ContentType;
-  isAll?: boolean;
   search?: string;
   isActive?: boolean;
+  limit?: number;
+  skip?: number;
 }
 
 export interface IMissionItem {
