@@ -44,7 +44,7 @@ export const validateRequestByPermission = (
 ) => {
   const validator = async (req: Request): Promise<void> => {
     const wantedValidation = allValidations.find((validation) =>
-      validation.permissions.includes(getContext(Global.PERMISSION))
+      validation.permissions.includes(getContext(Global.USER).permission)
     );
     if (!wantedValidation) {
       throw new PermissionError();

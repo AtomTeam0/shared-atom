@@ -21,8 +21,8 @@ export function conditionPlugin(
       if (
         !shouldSkipPlugins() &&
         !(
-          getContext(Global.PERMISSION) &&
-          options.bypassPermissions.includes(getContext(Global.PERMISSION))
+          getContext(Global.USER).permission &&
+          options.bypassPermissions.includes(getContext(Global.USER).permission)
         )
       ) {
         this.pipeline().unshift({
@@ -38,8 +38,8 @@ export function conditionPlugin(
       if (
         !shouldSkipPlugins() &&
         !(
-          getContext(Global.PERMISSION) &&
-          options.bypassPermissions.includes(getContext(Global.PERMISSION))
+          getContext(Global.USER).permission &&
+          options.bypassPermissions.includes(getContext(Global.USER).permission)
         )
       ) {
         this.where({ [options.propertyName]: options.wantedVal });
