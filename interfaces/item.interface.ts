@@ -25,6 +25,12 @@ export interface IMissionItem {
   editedBy: string | IUser;
 }
 
+export const missionItemKeys: (keyof IMissionItem)[] = [
+  "title",
+  "contentType",
+  "priority",
+];
+
 export interface IItem {
   id?: string;
   updatedAt: Date;

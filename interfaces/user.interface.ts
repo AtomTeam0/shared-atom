@@ -39,7 +39,7 @@ export interface IUserUpdater extends IUser {
   toggleEmployee?: string;
 }
 
-export interface IOtherUserUpdater extends IUser {
-  permission: Permission;
-  toggleEmployee: string;
-}
+export const otherUserKeys: (keyof IUserUpdater)[] = [
+  "permission",
+  "toggleEmployee",
+];
