@@ -47,7 +47,7 @@ export class PatcherService {
     return Promise.all(
       (isArray ? itemGroups : [itemGroups]).map(
         async (itemGroup: IItemGroup) => ({
-          ...itemGroup,
+          ...(itemGroup as any)._doc,
           items: (await PatcherService.itemPatcher(
             itemGroup.items as IItem[]
           )) as IItem[],
@@ -62,7 +62,7 @@ export class PatcherService {
     const isArray = Array.isArray(lessons);
     return Promise.all(
       (isArray ? lessons : [lessons]).map(async (lesson: ILesson) => ({
-        ...lesson,
+        ...(lesson as any)._doc,
         chapters: (await PatcherService.chapterPatcher(
           lesson.chapters as IChapter[]
         )) as IChapter[],
@@ -74,7 +74,7 @@ export class PatcherService {
     const isArray = Array.isArray(users);
     return Promise.all(
       (isArray ? users : [users]).map(async (user: IUser) => ({
-        ...user,
+        ...(user as any)._doc,
         favorites: (await PatcherService.itemPatcher(
           user.favorites as IItem[]
         )) as IItem[],

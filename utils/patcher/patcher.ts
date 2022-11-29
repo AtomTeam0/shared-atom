@@ -10,6 +10,9 @@ export function patchDocsWithObject<T>(
     defaultValue: { [k: string]: any };
   }
 ): T | T[] {
+  if (getContext(Global.SKIP_PLUGINS)) {
+    return docs;
+  }
   const userPatcher = (
     foreignArrayProperty: keyof IUser,
     foreignIdProperty: string,
@@ -32,7 +35,7 @@ export function patchDocsWithObject<T>(
 
   const isArray = Array.isArray(docs);
   const res = (isArray ? docs : [docs]).map((doc: any) => ({
-    ...doc,
+    ...(doc as any)._doc,
     ...enhanceProperties(doc),
   }));
   return isArray ? res : res[0];
@@ -46,6 +49,9 @@ export function patchDocsWithBoolean<T>(
     defaultValue: boolean;
   }
 ): T | T[] {
+  if (getContext(Global.SKIP_PLUGINS)) {
+    return docs;
+  }
   const userPatcherBoolean = (
     foreignArrayProperty: keyof IUser & string,
     localId: string
@@ -63,7 +69,7 @@ export function patchDocsWithBoolean<T>(
 
   const isArray = Array.isArray(docs);
   const res = (isArray ? docs : [docs]).map((doc: any) => ({
-    ...doc,
+    ...(doc as any)._doc,
     ...enhanceBooleanProperty(doc),
   }));
   return isArray ? res : res[0];
