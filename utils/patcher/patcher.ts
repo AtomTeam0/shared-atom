@@ -42,12 +42,13 @@ export function patchDocsWithObject<T>(
         ...enhanceProperties(child),
       })),
     }));
+  } else {
+    res = (isArray ? docs : [docs]).map((doc: any) => ({
+      ...doc,
+      ...enhanceProperties(doc),
+    }));
   }
 
-  res = (isArray ? docs : [docs]).map((doc: any) => ({
-    ...doc,
-    ...enhanceProperties(doc),
-  }));
   return isArray ? res : res[0];
 }
 
@@ -86,11 +87,12 @@ export function patchDocsWithBoolean<T>(
         ...enhanceBooleanProperty(child),
       })),
     }));
+  } else {
+    res = (isArray ? docs : [docs]).map((doc: any) => ({
+      ...doc,
+      ...enhanceBooleanProperty(doc),
+    }));
   }
 
-  res = (isArray ? docs : [docs]).map((doc: any) => ({
-    ...doc,
-    ...enhanceBooleanProperty(doc),
-  }));
   return isArray ? res : res[0];
 }

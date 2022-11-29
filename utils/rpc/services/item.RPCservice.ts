@@ -12,7 +12,7 @@ export class ItemRPCService {
   });
 
   static async getItemById(itemId: string): Promise<IItem> {
-    return RPCClientRequest()(ItemRPCService.rpcClient, "getItemById", {
+    return RPCClientRequest(ItemRPCService.rpcClient, "getItemById", {
       itemId,
     });
   }
@@ -22,7 +22,7 @@ export class ItemRPCService {
     contentType: ContentType,
     priority?: number
   ): Promise<IItem> {
-    return RPCClientRequest()(ItemRPCService.rpcClient, "createMissionItem", {
+    return RPCClientRequest(ItemRPCService.rpcClient, "createMissionItem", {
       title,
       contentType,
       priority,
@@ -30,13 +30,13 @@ export class ItemRPCService {
   }
 
   static async getAreaById(areaId: string): Promise<IArea> {
-    return RPCClientRequest()(ItemRPCService.rpcClient, "getAreaById", {
+    return RPCClientRequest(ItemRPCService.rpcClient, "getAreaById", {
       areaId,
     });
   }
 
   static async getRelevantArea(coordinate: number[]): Promise<IArea> {
-    return RPCClientRequest()(ItemRPCService.rpcClient, "getRelevantArea", {
+    return RPCClientRequest(ItemRPCService.rpcClient, "getRelevantArea", {
       coordinate,
     });
   }
