@@ -38,3 +38,8 @@ export interface IUserUpdater extends IUser {
   toggleFavorite?: string;
   toggleEmployee?: string;
 }
+
+export interface IOtherUserUpdater extends IUser {
+  permission: Permission;
+  toggleEmployee: string;
+}
