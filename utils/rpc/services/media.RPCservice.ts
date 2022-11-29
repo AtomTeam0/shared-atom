@@ -11,20 +11,26 @@ export class MediaRPCService {
   });
 
   static async getMediaById(mediaId: string): Promise<IMedia> {
-    return RPCClientRequest(false)(MediaRPCService.rpcClient, "getMediaById", {
-      mediaId,
-    });
+    return RPCClientRequest(
+      MediaRPCService.rpcClient,
+      "getMediaById",
+      {
+        mediaId,
+      },
+      false
+    );
   }
 
   static async getInfographicById(
     infographicId: string
   ): Promise<IInfographic> {
-    return RPCClientRequest(false)(
+    return RPCClientRequest(
       MediaRPCService.rpcClient,
       "getInfographicById",
       {
         infographicId,
-      }
+      },
+      false
     );
   }
 }

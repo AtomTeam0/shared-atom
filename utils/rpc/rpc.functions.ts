@@ -6,41 +6,32 @@ import { RPCFunctionError } from "../errors/validationError";
 import { getContext, runWithContext, setContext } from "../helpers/context";
 import { defaultValidationOptions } from "../joi/joi.functions";
 
-export const RPCClientRequest = (
-  skipPlugins = true
-): ((
+export const RPCClientRequest = async (
   rpcClient: jayson.HttpClient,
   route: string,
   params?:
     | {
         [k: string]: any;
       }
-    | undefined
-) => Promise<any>) => {
-  const request = async (
-    rpcClient: jayson.HttpClient,
-    route: string,
-    params?: { [k: string]: any }
-  ): Promise<any> => {
-    const isError = (obj: any) =>
-      obj ? !!obj.name && !!obj.message && !!obj.status : false;
-    const user = getContext(Global.USER);
+    | undefined,
+  skipPlugins = true
+): Promise<any> => {
+  const isError = (obj: any) =>
+    obj ? !!obj.name && !!obj.message && !!obj.status : false;
+  const user = getContext(Global.USER);
 
-    console.log(`-- ${route} RPC request was called --`);
-    const response = await rpcClient.request(route, {
-      ...(user && { user }),
-      skipPlugins,
-      params,
-    });
+  console.log(`-- ${route} RPC request was called --`);
+  const response = await rpcClient.request(route, {
+    ...(user && { user }),
+    skipPlugins,
+    params,
+  });
 
-    if (isError(response.result)) {
-      throw response.result;
-    }
+  if (isError(response.result)) {
+    throw response.result;
+  }
 
-    return response.result;
-  };
-
-  return request;
+  return response.result;
 };
 
 export const RPCServerRequest =

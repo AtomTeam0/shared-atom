@@ -5,14 +5,13 @@ import { getContext } from "../helpers/context";
 export function patchDocsWithObject<T>(
   docs: T | T[],
   options: {
-    foreignArrayProperty: keyof IUser & string;
-    foreignIdProperty: string;
+    foreignArrayProperty: keyof IUser;
+    foreignIdProperty: keyof IUser;
     defaultValue: { [k: string]: any };
-  },
-  childProperty?: keyof T
+  }
 ): T | T[] {
   const userPatcher = (
-    foreignArrayProperty: keyof IUser & string,
+    foreignArrayProperty: keyof IUser,
     foreignIdProperty: string,
     localId: string
   ): Promise<any> => {
@@ -31,20 +30,8 @@ export function patchDocsWithObject<T>(
       String(doc._id)
     ) || options.defaultValue;
 
-  let res;
   const isArray = Array.isArray(docs);
-
-  if (childProperty) {
-    res = (isArray ? docs : [docs]).map((doc: any) => ({
-      ...doc,
-      [childProperty]: doc[childProperty].map((child: any) => ({
-        ...child,
-        ...enhanceProperties(child),
-      })),
-    }));
-  }
-
-  res = (isArray ? docs : [docs]).map((doc: any) => ({
+  const res = (isArray ? docs : [docs]).map((doc: any) => ({
     ...doc,
     ...enhanceProperties(doc),
   }));
@@ -54,11 +41,10 @@ export function patchDocsWithObject<T>(
 export function patchDocsWithBoolean<T>(
   docs: T | T[],
   options: {
-    foreignArrayProperty: keyof IUser & string;
-    localBoolProperty: string;
+    foreignArrayProperty: keyof IUser;
+    localBoolProperty: keyof T;
     defaultValue: boolean;
-  },
-  childProperty?: keyof T
+  }
 ): T | T[] {
   const userPatcherBoolean = (
     foreignArrayProperty: keyof IUser & string,
@@ -75,20 +61,8 @@ export function patchDocsWithBoolean<T>(
       options.defaultValue,
   });
 
-  let res;
   const isArray = Array.isArray(docs);
-
-  if (childProperty) {
-    res = (isArray ? docs : [docs]).map((doc: any) => ({
-      ...doc,
-      [childProperty]: doc[childProperty].map((child: any) => ({
-        ...child,
-        ...enhanceBooleanProperty(child),
-      })),
-    }));
-  }
-
-  res = (isArray ? docs : [docs]).map((doc: any) => ({
+  const res = (isArray ? docs : [docs]).map((doc: any) => ({
     ...doc,
     ...enhanceBooleanProperty(doc),
   }));

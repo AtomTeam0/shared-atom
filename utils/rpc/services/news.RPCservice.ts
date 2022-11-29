@@ -12,7 +12,7 @@ export class NewsRPCService {
     joinRoomId: string,
     leaveRoomId: string
   ): Promise<void> {
-    return RPCClientRequest()(NewsRPCService.rpcClient, "updateSocketRoom", {
+    return RPCClientRequest(NewsRPCService.rpcClient, "updateSocketRoom", {
       joinRoomId,
       leaveRoomId,
     });
