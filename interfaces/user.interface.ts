@@ -17,7 +17,7 @@ export interface IUserChapterPatch {
 }
 
 export interface IUserMediaPatch {
-  mode: WatchMode;
+  mode?: WatchMode;
   note?: string;
 }
 export interface IUser {
