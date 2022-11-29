@@ -1,12 +1,9 @@
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
 import { FileTypes } from "../enums/helpers/FileTypes";
-import { Permission } from "../enums/Permission";
 import { IItem } from "../interfaces/item.interface";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
-import { conditionPlugin } from "../utils/schema/plugins/conditionPlugin";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
-import { patchBooleanPlugin } from "../utils/schema/plugins/patchPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { AreaModel } from "./area.model";
 import { UnitModel } from "./unit.model";
@@ -104,21 +101,11 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-ItemSchema.plugin(conditionPlugin, {
-  propertyName: "isActive",
-  wantedVal: true,
-  bypassPermissions: [Permission.ADMIN, Permission.DIRECTOR],
-});
 ItemSchema.plugin(populatePlugin, [
   { path: "areas", ref: "areas", isArray: true },
   { path: "unit", ref: "units" },
   { path: "similarItems", ref: "items", isArray: true },
 ]);
-ItemSchema.plugin(patchBooleanPlugin, {
-  foreignArrayProperty: "favorites",
-  localBoolProperty: "isFavorite",
-  defaultValue: false,
-});
 ItemSchema.plugin(indexPlugin, {
   propertyNames: ["title"],
 });

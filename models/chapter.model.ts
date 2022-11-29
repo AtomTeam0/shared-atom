@@ -1,7 +1,5 @@
 import * as mongoose from "mongoose";
-import { WatchMode } from "../enums/WatchMode";
 import { IChapter } from "../interfaces/chapter.interface";
-import { patchObjectPlugin } from "../utils/schema/plugins/patchPlugin";
 
 const ChapterSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -30,13 +28,6 @@ const ChapterSchema: mongoose.Schema = new mongoose.Schema(
     timestamps: { createdAt: false, updatedAt: false },
   }
 );
-
-// plugins
-ChapterSchema.plugin(patchObjectPlugin, {
-  foreignArrayProperty: "chapters",
-  foreignIdProperty: "chapterId",
-  defaultValue: { mode: WatchMode.UNREAD },
-});
 
 export const ChapterModel = mongoose.model<IChapter & mongoose.Document>(
   "chapters",

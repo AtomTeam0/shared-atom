@@ -1,9 +1,7 @@
 import * as mongoose from "mongoose";
 import { FileTypes } from "../enums/helpers/FileTypes";
-import { WatchMode } from "../enums/WatchMode";
 import { IMedia } from "../interfaces/media.interface";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
-import { patchObjectPlugin } from "../utils/schema/plugins/patchPlugin";
 
 const MediaSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -40,11 +38,6 @@ const MediaSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-MediaSchema.plugin(patchObjectPlugin, {
-  foreignArrayProperty: "media",
-  foreignIdProperty: "mediaId",
-  defaultValue: { mode: WatchMode.UNREAD },
-});
 MediaSchema.plugin(blobPlugin, [
   {
     propertyName: "video",
