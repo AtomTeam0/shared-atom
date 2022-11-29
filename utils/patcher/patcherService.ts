@@ -8,7 +8,7 @@ import { IMedia } from "../../interfaces/media.interface";
 
 export class PatcherService {
   // regulars
-  static itemPatcher(items: IItem | IItem[]): IItem | IItem[] {
+  static async itemPatcher(items: IItem | IItem[]): Promise<IItem | IItem[]> {
     const itemOptions = {
       foreignArrayProperty: "favorites" as keyof IUser,
       localBoolProperty: "isFavorite" as keyof IItem,
@@ -17,9 +17,9 @@ export class PatcherService {
     return patchDocsWithBoolean<IItem>(items, itemOptions);
   }
 
-  static chapterPatcher(
+  static async chapterPatcher(
     chapters: IChapter | IChapter[]
-  ): IChapter | IChapter[] {
+  ): Promise<IChapter | IChapter[]> {
     const chapterOptions = {
       foreignArrayProperty: "chapters" as keyof IUser,
       foreignIdProperty: "chapterId" as keyof IUser,
@@ -28,7 +28,9 @@ export class PatcherService {
     return patchDocsWithObject<IChapter>(chapters, chapterOptions);
   }
 
-  static mediaPatcher(medias: IMedia | IMedia[]): IMedia | IMedia[] {
+  static async mediaPatcher(
+    medias: IMedia | IMedia[]
+  ): Promise<IMedia | IMedia[]> {
     const mediaOptions = {
       foreignArrayProperty: "media" as keyof IUser,
       foreignIdProperty: "mediaId" as keyof IUser,
@@ -38,38 +40,48 @@ export class PatcherService {
   }
 
   // with child properties
-  static itemGroupPatcher(itemGroups: IItemGroup[]): IItemGroup[] {
+  static async itemGroupPatcher(
+    itemGroups: IItemGroup[]
+  ): Promise<IItemGroup[]> {
     const isArray = Array.isArray(itemGroups);
-    return (isArray ? itemGroups : [itemGroups]).map(
-      (itemGroup: IItemGroup) => ({
-        ...itemGroup,
-        items: PatcherService.itemPatcher(
-          itemGroup.items as IItem[]
-        ) as IItem[],
-      })
+    return Promise.all(
+      (isArray ? itemGroups : [itemGroups]).map(
+        async (itemGroup: IItemGroup) => ({
+          ...itemGroup,
+          items: (await PatcherService.itemPatcher(
+            itemGroup.items as IItem[]
+          )) as IItem[],
+        })
+      )
     );
   }
 
-  static lessonPatcher(lessons: ILesson | ILesson[]): ILesson | ILesson[] {
+  static async lessonPatcher(
+    lessons: ILesson | ILesson[]
+  ): Promise<ILesson | ILesson[]> {
     const isArray = Array.isArray(lessons);
-    return (isArray ? lessons : [lessons]).map((lesson: ILesson) => ({
-      ...lesson,
-      chapters: PatcherService.chapterPatcher(
-        lesson.chapters as IChapter[]
-      ) as IChapter[],
-    }));
+    return Promise.all(
+      (isArray ? lessons : [lessons]).map(async (lesson: ILesson) => ({
+        ...lesson,
+        chapters: (await PatcherService.chapterPatcher(
+          lesson.chapters as IChapter[]
+        )) as IChapter[],
+      }))
+    );
   }
 
-  static userPatcher(users: IUser | IUser[]): IUser | IUser[] {
+  static async userPatcher(users: IUser | IUser[]): Promise<IUser | IUser[]> {
     const isArray = Array.isArray(users);
-    return (isArray ? users : [users]).map((user: IUser) => ({
-      ...user,
-      favorites: PatcherService.itemPatcher(
-        user.favorites as IItem[]
-      ) as IItem[],
-      lastWatched: PatcherService.itemPatcher(
-        user.lastWatched as IItem[]
-      ) as IItem[],
-    }));
+    return Promise.all(
+      (isArray ? users : [users]).map(async (user: IUser) => ({
+        ...user,
+        favorites: (await PatcherService.itemPatcher(
+          user.favorites as IItem[]
+        )) as IItem[],
+        lastWatched: (await PatcherService.itemPatcher(
+          user.lastWatched as IItem[]
+        )) as IItem[],
+      }))
+    );
   }
 }
