@@ -1,7 +1,7 @@
 export interface IMyWikiQuery {
   search: string;
-  skip?: string;
-  limit?: string;
+  skip: string;
+  limit: string;
 }
 
 export interface IMyWiki {
