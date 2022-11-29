@@ -13,11 +13,11 @@ export interface ILastWatchedQuery {
   section: Section;
 }
 export interface IUserChapterPatch {
-  mode?: WatchMode;
+  mode: WatchMode;
 }
 
 export interface IUserMediaPatch {
-  mode?: WatchMode;
+  mode: WatchMode;
   note?: string;
 }
 export interface IUser {
@@ -30,8 +30,8 @@ export interface IUser {
   favorites: string[] | IItem[];
   lastWatched: string[] | IItem[];
   employees?: string[] | IUser[];
-  media: { mediaId: string; mode: WatchMode; note: string }[];
-  chapters: { chapterId: string; mode: WatchMode }[];
+  media: ({ mediaId: string } & IUserMediaPatch)[];
+  chapters: ({ chapterId: string } & IUserChapterPatch)[];
 }
 
 export interface IUserUpdater extends IUser {
