@@ -25,7 +25,7 @@ const coordinateAxisRegex = /^-?[0-9]{1,3}(?:\.[0-9]{1,15})?$/;
 // exported types
 export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
   Joi.string().external(async (value: string | undefined, helpers: any) => {
-    if (value) {
+    if (value !== undefined) {
       const isValid = mongoIdRegex.test(value);
       if (!isValid) {
         throw new InvalidMongoIdError();
@@ -46,7 +46,7 @@ export const joiPoligon = (getAreasFunc: () => Promise<IArea[]>) =>
   Joi.array()
     .items(Joi.array().items(Joi.number()))
     .external(async (value: number[][] | undefined, helpers: any) => {
-      if (value) {
+      if (value !== undefined) {
         const isValid =
           value.length &&
           value.every(
@@ -78,7 +78,7 @@ export const joiPoligon = (getAreasFunc: () => Promise<IArea[]>) =>
 export const joiCoordinate = Joi.array()
   .items(Joi.number())
   .external(async (value: number[] | undefined, helpers: any) => {
-    if (value) {
+    if (value !== undefined) {
       const isValid =
         value.length === 2 &&
         value.every((coordinateAxis: number) =>
@@ -94,7 +94,7 @@ export const joiCoordinate = Joi.array()
 export const joiWeekNum = Joi.number()
   .integer()
   .external(async (value: number | undefined, helpers: any) => {
-    if (value) {
+    if (value !== undefined) {
       const isValid = value >= 1 && value <= 52;
       if (!isValid) {
         throw new InvalidWeekNumError();
@@ -102,8 +102,8 @@ export const joiWeekNum = Joi.number()
       const numOfDays = 1 + (value - 1) * 7; // 1st of January + 7 days for each week
       const currentYear = new Date().getFullYear(); // returns the current year
       return {
-        weekStartDate: new Date(currentYear, 0, numOfDays),
-        weekEndDate: new Date(currentYear, 0, numOfDays + 7),
+        weekStartDate: new Date(currentYear, 0, numOfDays).toISOString(),
+        weekEndDate: new Date(currentYear, 0, numOfDays + 6).toISOString(),
       };
     }
     return value;
