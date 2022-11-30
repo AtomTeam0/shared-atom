@@ -102,8 +102,8 @@ export const joiWeekNum = Joi.number()
       const numOfDays = 1 + (value - 1) * 7; // 1st of January + 7 days for each week
       const currentYear = new Date().getFullYear(); // returns the current year
       return {
-        weekStartDate: new Date(currentYear, 0, numOfDays).toISOString(),
-        weekEndDate: new Date(currentYear, 0, numOfDays + 6).toISOString(),
+        weekStartDate: new Date(currentYear, 0, numOfDays),
+        weekEndDate: new Date(currentYear, 0, numOfDays + 6),
       };
     }
     return value;
