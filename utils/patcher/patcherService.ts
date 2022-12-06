@@ -5,6 +5,7 @@ import { IUser } from "../../interfaces/user.interface";
 import { patchDocsWithBoolean, patchDocsWithObject } from "./patcher";
 import { ILesson } from "../../interfaces/lesson.interface";
 import { IMedia } from "../../interfaces/media.interface";
+import { IPaginator } from "../../interfaces/helpers/paginator.interface";
 
 export class PatcherService {
   // regulars
@@ -54,6 +55,17 @@ export class PatcherService {
         })
       )
     );
+  }
+
+  static async paginatedItemsPatcher(
+    paginatedItems: IPaginator<IItem>
+  ): Promise<IPaginator<IItem>> {
+    return {
+      ...(paginatedItems as any)._doc,
+      data: (await PatcherService.itemPatcher(
+        paginatedItems.data as IItem[]
+      )) as IItem[],
+    };
   }
 
   static async lessonPatcher(
