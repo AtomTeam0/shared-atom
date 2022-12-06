@@ -1,3 +1,8 @@
+export interface IPaginationQuery {
+  skip?: number;
+  limit?: number;
+}
+
 export interface IPaginator<T> {
   metadata: {
     totalDocs: number;
@@ -5,3 +10,5 @@ export interface IPaginator<T> {
   };
   data: T[];
 }
+
+export const paginationKeys: (keyof IPaginationQuery)[] = ["skip", "limit"];

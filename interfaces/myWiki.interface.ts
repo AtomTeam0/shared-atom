@@ -1,7 +1,7 @@
-export interface IMyWikiQuery {
+import { IPaginationQuery } from "./helpers/paginator.interface";
+
+export interface IMyWikiQuery extends IPaginationQuery {
   search: string;
-  skip: string;
-  limit: string;
 }
 
 export interface IMyWiki {

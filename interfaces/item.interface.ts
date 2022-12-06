@@ -6,16 +6,15 @@ import { Section } from "../enums/Section";
 import { IArea } from "./area.interface";
 import { IUnit } from "./unit.interface";
 import { IUser } from "./user.interface";
+import { IPaginationQuery } from "./helpers/paginator.interface";
 
-export interface IItemQuery {
+export interface IItemQuery extends IPaginationQuery {
   areaId?: string;
   section?: Section;
   category?: Category;
   contentType?: ContentType;
   search?: string;
   isActive?: boolean;
-  limit?: number;
-  skip?: number;
 }
 
 export interface IMissionItem {
