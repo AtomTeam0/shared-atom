@@ -9,13 +9,16 @@ import { IPaginator } from "../../interfaces/helpers/paginator.interface";
 
 export class PatcherService {
   // regulars
-  static async itemPatcher(items: IItem | IItem[]): Promise<IItem | IItem[]> {
+  static async itemPatcher(
+    items: IItem | IItem[],
+    isLean = false
+  ): Promise<IItem | IItem[]> {
     const itemOptions = {
       foreignArrayProperty: "favorites" as keyof IUser,
       localBoolProperty: "isFavorite" as keyof IItem,
       defaultValue: false,
     };
-    return patchDocsWithBoolean<IItem>(items, itemOptions);
+    return patchDocsWithBoolean<IItem>(items, itemOptions, isLean);
   }
 
   static async chapterPatcher(
@@ -61,9 +64,10 @@ export class PatcherService {
     paginatedItems: IPaginator<IItem>
   ): Promise<IPaginator<IItem>> {
     return {
-      ...(paginatedItems as any)._doc,
+      ...paginatedItems,
       data: (await PatcherService.itemPatcher(
-        paginatedItems.data as IItem[]
+        paginatedItems.data as IItem[],
+        true
       )) as IItem[],
     };
   }
