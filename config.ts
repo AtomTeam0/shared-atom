@@ -5,11 +5,6 @@ export const config = {
   azure: {
     azureAccountName: process.env.AZURE_ACCOUNT_NAME || "",
     azureAccountKey: process.env.AZURE_ACCOUNT_KEY || "",
-    blobContainers: {
-      imageContainerName: process.env.IMAGE_CONTAINER_NAME || "images",
-      mp3ContainerName: process.env.MP3_CONTAINER_NAME || "mp3's",
-      mp4ContainerName: process.env.MP4_CONTAINER_NAME || "mp4's",
-    },
   },
   jwt: {
     secretKey: process.env.SECRET_KEY || "atomTeam",
