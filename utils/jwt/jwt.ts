@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import * as jwt from "jsonwebtoken";
 import { config } from "../../config";
-import { IUser } from "../../interfaces/user.interface";
+import { IUser } from "../../common/interfaces/user.interface";
 import { InvalidToken, TokenNotProvided } from "../errors/validationError";
 import { wrapAsyncMiddleware } from "../helpers/wrapper";
 

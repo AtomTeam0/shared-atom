@@ -1,8 +1,8 @@
 import * as jayson from "jayson/promise";
 import { config } from "../../../config";
-import { IChapter } from "../../../interfaces/chapter.interface";
-import { ILesson } from "../../../interfaces/lesson.interface";
-import { IPakal } from "../../../interfaces/pakal.interface";
+import { IChapter } from "../../../common/interfaces/chapter.interface";
+import { ILesson } from "../../../common/interfaces/lesson.interface";
+import { IPakal } from "../../../common/interfaces/pakal.interface";
 import { RPCClientRequest } from "../rpc.functions";
 
 export class LessonRPCService {

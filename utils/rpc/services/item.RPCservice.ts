@@ -1,8 +1,8 @@
 import * as jayson from "jayson/promise";
 import { config } from "../../../config";
-import { ContentType } from "../../../enums/ContentType";
-import { IArea } from "../../../interfaces/area.interface";
-import { IItem } from "../../../interfaces/item.interface";
+import { ContentType } from "../../../common/enums/ContentType";
+import { IArea } from "../../../common/interfaces/area.interface";
+import { IItem } from "../../../common/interfaces/item.interface";
 import { RPCClientRequest } from "../rpc.functions";
 
 export class ItemRPCService {

@@ -13,7 +13,7 @@ import {
   unknownErrorHandler,
 } from "./utils/errors/errorHandler";
 import { initLogger } from "./utils/helpers/logger";
-import { IServerConfig } from "./interfaces/helpers/serverConfig.interface";
+import { IServerConfig } from "./common/interfaces/helpers/serverConfig.interface";
 import { setSocketServer } from "./utils/schema/helpers/socketHelpers";
 import { runWithContextMiddleWare } from "./utils/helpers/context";
 import { config } from "./config";

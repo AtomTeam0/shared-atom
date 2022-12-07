@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
-import { FileTypes } from "../enums/helpers/FileTypes";
-import { IArticle } from "../interfaces/article.interface";
+import { FileTypes } from "../common/enums/helpers/FileTypes";
+import { IArticle } from "../common/interfaces/article.interface";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { CommentModel } from "./comment.model";

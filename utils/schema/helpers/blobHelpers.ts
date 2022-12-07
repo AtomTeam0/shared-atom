@@ -10,7 +10,7 @@ import {
   FileTypes,
   getContainerNameByFileType,
   getMimeTypeByFileType,
-} from "../../../enums/helpers/FileTypes";
+} from "../../../common/enums/helpers/FileTypes";
 import { config } from "../../../config";
 
 let blobClient: BlobServiceClient;

@@ -1,7 +1,7 @@
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
-import { FileTypes } from "../enums/helpers/FileTypes";
-import { IUnit } from "../interfaces/unit.interface";
+import { FileTypes } from "../common/enums/helpers/FileTypes";
+import { IUnit } from "../common/interfaces/unit.interface";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 
 const UnitSchema: mongoose.Schema = new mongoose.Schema(

@@ -1,8 +1,8 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
-import { FileTypes } from "../../../enums/helpers/FileTypes";
-import { Global } from "../../../enums/helpers/Global";
+import { FileTypes } from "../../../common/enums/helpers/FileTypes";
+import { Global } from "../../../common/enums/helpers/Global";
 import {
   getContext,
   setContext,

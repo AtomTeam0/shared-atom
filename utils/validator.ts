@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { Global } from "../enums/helpers/Global";
-import { Permission } from "../enums/Permission";
-import { IUser } from "../interfaces/user.interface";
+import { Global } from "../common/enums/helpers/Global";
+import { Permission } from "../common/enums/Permission";
+import { IUser } from "../common/interfaces/user.interface";
 import { AuthenticationError, PermissionError } from "./errors/generalError";
 import { setContext } from "./helpers/context";
 import { wrapAsyncMiddleware } from "./helpers/wrapper";

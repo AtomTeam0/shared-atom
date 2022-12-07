@@ -1,7 +1,7 @@
 import * as jayson from "jayson/promise";
 import * as Joi from "joi";
-import { Global } from "../../enums/helpers/Global";
-import { IRPCPayload } from "../../interfaces/helpers/rpcPayload.interface";
+import { Global } from "../../common/enums/helpers/Global";
+import { IRPCPayload } from "../../common/interfaces/helpers/rpcPayload.interface";
 import { RPCFunctionError } from "../errors/validationError";
 import { getContext, runWithContext, setContext } from "../helpers/context";
 import { defaultValidationOptions } from "../joi/joi.functions";

@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 import * as http from "http";
 import { getContext } from "../../helpers/context";
-import { Global } from "../../../enums/helpers/Global";
+import { Global } from "../../../common/enums/helpers/Global";
 
 let socketServer: Server;
 

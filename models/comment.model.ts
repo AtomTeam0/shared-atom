@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { IComment } from "../interfaces/comment.interface";
+import { IComment } from "../common/interfaces/comment.interface";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { UserModel } from "./user.model";
 

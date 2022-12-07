@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { Global } from "../../enums/helpers/Global";
-import { Permission } from "../../enums/Permission";
+import { Global } from "../../common/enums/helpers/Global";
+import { Permission } from "../../common/enums/Permission";
 import { wrapAsyncMiddleware } from "./wrapper";
 
 const context = require("cls-hooked");

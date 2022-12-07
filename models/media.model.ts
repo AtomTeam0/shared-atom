@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
-import { FileTypes } from "../enums/helpers/FileTypes";
-import { IMedia } from "../interfaces/media.interface";
+import { FileTypes } from "../common/enums/helpers/FileTypes";
+import { IMedia } from "../common/interfaces/media.interface";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 
 const MediaSchema: mongoose.Schema = new mongoose.Schema(

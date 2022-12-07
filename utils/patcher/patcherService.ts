@@ -1,11 +1,11 @@
-import { WatchMode } from "../../enums/WatchMode";
-import { IItem, IItemGroup } from "../../interfaces/item.interface";
-import { IChapter } from "../../interfaces/chapter.interface";
-import { IUser } from "../../interfaces/user.interface";
+import { WatchMode } from "../../common/enums/WatchMode";
+import { IItem, IItemGroup } from "../../common/interfaces/item.interface";
+import { IChapter } from "../../common/interfaces/chapter.interface";
+import { IUser } from "../../common/interfaces/user.interface";
 import { patchDocsWithBoolean, patchDocsWithObject } from "./patcher";
-import { ILesson } from "../../interfaces/lesson.interface";
-import { IMedia } from "../../interfaces/media.interface";
-import { IPaginator } from "../../interfaces/helpers/paginator.interface";
+import { ILesson } from "../../common/interfaces/lesson.interface";
+import { IMedia } from "../../common/interfaces/media.interface";
+import { IPaginator } from "../../common/interfaces/helpers/paginator.interface";
 
 export class PatcherService {
   // regulars

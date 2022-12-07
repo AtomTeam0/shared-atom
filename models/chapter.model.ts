@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { IChapter } from "../interfaces/chapter.interface";
+import { IChapter } from "../common/interfaces/chapter.interface";
 
 const ChapterSchema: mongoose.Schema = new mongoose.Schema(
   {

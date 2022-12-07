@@ -1,7 +1,7 @@
 import * as jayson from "jayson/promise";
 import { config } from "../../../config";
-import { IInfographic } from "../../../interfaces/infographic.interface";
-import { IMedia } from "../../../interfaces/media.interface";
+import { IInfographic } from "../../../common/interfaces/infographic.interface";
+import { IMedia } from "../../../common/interfaces/media.interface";
 import { RPCClientRequest } from "../rpc.functions";
 
 export class MediaRPCService {

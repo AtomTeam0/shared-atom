@@ -1,5 +1,5 @@
 import { ObjectSchema } from "joi";
-import { Permission } from "../../enums/Permission";
+import { Permission } from "../../common/enums/Permission";
 
 export interface IPermissionSchema {
   permissions: Permission[];

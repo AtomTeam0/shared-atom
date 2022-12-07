@@ -1,10 +1,10 @@
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
-import { WatchMode } from "../enums/WatchMode";
+import { WatchMode } from "../common/enums/WatchMode";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { UserModel } from "./user.model";
 import { ItemModel } from "./item.model";
-import { IMission } from "../interfaces/mission.interface";
+import { IMission } from "../common/interfaces/mission.interface";
 
 const MissionSchema: mongoose.Schema = new mongoose.Schema(
   {

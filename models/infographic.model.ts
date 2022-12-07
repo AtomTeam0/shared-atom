@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
-import { FileTypes } from "../enums/helpers/FileTypes";
-import { IInfographic } from "../interfaces/infographic.interface";
+import { FileTypes } from "../common/enums/helpers/FileTypes";
+import { IInfographic } from "../common/interfaces/infographic.interface";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 
 const InfographicSchema: mongoose.Schema = new mongoose.Schema(

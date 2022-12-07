@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { ITestByUser } from "../interfaces/testByUser.interface";
+import { ITestByUser } from "../common/interfaces/testByUser.interface";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { ItemModel } from "./item.model";
 import { TestModel } from "./test.model";

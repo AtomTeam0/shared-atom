@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import * as Joi from "joi";
 import * as turf from "@turf/turf";
-import { Global } from "../../enums/helpers/Global";
+import { Global } from "../../common/enums/helpers/Global";
 import {
   IdNotFoundError,
   InvalidMongoIdError,
@@ -11,7 +11,7 @@ import {
   InvalidWeekNumError,
 } from "../errors/validationError";
 import { getContext, setContext } from "../helpers/context";
-import { IArea } from "../../interfaces/area.interface";
+import { IArea } from "../../common/interfaces/area.interface";
 
 // regex
 const mongoIdRegex = /^[0-9a-fA-F]{24}$/;

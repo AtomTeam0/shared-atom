@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { ILesson } from "../interfaces/lesson.interface";
+import { ILesson } from "../common/interfaces/lesson.interface";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { ChapterModel } from "./chapter.model";
 import { ItemModel } from "./item.model";

@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { IPakal } from "../interfaces/pakal.interface";
+import { IPakal } from "../common/interfaces/pakal.interface";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { ChapterModel } from "./chapter.model";
 import { TestModel } from "./test.model";

@@ -1,5 +1,5 @@
-import { Global } from "../../enums/helpers/Global";
-import { IUser } from "../../interfaces/user.interface";
+import { Global } from "../../common/enums/helpers/Global";
+import { IUser } from "../../common/interfaces/user.interface";
 import { getContext } from "../helpers/context";
 
 export function patchDocsWithObject<T>(
