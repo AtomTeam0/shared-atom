@@ -1,12 +1,12 @@
 import * as jayson from "jayson/promise";
-import { RPCconfig } from "../rpc.config";
+import { config } from "../../../config";
 import { IUser } from "../../../interfaces/user.interface";
 import { RPCClientRequest } from "../rpc.functions";
 
 export class UsersRPCService {
   private static rpcClient = jayson.Client.http({
-    hostname: RPCconfig.userService.rpcHostname,
-    port: RPCconfig.userService.rpcPort,
+    hostname: config.rpc.userService.rpcHostname,
+    port: config.rpc.userService.rpcPort,
   });
 
   static async getUserById(userId: string): Promise<IUser> {

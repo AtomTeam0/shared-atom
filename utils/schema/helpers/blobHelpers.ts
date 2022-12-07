@@ -11,10 +11,7 @@ import {
   getContainerNameByFileType,
   getMimeTypeByFileType,
 } from "../../../enums/helpers/FileTypes";
-
-const AZURE_ACCOUNT_NAME = process.env.AZURE_ACCOUNT_NAME || "";
-const AZURE_ACCOUNT_KEY = process.env.AZURE_ACCOUNT_KEY || "";
-const AZURE_STORAGE_CONNECTION_STRING = `DefaultEndpointsProtocol=https;AccountName=${AZURE_ACCOUNT_NAME};AccountKey=${AZURE_ACCOUNT_KEY};EndpointSuffix=core.windows.net`;
+import { config } from "../../../config";
 
 let blobClient: BlobServiceClient;
 
@@ -23,6 +20,7 @@ const getBlobClient = () => {
     return blobClient;
   }
 
+  const AZURE_STORAGE_CONNECTION_STRING = `DefaultEndpointsProtocol=https;AccountName=${config.azure.azureAccountName};AccountKey=${config.azure.azureAccountKey};EndpointSuffix=core.windows.net`;
   blobClient = BlobServiceClient.fromConnectionString(
     AZURE_STORAGE_CONNECTION_STRING
   );
@@ -30,11 +28,9 @@ const getBlobClient = () => {
   return blobClient;
 };
 
-const createSasUrl = async (
-  accountName: string,
-  containerName: string,
-  blobName: string
-) => {
+const createSasUrl = async (containerName: string, blobName: string) => {
+  const accountName = config.azure.azureAccountName;
+
   const HOUR = 60 * 60 * 1000;
   const NOW = new Date();
 
@@ -116,8 +112,4 @@ export const updateBlob = async (
 ) => uploadBlob(base64Data, fileType, blobName);
 
 export const downloadBlob = async (blobId: string, fileType: FileTypes) =>
-  createSasUrl(
-    AZURE_ACCOUNT_NAME,
-    getContainerNameByFileType(fileType),
-    blobId
-  );
+  createSasUrl(getContainerNameByFileType(fileType), blobId);

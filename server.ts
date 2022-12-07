@@ -16,63 +16,61 @@ import { initLogger } from "./utils/helpers/logger";
 import { IServerConfig } from "./interfaces/helpers/serverConfig.interface";
 import { setSocketServer } from "./utils/schema/helpers/socketHelpers";
 import { runWithContextMiddleWare } from "./utils/helpers/context";
+import { config } from "./config";
 
 export class Server {
   public app: express.Application;
 
-  private config: IServerConfig;
+  private serverConfig: IServerConfig;
 
   private server: http.Server;
 
   private logger: winston.Logger;
 
   public static bootstrap(
-    config: IServerConfig,
+    serverConfig: IServerConfig,
     router: Router,
     RpcServer?: jayson.Server,
     isSocket = false
   ): Server {
-    return new Server(config, router, RpcServer, isSocket);
+    return new Server(serverConfig, router, RpcServer, isSocket);
   }
 
   private constructor(
-    config: IServerConfig,
+    serverConfig: IServerConfig,
     router: Router,
     RpcServer?: jayson.Server,
     isSocket = false
   ) {
     // handle express
     this.app = express();
-    this.config = config;
-    this.logger = initLogger(config);
+    this.serverConfig = serverConfig;
+    this.logger = initLogger(serverConfig);
     this.configureMiddlewares();
     this.app.use(runWithContextMiddleWare());
     this.app.use(router);
     this.initializeErrorHandler();
     this.server = http.createServer(this.app);
-    this.server.listen(this.config.server.port, () => {
+    this.server.listen(this.serverConfig.server.port, () => {
       console.log(
-        `Server running in ${
-          process.env.NODE_ENV || "development"
-        } environment on port ${this.config.server.port}`
+        `Server running in ${config.server.nodeEnv} environment on port ${this.serverConfig.server.port}`
       );
       this.log(
         "info",
-        `Server running in ${
-          process.env.NODE_ENV || "development"
-        } environment on port ${this.config.server.port}`,
+        `Server running in ${config.server.nodeEnv} environment on port ${this.serverConfig.server.port}`,
         "server started"
       );
     });
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
     // handle RPC
     if (RpcServer) {
-      RpcServer.http().listen(this.config.rpc?.port, () => {
-        console.log(`RPC server running on port ${this.config.rpc?.port}`);
+      RpcServer.http().listen(this.serverConfig.rpc?.port, () => {
+        console.log(
+          `RPC server running on port ${this.serverConfig.rpc?.port}`
+        );
         this.log(
           "info",
-          `RPC server running on port ${this.config.rpc?.port}`,
+          `RPC server running on port ${this.serverConfig.rpc?.port}`,
           "RPC server started"
         );
       });
@@ -85,11 +83,11 @@ export class Server {
 
   private configureMiddlewares() {
     const corsOptions: cors.CorsOptions = {
-      origin: this.config.cors.allowedOrigins,
+      origin: this.serverConfig.cors.allowedOrigins,
     };
     this.app.use(cors(corsOptions));
 
-    if (process.env.NODE_ENV === "development") {
+    if (config.server.nodeEnv === "development") {
       this.app.use(morgan("dev"));
     }
 

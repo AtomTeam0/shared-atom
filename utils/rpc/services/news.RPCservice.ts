@@ -1,11 +1,11 @@
 import * as jayson from "jayson/promise";
-import { RPCconfig } from "../rpc.config";
+import { config } from "../../../config";
 import { RPCClientRequest } from "../rpc.functions";
 
 export class NewsRPCService {
   private static rpcClient = jayson.Client.http({
-    hostname: RPCconfig.newsService.rpcHostname,
-    port: RPCconfig.newsService.rpcPort,
+    hostname: config.rpc.newsService.rpcHostname,
+    port: config.rpc.newsService.rpcPort,
   });
 
   static async updateSocketRoom(

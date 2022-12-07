@@ -1,14 +1,14 @@
 import * as jayson from "jayson/promise";
+import { config } from "../../../config";
 import { IChapter } from "../../../interfaces/chapter.interface";
 import { ILesson } from "../../../interfaces/lesson.interface";
 import { IPakal } from "../../../interfaces/pakal.interface";
-import { RPCconfig } from "../rpc.config";
 import { RPCClientRequest } from "../rpc.functions";
 
 export class LessonRPCService {
   private static rpcClient = jayson.Client.http({
-    hostname: RPCconfig.lessonService.rpcHostname,
-    port: RPCconfig.lessonService.rpcPort,
+    hostname: config.rpc.lessonService.rpcHostname,
+    port: config.rpc.lessonService.rpcPort,
   });
 
   static async getLessonById(lessonId: string): Promise<ILesson> {

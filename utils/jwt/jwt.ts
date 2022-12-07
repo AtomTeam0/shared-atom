@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import * as jwt from "jsonwebtoken";
+import { config } from "../../config";
 import { IUser } from "../../interfaces/user.interface";
 import { InvalidToken, TokenNotProvided } from "../errors/validationError";
 import { wrapAsyncMiddleware } from "../helpers/wrapper";
-import { JWTconfig } from "./jwt.config";
 
 export const verifyToken = wrapAsyncMiddleware(
   async (
@@ -17,7 +17,7 @@ export const verifyToken = wrapAsyncMiddleware(
       throw new TokenNotProvided();
     }
 
-    jwt.verify(token, JWTconfig.secretKey, (err: any, user: any) => {
+    jwt.verify(token, config.jwt.secretKey, (err: any, user: any) => {
       if (err) {
         throw new InvalidToken();
       }

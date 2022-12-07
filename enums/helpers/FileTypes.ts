@@ -1,3 +1,4 @@
+import { config } from "../../config";
 import { UnsupportedFileType } from "../../utils/errors/validationError";
 
 export enum FileTypes {
@@ -7,17 +8,13 @@ export enum FileTypes {
 }
 
 export const getContainerNameByFileType = (fileType: FileTypes) => {
-  const IMAGE_CONTAINER_NAME = process.env.IMAGE_CONTAINER_NAME || "images";
-  const MP3_CONTAINER_NAME = process.env.MP3_CONTAINER_NAME || "mp3's";
-  const MP4_CONTAINER_NAME = process.env.MP4_CONTAINER_NAME || "mp4's";
-
   switch (fileType) {
     case FileTypes.IMAGE:
-      return IMAGE_CONTAINER_NAME;
+      return config.azure.blobContainers.imageContainerName;
     case FileTypes.MP3:
-      return MP3_CONTAINER_NAME;
+      return config.azure.blobContainers.mp3ContainerName;
     case FileTypes.MP4:
-      return MP4_CONTAINER_NAME;
+      return config.azure.blobContainers.mp4ContainerName;
     default:
       throw new UnsupportedFileType();
   }
