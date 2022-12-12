@@ -48,7 +48,7 @@ export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
     return value;
   });
 
-export const joiPoligon = (getAreasFunc: () => Promise<IArea[]>) =>
+export const joiPoligon = () =>
   Joi.array()
     .items(Joi.array().items(Joi.number()))
     .external(async (value: number[][] | undefined, helpers: any) => {
@@ -70,10 +70,12 @@ export const joiPoligon = (getAreasFunc: () => Promise<IArea[]>) =>
             coordinateArray.map((coordinate: number) => +coordinate)
           ),
         ]);
-        const isIntersecting = (await getAreasFunc()).some((area: IArea) => {
-          const areaPolygon = turf.polygon([area.polygon]);
-          return !!turf.intersect(givenPolygon, areaPolygon);
-        });
+        const isIntersecting = (await ItemRPCService.getAreas()).some(
+          (area: IArea) => {
+            const areaPolygon = turf.polygon([area.polygon]);
+            return !!turf.intersect(givenPolygon, areaPolygon);
+          }
+        );
         if (isIntersecting) {
           throw new PoligonIntersectionError();
         }
