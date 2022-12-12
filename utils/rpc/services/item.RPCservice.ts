@@ -32,7 +32,7 @@ export class ItemRPCService {
 
   static async createItem(item: IItem): Promise<IItem> {
     return RPCClientRequest(ItemRPCService.rpcClient, "createItem", {
-      ...item,
+      item,
     });
   }
 
