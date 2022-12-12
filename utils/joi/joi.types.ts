@@ -48,40 +48,39 @@ export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
     return value;
   });
 
-export const joiPoligon = () =>
-  Joi.array()
-    .items(Joi.array().items(Joi.number()))
-    .external(async (value: number[][] | undefined, helpers: any) => {
-      if (value !== undefined) {
-        const isValid =
-          value.length &&
-          value.every(
-            (coordinateArray: number[]) =>
-              coordinateArray.length === 2 &&
-              coordinateArray.every((coordinate: number) =>
-                coordinateAxisRegex.test(coordinate.toString())
-              )
-          );
-        if (!isValid) {
-          throw new InvalidCoordinateError();
-        }
-        const givenPolygon = turf.polygon([
-          value.map((coordinateArray: number[]) =>
-            coordinateArray.map((coordinate: number) => +coordinate)
-          ),
-        ]);
-        const isIntersecting = (await ItemRPCService.getAreas()).some(
-          (area: IArea) => {
-            const areaPolygon = turf.polygon([area.polygon]);
-            return !!turf.intersect(givenPolygon, areaPolygon);
-          }
+export const joiPoligon = Joi.array()
+  .items(Joi.array().items(Joi.number()))
+  .external(async (value: number[][] | undefined, helpers: any) => {
+    if (value !== undefined) {
+      const isValid =
+        value.length &&
+        value.every(
+          (coordinateArray: number[]) =>
+            coordinateArray.length === 2 &&
+            coordinateArray.every((coordinate: number) =>
+              coordinateAxisRegex.test(coordinate.toString())
+            )
         );
-        if (isIntersecting) {
-          throw new PoligonIntersectionError();
-        }
+      if (!isValid) {
+        throw new InvalidCoordinateError();
       }
-      return value;
-    });
+      const givenPolygon = turf.polygon([
+        value.map((coordinateArray: number[]) =>
+          coordinateArray.map((coordinate: number) => +coordinate)
+        ),
+      ]);
+      const isIntersecting = (await ItemRPCService.getAreas()).some(
+        (area: IArea) => {
+          const areaPolygon = turf.polygon([area.polygon]);
+          return !!turf.intersect(givenPolygon, areaPolygon);
+        }
+      );
+      if (isIntersecting) {
+        throw new PoligonIntersectionError();
+      }
+    }
+    return value;
+  });
 
 export const joiCoordinate = Joi.array()
   .items(Joi.number())
