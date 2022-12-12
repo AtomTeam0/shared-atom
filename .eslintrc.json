@@ -38,6 +38,7 @@
                 "endOfLine": "auto"
             }
         ],
+        "import/no-relative-packages": "off",
         "import/extensions": [
             "error",
             "ignorePackages",
