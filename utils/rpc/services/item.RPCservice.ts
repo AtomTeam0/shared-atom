@@ -30,6 +30,12 @@ export class ItemRPCService {
     });
   }
 
+  static async createItem(item: IItem): Promise<IItem> {
+    return RPCClientRequest(ItemRPCService.rpcClient, "createItem", {
+      ...item,
+    });
+  }
+
   static async getAreaById(areaId: string): Promise<IArea> {
     return RPCClientRequest(ItemRPCService.rpcClient, "getAreaById", {
       areaId,
