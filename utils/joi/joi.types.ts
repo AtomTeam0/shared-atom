@@ -12,6 +12,12 @@ import {
 } from "../errors/validationError";
 import { getContext, setContext } from "../helpers/context";
 import { IArea } from "../../common/interfaces/area.interface";
+import { ItemRPCService } from "../rpc/services/item.RPCservice";
+import { Section } from "../../common/enums/Section";
+import { Category } from "../../common/enums/Category";
+import { Corp } from "../../common/enums/Corp";
+import { ContentType } from "../../common/enums/ContentType";
+import { Grade } from "../../common/enums/Grade";
 
 // regex
 const mongoIdRegex = /^[0-9a-fA-F]{24}$/;
@@ -122,3 +128,20 @@ export const joiPersonalId = Joi.string().regex(personalIdRegex);
 export const joiPdfURL = Joi.string().regex(pdfURLRegex);
 
 export const joiPriority = Joi.number().integer().min(1).max(100);
+
+export const joiItem = Joi.object({
+  title: Joi.string().required(),
+  description: Joi.string().required(),
+  timeToRead: Joi.number().required(),
+  thumbNail: joiBlob.required(),
+  unit: joiMongoId(ItemRPCService.getUnitById).required(),
+  contentId: joiMongoId().required(),
+  similarItems: joiMongoIdArray(ItemRPCService.getItemById),
+  areas: joiMongoIdArray(ItemRPCService.getAreaById).min(1).required(),
+  sections: Joi.array().items(joiEnum(Section)).min(1).required(),
+  categories: Joi.array().items(joiEnum(Category)).min(1).required(),
+  corps: Joi.array().items(joiEnum(Corp)).min(1).required(),
+  grade: joiEnum(Grade).required(),
+  contentType: joiEnum(ContentType).required(),
+  priority: joiPriority,
+});

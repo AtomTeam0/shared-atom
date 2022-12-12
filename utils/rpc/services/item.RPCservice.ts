@@ -4,6 +4,7 @@ import { ContentType } from "../../../common/enums/ContentType";
 import { IArea } from "../../../common/interfaces/area.interface";
 import { IItem } from "../../../common/interfaces/item.interface";
 import { RPCClientRequest } from "../rpc.functions";
+import { IUnit } from "../../../common/interfaces/unit.interface";
 
 export class ItemRPCService {
   private static rpcClient = jayson.Client.http({
@@ -38,6 +39,12 @@ export class ItemRPCService {
   static async getRelevantArea(coordinate: number[]): Promise<IArea> {
     return RPCClientRequest(ItemRPCService.rpcClient, "getRelevantArea", {
       coordinate,
+    });
+  }
+
+  static async getUnitById(unitId: string): Promise<IUnit> {
+    return RPCClientRequest(ItemRPCService.rpcClient, "getUnitById", {
+      unitId,
     });
   }
 }
