@@ -48,6 +48,25 @@ export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
     return value;
   });
 
+export const joiContentId = Joi.string().external(
+  async (value: string | undefined, helpers: any) => {
+    if (value !== undefined) {
+      const isValid = mongoIdRegex.test(value);
+      if (!isValid) {
+        throw new InvalidMongoIdError();
+      }
+      const skipPlugins = getContext(Global.SKIP_PLUGINS);
+      setContext(Global.SKIP_PLUGINS, true);
+      const res = await ItemRPCService.getItemByContentId(value);
+      setContext(Global.SKIP_PLUGINS, skipPlugins);
+      if (!res) {
+        throw new IdNotFoundError("contentId");
+      }
+    }
+    return value;
+  }
+);
+
 export const joiPoligon = Joi.array()
   .items(Joi.array().items(Joi.number()))
   .external(async (value: number[][] | undefined, helpers: any) => {
@@ -130,19 +149,30 @@ export const joiPdfURL = Joi.string().regex(pdfURLRegex);
 
 export const joiPriority = Joi.number().integer().min(1).max(100);
 
-export const joiItem = Joi.object({
-  title: Joi.string().required(),
-  description: Joi.string().required(),
-  timeToRead: Joi.number().required(),
-  thumbNail: joiBlob.required(),
-  unit: joiMongoId(ItemRPCService.getUnitById).required(),
-  contentId: joiMongoId().required(),
-  similarItems: joiMongoIdArray(ItemRPCService.getItemById),
-  areas: joiMongoIdArray(ItemRPCService.getAreaById).min(1).required(),
-  sections: Joi.array().items(joiEnum(Section)).min(1).required(),
-  categories: Joi.array().items(joiEnum(Category)).min(1).required(),
-  corps: Joi.array().items(joiEnum(Corp)).min(1).required(),
-  grade: joiEnum(Grade).required(),
-  contentType: joiEnum(ContentType).required(),
-  priority: joiPriority,
-});
+export const joiContentCreator = (contentValidator: Joi.Schema) =>
+  Joi.object({
+    params: {},
+    body: Joi.object({
+      content: contentValidator.required(),
+      item: Joi.object({
+        title: Joi.string().required(),
+        description: Joi.string().required(),
+        timeToRead: Joi.number().required(),
+        thumbNail: joiBlob.required(),
+        unit: joiMongoId(ItemRPCService.getUnitById).required(),
+        contentId: joiMongoId().required(),
+        similarItems: joiMongoIdArray(ItemRPCService.getItemById),
+        areas: joiMongoIdArray(ItemRPCService.getAreaById).min(1).required(),
+        sections: Joi.array().items(joiEnum(Section)).min(1).required(),
+        categories: Joi.array().items(joiEnum(Category)).min(1).required(),
+        corps: Joi.array().items(joiEnum(Corp)).min(1).required(),
+        grade: joiEnum(Grade).required(),
+        contentType: joiEnum(ContentType).required(),
+        priority: joiPriority,
+      }),
+      contentId: joiContentId,
+    })
+      .xor("item", "contentId")
+      .required(),
+    query: {},
+  });

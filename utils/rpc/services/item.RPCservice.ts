@@ -18,6 +18,12 @@ export class ItemRPCService {
     });
   }
 
+  static async getItemByContentId(contentId: string): Promise<IItem> {
+    return RPCClientRequest(ItemRPCService.rpcClient, "getItemByContentId", {
+      contentId,
+    });
+  }
+
   static async createMissionItem(
     title: string,
     contentType: ContentType,
