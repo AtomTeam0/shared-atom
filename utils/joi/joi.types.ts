@@ -160,7 +160,6 @@ export const joiContentCreator = (contentValidator: Joi.Schema) =>
         timeToRead: Joi.number().required(),
         thumbNail: joiBlob.required(),
         unit: joiMongoId(ItemRPCService.getUnitById).required(),
-        contentId: joiMongoId().required(),
         similarItems: joiMongoIdArray(ItemRPCService.getItemById),
         areas: joiMongoIdArray(ItemRPCService.getAreaById).min(1).required(),
         sections: Joi.array().items(joiEnum(Section)).min(1).required(),
