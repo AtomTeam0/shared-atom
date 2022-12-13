@@ -15,7 +15,7 @@ export const setContext = (property: Global, value: any): void => {
 };
 
 export const shouldSkipPlugins = (): any =>
-  session.active ? getContext(Global.SKIP_PLUGINS) : false;
+  !session.active || getContext(Global.SKIP_PLUGINS);
 
 export const runWithContext = (callBack: any) =>
   session.runAndReturn(() => {
