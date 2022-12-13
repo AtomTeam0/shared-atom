@@ -18,18 +18,22 @@ export const validateUserAndPermission = (
       return new AuthenticationError();
     }
 
-    if (
-      !user.permission ||
-      ![Permission.ADMIN, ...permissionsToValidate].includes(user.permission)
-    ) {
-      return new PermissionError();
-    }
-
+    let userFromDb;
     try {
-      const userFromDb = await UsersRPCService.getUserById(user.id);
+      userFromDb = await UsersRPCService.getUserById(user.id);
       setContext(Global.USER, userFromDb);
     } catch (err) {
       return err;
+    }
+
+    if (
+      !userFromDb ||
+      !userFromDb.permission ||
+      ![Permission.ADMIN, ...permissionsToValidate].includes(
+        userFromDb.permission
+      )
+    ) {
+      return new PermissionError();
     }
 
     return undefined;
