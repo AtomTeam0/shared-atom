@@ -166,7 +166,6 @@ export const joiContentCreator = (contentValidator: Joi.Schema) =>
         categories: Joi.array().items(joiEnum(Category)).min(1).required(),
         corps: Joi.array().items(joiEnum(Corp)).min(1).required(),
         grade: joiEnum(Grade).required(),
-        contentType: joiEnum(ContentType).required(),
         priority: joiPriority,
       }),
       contentId: joiContentId,
