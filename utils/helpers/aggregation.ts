@@ -12,5 +12,14 @@ export const paginationPipline = (skip: number, limit: number) => [
       data: [{ $skip: skip }, { $limit: limit }],
     },
   },
-  { $addFields: { metadata: { $arrayElemAt: ["$metadata", 0] } } },
+  {
+    $addFields: {
+      metadata: {
+        $ifNull: [
+          { $arrayElemAt: ["$metadata", 0] },
+          { totalDocs: 0, page: 0 },
+        ],
+      },
+    },
+  },
 ];
