@@ -57,7 +57,7 @@ const ArticleSchema: mongoose.Schema = new mongoose.Schema(
       ref: CommentModel,
       default: [],
     },
-    thumbnail: {
+    thumbNail: {
       type: String,
       required: true,
     },
