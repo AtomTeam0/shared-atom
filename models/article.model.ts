@@ -83,7 +83,7 @@ ArticleSchema.plugin(populatePlugin, [
 ]);
 ArticleSchema.plugin(blobPlugin, [
   {
-    propertyName: "thumbnail",
+    propertyName: "thumbNail",
     fileType: FileTypes.IMAGE,
   },
   {
