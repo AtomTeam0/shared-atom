@@ -79,33 +79,33 @@ export function blobPlugin(
     modifyProperties(
       doc,
       (
-        blobId: string,
+        blobName: string,
         property: {
           fatherProperty?: string;
           propertyName: string;
           fileType: FileTypes;
         }
-      ) => downloadBlob(blobId, property.fileType)
+      ) => downloadBlob(blobName, property.fileType)
     );
 
   const createProperties = (doc: any) =>
     modifyProperties(
       doc,
       (
-        base64Data: string,
+        fileBinary: Buffer,
         property: {
           fatherProperty?: string;
           propertyName: string;
           fileType: FileTypes;
         }
-      ) => createBlob(base64Data, property.fileType)
+      ) => createBlob(fileBinary, property.fileType)
     );
 
   const updateProperties = (doc: any, query: mongoose.Query<any, any>) =>
     modifyProperties(
       doc,
       async (
-        base64Data: string,
+        fileBinary: Buffer,
         property: {
           fatherProperty?: string;
           propertyName: string;
@@ -118,7 +118,7 @@ export function blobPlugin(
           property.fatherProperty
         );
         return (
-          oldBlobId && updateBlob(base64Data, property.fileType, oldBlobId)
+          oldBlobId && updateBlob(fileBinary, property.fileType, oldBlobId)
         );
       }
     );
