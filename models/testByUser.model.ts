@@ -42,10 +42,10 @@ const TestByUserSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-TestByUserSchema.plugin(populatePlugin, [
-  { path: "user", ref: "users" },
-  { path: "test", ref: "tests" },
-  { path: "item", ref: "items" },
+TestByUserSchema.plugin(populatePlugin<ITestByUser>, [
+  { property: "user", ref: "users" },
+  { property: "test", ref: "tests" },
+  { property: "item", ref: "items" },
 ]);
 
 export const TestByUserModel = mongoose.model<ITestByUser & mongoose.Document>(

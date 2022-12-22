@@ -31,7 +31,9 @@ const CommentSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-CommentSchema.plugin(populatePlugin, [{ path: "user", ref: "user" }]);
+CommentSchema.plugin(populatePlugin<IComment>, [
+  { property: "user", ref: "user" },
+]);
 
 export const CommentModel = mongoose.model<IComment & mongoose.Document>(
   "comments",

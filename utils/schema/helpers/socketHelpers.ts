@@ -17,10 +17,11 @@ export const emitEvent = (
   data?: any,
   roomName?: string
 ): void => {
-  if (roomName) {
-    socketServer.to(roomName).emit(eventName, data);
+  const toEmit = roomName ? socketServer.to(roomName) : socketServer;
+  if (data) {
+    toEmit.emit(eventName, data);
   } else {
-    socketServer.emit(eventName, data);
+    toEmit.emit(eventName);
   }
 };
 

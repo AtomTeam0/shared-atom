@@ -51,10 +51,10 @@ const LessonSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-LessonSchema.plugin(populatePlugin, [
-  { path: "chapters", ref: "chapters", isArray: true },
-  { path: "preKnowledge", ref: "items", isArray: true },
-  { path: "test", ref: "tests" },
+LessonSchema.plugin(populatePlugin<ILesson>, [
+  { property: "chapters", ref: "chapters", isArray: true },
+  { property: "preKnowledge", ref: "items", isArray: true },
+  { property: "test", ref: "tests" },
 ]);
 
 export const LessonModel = mongoose.model<ILesson & mongoose.Document>(

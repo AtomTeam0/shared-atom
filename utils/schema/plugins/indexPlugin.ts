@@ -1,15 +1,15 @@
 import * as mongoose from "mongoose";
 
-export function indexPlugin(
+export function indexPlugin<T>(
   schema: mongoose.Schema,
   options: {
-    propertyNames: string[];
+    properties: Array<keyof T>;
   }
 ) {
   const indexObj = Object.assign(
     {},
-    ...options.propertyNames.map((property) => ({ [property]: "text" }))
+    ...options.properties.map((property) => ({ [property]: "text" }))
   );
-  const indexName = { name: `${options.propertyNames.join("-")}-text-index` };
+  const indexName = { name: `${options.properties.join("-")}-text-index` };
   schema.index(indexObj, indexName);
 }

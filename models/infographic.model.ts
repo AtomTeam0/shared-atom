@@ -26,9 +26,9 @@ const InfographicSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-InfographicSchema.plugin(blobPlugin, [
+InfographicSchema.plugin(blobPlugin<IInfographic>, [
   {
-    propertyName: "image",
+    property: "image",
     fileType: FileTypes.IMAGE,
   },
 ]);

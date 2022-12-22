@@ -38,13 +38,13 @@ const MediaSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-MediaSchema.plugin(blobPlugin, [
+MediaSchema.plugin(blobPlugin<IMedia>, [
   {
-    propertyName: "video",
+    property: "video",
     fileType: FileTypes.MP4,
   },
   {
-    propertyName: "audio",
+    property: "audio",
     fileType: FileTypes.MP3,
   },
 ]);

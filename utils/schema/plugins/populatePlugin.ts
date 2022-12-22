@@ -7,9 +7,9 @@ import {
   preUpdateFunctionType,
 } from "../helpers/schemaHelpers";
 
-export function populatePlugin(
+export function populatePlugin<T>(
   schema: mongoose.Schema,
-  options: { path: string; ref: string; isArray?: boolean }[]
+  options: { property: keyof T; ref: string; isArray?: boolean }[]
 ) {
   schema.pre(
     preCreationFunctionType,
@@ -19,12 +19,12 @@ export function populatePlugin(
           this,
           ...options.map(
             (p) =>
-              this[p.path] && {
-                [p.path]: p.isArray
-                  ? this[p.path].map((innerId: string) =>
+              this[p.property] && {
+                [p.property]: p.isArray
+                  ? this[p.property].map((innerId: string) =>
                       mongoose.Types.ObjectId(innerId)
                     )
-                  : mongoose.Types.ObjectId(this[p.path]),
+                  : mongoose.Types.ObjectId(this[p.property]),
               }
           )
         );
@@ -41,12 +41,12 @@ export function populatePlugin(
           this,
           ...options.map(
             (p) =>
-              this[p.path] && {
-                [p.path]: p.isArray
-                  ? this[p.path].map((innerId: string) =>
+              this[p.property] && {
+                [p.property]: p.isArray
+                  ? this[p.property].map((innerId: string) =>
                       mongoose.Types.ObjectId(innerId)
                     )
-                  : mongoose.Types.ObjectId(this[p.path]),
+                  : mongoose.Types.ObjectId(this[p.property]),
               }
           )
         );
@@ -70,9 +70,9 @@ export function populatePlugin(
           this.pipeline().splice(isWithSearch ? 2 : 0, 0, {
             $lookup: {
               from: p.ref,
-              localField: p.path,
+              localField: p.property,
               foreignField: "_id",
-              as: p.path,
+              as: p.property,
             },
           });
         });
@@ -85,7 +85,7 @@ export function populatePlugin(
     schema.pre(type, function (next: mongoose.HookNextFunction) {
       if (!shouldSkipPlugins()) {
         options.map((p) =>
-          this.populate({ path: p.path, options: { _recursed: true } })
+          this.populate({ path: p.property, options: { _recursed: true } })
         );
       }
       next();

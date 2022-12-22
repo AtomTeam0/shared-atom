@@ -36,9 +36,9 @@ const PakalSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-PakalSchema.plugin(populatePlugin, [
-  { path: "chapters", ref: "chapters", isArray: true },
-  { path: "test", ref: "tests" },
+PakalSchema.plugin(populatePlugin<IPakal>, [
+  { property: "chapters", ref: "chapters", isArray: true },
+  { property: "test", ref: "tests" },
 ]);
 
 export const PakalModel = mongoose.model<IPakal & mongoose.Document>(

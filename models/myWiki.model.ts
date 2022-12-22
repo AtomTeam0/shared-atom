@@ -29,8 +29,8 @@ const MyWikiSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-MyWikiSchema.plugin(indexPlugin, {
-  propertyNames: ["word", "defenition"],
+MyWikiSchema.plugin(indexPlugin<IMyWiki>, {
+  properties: ["word", "defenition"],
 });
 
 export const MyWikiModel = mongoose.model<IMyWiki & mongoose.Document>(

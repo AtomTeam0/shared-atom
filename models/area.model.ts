@@ -38,9 +38,9 @@ const AreaSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-AreaSchema.plugin(blobPlugin, [
+AreaSchema.plugin(blobPlugin<IArea>, [
   {
-    propertyName: "image",
+    property: "image",
     fileType: FileTypes.IMAGE,
   },
 ]);

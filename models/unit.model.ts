@@ -32,9 +32,9 @@ const UnitSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-UnitSchema.plugin(blobPlugin, [
+UnitSchema.plugin(blobPlugin<IUnit>, [
   {
-    propertyName: "image",
+    property: "image",
     fileType: FileTypes.IMAGE,
   },
 ]);

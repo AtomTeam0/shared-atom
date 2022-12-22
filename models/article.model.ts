@@ -78,17 +78,16 @@ const ArticleSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-ArticleSchema.plugin(populatePlugin, [
-  { path: "comments", ref: "comments", isArray: true },
+ArticleSchema.plugin(populatePlugin<IArticle>, [
+  { property: "comments", ref: "comments", isArray: true },
 ]);
-ArticleSchema.plugin(blobPlugin, [
+ArticleSchema.plugin(blobPlugin<IArticle>, [
   {
-    propertyName: "thumbNail",
+    property: "thumbNail",
     fileType: FileTypes.IMAGE,
   },
   {
-    fatherProperty: "bestSoldier",
-    propertyName: "image",
+    property: "bestSoldier.image",
     fileType: FileTypes.IMAGE,
   },
 ]);

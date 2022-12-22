@@ -56,10 +56,10 @@ const MissionSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-MissionSchema.plugin(populatePlugin, [
-  { path: "director", ref: "users" },
-  { path: "editor", ref: "users" },
-  { path: "item", ref: "items" },
+MissionSchema.plugin(populatePlugin<IMission>, [
+  { property: "director", ref: "users" },
+  { property: "editor", ref: "users" },
+  { property: "item", ref: "items" },
 ]);
 
 export const MissionModel = mongoose.model<IMission & mongoose.Document>(

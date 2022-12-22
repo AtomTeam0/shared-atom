@@ -8,6 +8,11 @@ import {
   setContext,
   shouldSkipPlugins,
 } from "../../helpers/context";
+import {
+  PorpertyOptionalDeep,
+  propertyValGetter,
+  propertyValSetter,
+} from "../../helpers/types";
 import { createBlob, downloadBlob, updateBlob } from "../helpers/blobHelpers";
 import {
   postGetSingleFunctionTypes,
@@ -16,18 +21,16 @@ import {
   preUpdateFunctionType,
 } from "../helpers/schemaHelpers";
 
-export function blobPlugin(
+export function blobPlugin<T>(
   schema: mongoose.Schema,
   options: {
-    fatherProperty?: string;
-    propertyName: string;
+    property: PorpertyOptionalDeep<T>;
     fileType: FileTypes;
   }[]
 ) {
   const getOldBlobId = async (
     query: mongoose.Query<any, any>,
-    propertyName: string,
-    fatherProperty?: string
+    property: PorpertyOptionalDeep<T>
   ) => {
     const wantedId = query.getFilter()._id;
     const skipPlugins = getContext(Global.SKIP_PLUGINS);
@@ -35,42 +38,25 @@ export function blobPlugin(
     const oldDoc = await query.model.findById(wantedId).exec();
     setContext(Global.SKIP_PLUGINS, skipPlugins);
     if (oldDoc) {
-      return fatherProperty
-        ? oldDoc[fatherProperty][propertyName]
-        : oldDoc[propertyName];
+      return propertyValGetter<T>(oldDoc, property);
     }
     return undefined;
   };
 
   const modifyProperties = async (
     doc: any,
-    blobAction: (...args: any) => void
+    blobAction: (...args: any) => Promise<string>
   ) =>
     Promise.all(
       options.map(async (property) => {
-        if (property.fatherProperty) {
-          const father = doc[property.fatherProperty];
-          if (father) {
-            const nested = father[property.propertyName];
-            return (
-              nested && {
-                [property.fatherProperty]: {
-                  ...father,
-                  [property.propertyName]: await blobAction(nested, property),
-                },
-              }
-            );
-          }
-          return undefined;
-        }
-
+        const currentVal = propertyValGetter<T>(doc, property.property);
         return (
-          doc[property.propertyName] && {
-            [property.propertyName]: await blobAction(
-              doc[property.propertyName],
-              property
-            ),
-          }
+          currentVal &&
+          propertyValSetter<T>(
+            doc,
+            property.property,
+            await blobAction(currentVal, property)
+          )
         );
       })
     );
@@ -81,8 +67,7 @@ export function blobPlugin(
       (
         blobName: string,
         property: {
-          fatherProperty?: string;
-          propertyName: string;
+          property: PorpertyOptionalDeep<T>;
           fileType: FileTypes;
         }
       ) => downloadBlob(blobName, property.fileType)
@@ -94,8 +79,7 @@ export function blobPlugin(
       (
         fileBuffer: Buffer,
         property: {
-          fatherProperty?: string;
-          propertyName: string;
+          property: PorpertyOptionalDeep<T>;
           fileType: FileTypes;
         }
       ) => createBlob(fileBuffer, property.fileType)
@@ -107,16 +91,11 @@ export function blobPlugin(
       async (
         fileBuffer: Buffer,
         property: {
-          fatherProperty?: string;
-          propertyName: string;
+          property: PorpertyOptionalDeep<T>;
           fileType: FileTypes;
         }
       ) => {
-        const oldBlobId = await getOldBlobId(
-          query,
-          property.propertyName,
-          property.fatherProperty
-        );
+        const oldBlobId = await getOldBlobId(query, property.property);
         return (
           oldBlobId && updateBlob(fileBuffer, property.fileType, oldBlobId)
         );
