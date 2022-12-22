@@ -9,6 +9,10 @@ export const config = {
   jwt: {
     secretKey: process.env.SECRET_KEY || "atomTeam",
   },
+  multer: {
+    encoding: process.env.FILE_ENCODING || "binary",
+    maxSize: +(process.env.MAX_FILE_SIZE || 2 * 1024 * 1024), // 2MB by default
+  },
   rpc: {
     userService: {
       rpcPort: +(process.env.APPLICATION_RPC_PORT || 5000),

@@ -92,20 +92,20 @@ export function blobPlugin(
     modifyProperties(
       doc,
       (
-        fileBinary: Buffer,
+        fileBuffer: Buffer,
         property: {
           fatherProperty?: string;
           propertyName: string;
           fileType: FileTypes;
         }
-      ) => createBlob(fileBinary, property.fileType)
+      ) => createBlob(fileBuffer, property.fileType)
     );
 
   const updateProperties = (doc: any, query: mongoose.Query<any, any>) =>
     modifyProperties(
       doc,
       async (
-        fileBinary: Buffer,
+        fileBuffer: Buffer,
         property: {
           fatherProperty?: string;
           propertyName: string;
@@ -118,7 +118,7 @@ export function blobPlugin(
           property.fatherProperty
         );
         return (
-          oldBlobId && updateBlob(fileBinary, property.fileType, oldBlobId)
+          oldBlobId && updateBlob(fileBuffer, property.fileType, oldBlobId)
         );
       }
     );

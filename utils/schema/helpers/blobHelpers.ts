@@ -7,7 +7,7 @@ import {
   StorageSharedKeyCredential,
 } from "@azure/storage-blob";
 import { promisify } from "util";
-import { createWriteStream, unlink } from "fs";
+import { writeFile, unlink } from "fs";
 import * as path from "path";
 import {
   FileTypes,
@@ -64,7 +64,7 @@ const createSasUrl = async (containerName: string, blobName: string) => {
 };
 
 const uploadFile = async (
-  fileBinary: Buffer,
+  fileBuffer: Buffer,
   fileType: FileTypes,
   fileName = uuidv4()
 ) => {
@@ -74,9 +74,7 @@ const uploadFile = async (
   const filePath = path.join(__dirname, "../uploads", fileName);
 
   // save file on the server locally
-  const writeStream = createWriteStream(filePath);
-  writeStream.write(fileBinary);
-  writeStream.end();
+  await promisify(writeFile)(filePath, fileBuffer);
 
   // upload the file to azure
   await blockBlobClient.uploadFile(filePath);
@@ -87,14 +85,14 @@ const uploadFile = async (
   return fileName;
 };
 
-export const createBlob = async (fileBinary: Buffer, fileType: FileTypes) =>
-  uploadFile(fileBinary, fileType);
+export const createBlob = async (fileBuffer: Buffer, fileType: FileTypes) =>
+  uploadFile(fileBuffer, fileType);
 
 export const updateBlob = async (
-  fileBinary: Buffer,
+  fileBuffer: Buffer,
   fileType: FileTypes,
   fileName: string
-) => uploadFile(fileBinary, fileType, fileName);
+) => uploadFile(fileBuffer, fileType, fileName);
 
 export const downloadBlob = async (blobName: string, fileType: FileTypes) =>
   createSasUrl(getContainerNameByFileType(fileType), blobName);

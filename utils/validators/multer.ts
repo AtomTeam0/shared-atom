@@ -1,19 +1,11 @@
-import * as multer from "multer";
+import { config } from "../../config";
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const multer = require("multer");
 
 export function multerMiddleware<T>(
-  porpertyArray: Array<keyof T>,
-  deepPropertyArray: Array<{
-    fatherProprty: keyof T;
-    childProperty: string;
-  }> = []
+  porpertyArray: Array<Extract<keyof T, string>>,
+  fileSize = config.multer.maxSize,
+  encoding = config.multer.encoding
 ) {
-  return upload.fields([
-    ...porpertyArray.map((property) => ({ name: property as string })),
-    ...deepPropertyArray.map((property) => ({
-      name: `${property.fatherProprty as string}.${property.childProperty}`,
-    })),
-  ]);
+  return multer({ limit: { fileSize }, encoding }).buffer(porpertyArray, 1);
 }
