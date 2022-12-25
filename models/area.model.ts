@@ -1,8 +1,8 @@
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
 import { AreaNames } from "../common/enums/AreaNames";
-import { FileTypes } from "../common/enums/helpers/FileTypes";
 import { IArea } from "../common/interfaces/area.interface";
+import { config } from "../config";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 
 const AreaSchema: mongoose.Schema = new mongoose.Schema(
@@ -38,12 +38,7 @@ const AreaSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-AreaSchema.plugin(blobPlugin<IArea>, [
-  {
-    property: "image",
-    fileType: FileTypes.IMAGE,
-  },
-]);
+AreaSchema.plugin(blobPlugin<IArea>, config.multer.propertyConfigs.area);
 
 export const AreaModel = mongoose.model<IArea & mongoose.Document>(
   "areas",

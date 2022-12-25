@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
-import { FileTypes } from "../common/enums/helpers/FileTypes";
 import { IArticle } from "../common/interfaces/article.interface";
+import { config } from "../config";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { CommentModel } from "./comment.model";
@@ -81,16 +81,10 @@ const ArticleSchema: mongoose.Schema = new mongoose.Schema(
 ArticleSchema.plugin(populatePlugin<IArticle>, [
   { property: "comments", ref: "comments", isArray: true },
 ]);
-ArticleSchema.plugin(blobPlugin<IArticle>, [
-  {
-    property: "thumbNail",
-    fileType: FileTypes.IMAGE,
-  },
-  {
-    property: "bestSoldier.image",
-    fileType: FileTypes.IMAGE,
-  },
-]);
+ArticleSchema.plugin(
+  blobPlugin<IArticle>,
+  config.multer.propertyConfigs.article
+);
 
 export const ArticleModel = mongoose.model<IArticle & mongoose.Document>(
   "articles",

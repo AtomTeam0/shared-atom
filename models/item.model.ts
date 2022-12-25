@@ -1,7 +1,7 @@
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
-import { FileTypes } from "../common/enums/helpers/FileTypes";
 import { IItem } from "../common/interfaces/item.interface";
+import { config } from "../config";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
@@ -109,12 +109,7 @@ ItemSchema.plugin(populatePlugin<IItem>, [
 ItemSchema.plugin(indexPlugin<IItem>, {
   properties: ["title"],
 });
-ItemSchema.plugin(blobPlugin<IItem>, [
-  {
-    property: "thumbNail",
-    fileType: FileTypes.IMAGE,
-  },
-]);
+ItemSchema.plugin(blobPlugin<IItem>, config.multer.propertyConfigs.item);
 
 export const ItemModel = mongoose.model<IItem & mongoose.Document>(
   "items",

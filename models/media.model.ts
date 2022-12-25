@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
-import { FileTypes } from "../common/enums/helpers/FileTypes";
 import { IMedia } from "../common/interfaces/media.interface";
+import { config } from "../config";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 
 const MediaSchema: mongoose.Schema = new mongoose.Schema(
@@ -38,16 +38,7 @@ const MediaSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-MediaSchema.plugin(blobPlugin<IMedia>, [
-  {
-    property: "video",
-    fileType: FileTypes.MP4,
-  },
-  {
-    property: "audio",
-    fileType: FileTypes.MP3,
-  },
-]);
+MediaSchema.plugin(blobPlugin<IMedia>, config.multer.propertyConfigs.media);
 
 export const MediaModel = mongoose.model<IMedia & mongoose.Document>(
   "media",

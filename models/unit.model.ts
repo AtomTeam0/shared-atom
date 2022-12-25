@@ -1,7 +1,7 @@
 /* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
-import { FileTypes } from "../common/enums/helpers/FileTypes";
 import { IUnit } from "../common/interfaces/unit.interface";
+import { config } from "../config";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 
 const UnitSchema: mongoose.Schema = new mongoose.Schema(
@@ -32,12 +32,7 @@ const UnitSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-UnitSchema.plugin(blobPlugin<IUnit>, [
-  {
-    property: "image",
-    fileType: FileTypes.IMAGE,
-  },
-]);
+UnitSchema.plugin(blobPlugin<IUnit>, config.multer.propertyConfigs.unit);
 
 export const UnitModel = mongoose.model<IUnit & mongoose.Document>(
   "units",

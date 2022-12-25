@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
-import { FileTypes } from "../common/enums/helpers/FileTypes";
 import { IInfographic } from "../common/interfaces/infographic.interface";
+import { config } from "../config";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 
 const InfographicSchema: mongoose.Schema = new mongoose.Schema(
@@ -26,12 +26,10 @@ const InfographicSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-InfographicSchema.plugin(blobPlugin<IInfographic>, [
-  {
-    property: "image",
-    fileType: FileTypes.IMAGE,
-  },
-]);
+InfographicSchema.plugin(
+  blobPlugin<IInfographic>,
+  config.multer.propertyConfigs.infographic
+);
 
 export const InfographicModel = mongoose.model<
   IInfographic & mongoose.Document
