@@ -10,8 +10,14 @@ export const config = {
     secretKey: process.env.SECRET_KEY || "atomTeam",
   },
   multer: {
-    encoding: process.env.FILE_ENCODING || "binary",
     maxSize: +(process.env.MAX_FILE_SIZE || 2 * 1024 * 1024), // 2MB by default
+    encoding: process.env.FILE_ENCODING || "binary",
+    fileTypes: process.env.FILE_TYPES || [
+      "video/mp4",
+      "audio/mp3",
+      "image/jpeg",
+      "image/png",
+    ],
   },
   rpc: {
     userService: {

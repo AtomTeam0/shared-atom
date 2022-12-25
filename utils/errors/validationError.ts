@@ -57,8 +57,8 @@ export class InvalidAnswersTestByUser extends ServerError {
 }
 
 export class UnsupportedFileType extends UserError {
-  constructor() {
-    super("Cant upload this file type", 403);
+  constructor(fileType: string) {
+    super(`Invalid file type: ${fileType}`, 403);
   }
 }
 
