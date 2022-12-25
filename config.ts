@@ -74,11 +74,11 @@ export const config = {
       media: [
         {
           property: "video",
-          fileType: FileTypes.MP4,
+          fileType: FileTypes.VIDEO,
         },
         {
           property: "audio",
-          fileType: FileTypes.MP3,
+          fileType: FileTypes.AUDIO,
         },
       ],
     },
