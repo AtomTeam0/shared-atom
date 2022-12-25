@@ -1,4 +1,8 @@
 import { Request, Response, NextFunction } from "express";
+import {
+  FileTypes,
+  getMimeTypeByFileType,
+} from "../../common/enums/helpers/FileTypes";
 import { config } from "../../config";
 import { UnsupportedFileType } from "../errors/validationError";
 import { PorpertyOptionalDeep } from "../helpers/types";
@@ -7,10 +11,12 @@ import { wrapAsyncMiddleware } from "../helpers/wrapper";
 const multer = require("multer");
 
 export function multerMiddleware<T>(
-  porpertyArray: Array<PorpertyOptionalDeep<T>>,
+  porpertyArray: {
+    property: PorpertyOptionalDeep<T>;
+    fileType: FileTypes;
+  }[],
   fileSize = config.multer.maxSize,
-  encoding = config.multer.encoding,
-  fileTypes = config.multer.fileTypes
+  encoding = config.multer.encoding
 ) {
   const multerOption = {
     limit: { fileSize },
@@ -20,7 +26,14 @@ export function multerMiddleware<T>(
       file: any,
       cb: (error: Error | null, acceptFile: boolean) => void
     ) => {
-      if (!fileTypes.includes(file.mimetype)) {
+      const propertyToCheck = porpertyArray.find(
+        (property) => property === file.fieldname
+      );
+
+      if (
+        propertyToCheck &&
+        !getMimeTypeByFileType(propertyToCheck.fileType).includes(file.mimetype)
+      ) {
         throw new UnsupportedFileType(file.mimetype);
       } else {
         cb(null, true);
