@@ -46,9 +46,9 @@ export function multerMiddleware<T>(
       multer(multerOption).fields(
         porpertyArray.map((property) => ({ name: property, maxCount: 1 }))
       )(req, res, () => {
-        if (req.files) {
-          Object.keys(req.files).forEach((key) => {
-            const [file] = (req.files as any)[key];
+        if ((req as any).files) {
+          Object.keys((req as any).files).forEach((key) => {
+            const [file] = (req as any).files[key];
             req.body[key] = file.buffer;
           });
         }
