@@ -14,7 +14,6 @@ import {
   getContainerNameByFileType,
 } from "../../../common/enums/helpers/FileTypes";
 import { config } from "../../../config";
-import { ConnectionError } from "../../errors/applicationError";
 
 let blobClient: BlobServiceClient;
 const accountName = config.azure.azureAccountName;
@@ -24,16 +23,11 @@ const getBlobClient = () => {
   if (blobClient) {
     return blobClient;
   }
-  let blobServiceClient;
-  try {
-    const credential = new StorageSharedKeyCredential(accountName, accountKey);
-    blobServiceClient = new BlobServiceClient(
-      `https://${accountName}.blob.core.windows.net`,
-      credential
-    );
-  } catch {
-    throw new ConnectionError("Azure connection failed");
-  }
+  const credential = new StorageSharedKeyCredential(accountName, accountKey);
+  const blobServiceClient = new BlobServiceClient(
+    `https://${accountName}.blob.core.windows.net`,
+    credential
+  );
 
   return blobServiceClient;
 };
