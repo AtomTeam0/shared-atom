@@ -3,6 +3,7 @@ import { FileTypes } from "./common/enums/helpers/FileTypes";
 export const config = {
   server: {
     nodeEnv: process.env.NODE_ENV || "development",
+    withDeepPlungin: (process.env.WITH_DEEP_PULGINS || "true") === "true",
   },
   azure: {
     azureAccountName: process.env.AZURE_ACCOUNT_NAME || "",

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { Global } from "../../common/enums/helpers/Global";
 import { Permission } from "../../common/enums/Permission";
+import { config } from "../../config";
 import { wrapAsyncMiddleware } from "./wrapper";
 
 const context = require("cls-hooked");
@@ -14,8 +15,12 @@ export const setContext = (property: Global, value: any): void => {
   session.set(property, value);
 };
 
-export const shouldSkipPlugins = (): any =>
-  !session.active || getContext(Global.SKIP_PLUGINS);
+export const shouldSkipPlugins = (): any => {
+  const isDeep = !session.active;
+  return !config.server.withDeepPlungin
+    ? isDeep || getContext(Global.SKIP_PLUGINS)
+    : getContext(Global.SKIP_PLUGINS);
+};
 
 export const runWithContext = (callBack: any) =>
   session.runAndReturn(() => {
