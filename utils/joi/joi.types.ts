@@ -117,24 +117,6 @@ export const joiCoordinate = Joi.array()
     return value;
   });
 
-export const joiWeekNum = Joi.number()
-  .integer()
-  .external(async (value: number | undefined, helpers: any) => {
-    if (value !== undefined) {
-      const isValid = value >= 1 && value <= 52;
-      if (!isValid) {
-        throw new InvalidWeekNumError();
-      }
-      const numOfDays = 1 + (value - 1) * 7; // 1st of January + 7 days for each week
-      const currentYear = new Date().getFullYear(); // returns the current year
-      return {
-        weekStartDate: new Date(currentYear, 0, numOfDays),
-        weekEndDate: new Date(currentYear, 0, numOfDays + 6),
-      };
-    }
-    return value;
-  });
-
 export const joiMongoIdArray = (getByIdFunc?: (id: string) => any) =>
   Joi.array().items(joiMongoId(getByIdFunc));
 
