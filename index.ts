@@ -9,7 +9,8 @@ export const initApp = (
   nodeProcess: any,
   config: IServerConfig,
   AppRouter: Router,
-  RPCServer?: jayson.Server
+  RPCServer?: jayson.Server,
+  onClose?: () => void
 ) => {
   nodeProcess.on("uncaughtException", (err: Error) => {
     console.error("Unhandled Exception", err.stack);
@@ -44,6 +45,9 @@ export const initApp = (
 
     server.app.on("close", () => {
       mongoose.disconnect();
+      if (onClose) {
+        onClose();
+      }
       console.log("Server closed");
     });
   })();
