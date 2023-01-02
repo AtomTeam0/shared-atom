@@ -9,9 +9,12 @@ export function virtualsPlugin(schema: mongoose.Schema) {
       next: mongoose.HookNextFunction
     ) {
       if (schema.get("id")) {
-        this.pipeline().splice(isWithSearch(this.pipeline()) ? 2 : 0, 0, {
-          $project: { id: "$_id", _id: 0 },
-        });
+        this.pipeline().splice(isWithSearch(this.pipeline()) ? 2 : 0, 0, [
+          {
+            $addFields: { id: "$_id" },
+          },
+          { $unset: "_id" },
+        ]);
       }
       next();
     }
