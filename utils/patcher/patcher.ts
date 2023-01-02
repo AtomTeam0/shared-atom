@@ -31,7 +31,7 @@ export function patchDocsWithObject<T>(
     userPatcher(
       options.foreignArrayProperty,
       options.foreignIdProperty,
-      String(doc._id)
+      String(doc.id)
     ) || options.defaultValue;
 
   const isArray = Array.isArray(docs);
@@ -65,7 +65,7 @@ export function patchDocsWithBoolean<T>(
 
   const enhanceBooleanProperty = (doc: any) => ({
     [options.localBoolProperty]:
-      userPatcherBoolean(options.foreignArrayProperty, String(doc._id)) ||
+      userPatcherBoolean(options.foreignArrayProperty, String(doc.id)) ||
       options.defaultValue,
   });
 
