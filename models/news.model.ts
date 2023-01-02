@@ -24,7 +24,6 @@ const NewsSchema: mongoose.Schema = new mongoose.Schema(
         delete ret._id;
       },
     },
-
     versionKey: false,
     id: true,
     timestamps: { createdAt: true, updatedAt: false },

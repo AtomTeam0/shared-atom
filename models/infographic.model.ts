@@ -18,7 +18,6 @@ const InfographicSchema: mongoose.Schema = new mongoose.Schema(
         delete ret._id;
       },
     },
-
     versionKey: false,
     id: true,
     timestamps: { createdAt: false, updatedAt: false },
