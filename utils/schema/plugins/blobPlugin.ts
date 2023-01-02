@@ -48,14 +48,14 @@ export function blobPlugin<T>(
     blobAction: (...args: any) => Promise<string>
   ) =>
     Promise.all(
-      options.map(async (property) => {
-        const currentVal = propertyValGetter<T>(doc, property.property);
+      options.map(async (option) => {
+        const currentVal = propertyValGetter<T>(doc, option.property);
         return (
           currentVal &&
           propertyValSetter<T>(
             doc,
-            property.property,
-            await blobAction(currentVal, property)
+            option.property,
+            await blobAction(currentVal, option)
           )
         );
       })

@@ -64,14 +64,44 @@ export function populatePlugin<T>(
     ) {
       if (!shouldSkipPlugins()) {
         options.forEach((p) => {
-          this.pipeline().splice(isWithSearch(this.pipeline()) ? 2 : 0, 0, {
-            $lookup: {
-              from: p.ref,
-              localField: p.property,
-              foreignField: "_id",
-              as: p.property,
-            },
-          });
+          if (p.isArray) {
+            this.pipeline().splice(isWithSearch(this.pipeline()) ? 2 : 0, 0, {
+              $lookup: {
+                from: p.ref,
+                localField: p.property,
+                foreignField: "_id",
+                as: p.property,
+              },
+            });
+          } else {
+            this.pipeline().splice(
+              isWithSearch(this.pipeline()) ? 2 : 0,
+              0,
+              {
+                $lookup: {
+                  from: p.ref,
+                  localField: p.property,
+                  foreignField: "_id",
+                  as: p.property,
+                },
+              },
+              {
+                $addFields: {
+                  [p.property]: {
+                    $cond: {
+                      if: {
+                        $eq: [0, { $size: `$${p.property as string}` }],
+                      },
+                      then: [],
+                      else: {
+                        $arrayElemAt: [`$${p.property as string}`, 0],
+                      },
+                    },
+                  },
+                },
+              }
+            );
+          }
         });
       }
       next();
@@ -82,7 +112,7 @@ export function populatePlugin<T>(
     schema.pre(type, function (next: mongoose.HookNextFunction) {
       if (!shouldSkipPlugins()) {
         options.map((p) =>
-          this.populate({ path: p.property, options: { _recursed: true } })
+          this.populate({ path: p.property, justOne: !p.isArray })
         );
       }
       next();

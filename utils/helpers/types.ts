@@ -15,7 +15,7 @@ export function propertyValGetter<T>(
   if (property.toString().includes(".")) {
     const fatherProperty = property.toString().split(".")[0];
     const childProperty = property.toString().split(".")[1];
-    return doc[fatherProperty][childProperty];
+    return doc[fatherProperty] ? doc[fatherProperty][childProperty] : undefined;
   }
   return doc[property];
 }
