@@ -45,15 +45,16 @@ export class PatcherService {
 
   // with child properties
   static async itemGroupPatcher(
-    itemGroups: IItemGroup[]
-  ): Promise<IItemGroup[]> {
+    itemGroups: IItemGroup | IItemGroup[]
+  ): Promise<IItemGroup | IItemGroup[]> {
     const isArray = Array.isArray(itemGroups);
     return Promise.all(
       (isArray ? itemGroups : [itemGroups]).map(
         async (itemGroup: IItemGroup) => ({
-          ...(itemGroup as any)._doc,
+          ...(itemGroup as any),
           items: (await PatcherService.itemPatcher(
-            itemGroup.items as IItem[]
+            itemGroup.items as IItem[],
+            true
           )) as IItem[],
         })
       )
