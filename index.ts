@@ -1,9 +1,13 @@
 import * as mongoose from "mongoose";
-import { Router } from "express";
 import * as jayson from "jayson/promise";
 import { Server } from "./server";
 import { IServerConfig } from "./common/interfaces/helpers/serverConfig.interface";
 import { virtualsPlugin } from "./utils/schema/plugins/virtualsPlugin";
+
+mongoose.plugin(virtualsPlugin);
+
+// eslint-disable-next-line import/order, import/first
+import { Router } from "express";
 
 export const initApp = (
   nodeProcess: any,
@@ -32,7 +36,6 @@ export const initApp = (
     }
   });
   (async () => {
-    mongoose.plugin(virtualsPlugin);
     await mongoose.connect(config.db.connectionString, {
       useNewUrlParser: true,
       useFindAndModify: false,
