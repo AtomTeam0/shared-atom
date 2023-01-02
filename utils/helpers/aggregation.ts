@@ -23,3 +23,11 @@ export const paginationPipline = (skip: number, limit: number) => [
     },
   },
 ];
+
+export const isWithSearch = (pipeline: any) => {
+  const firstPipe = pipeline[0];
+  return (
+    Object.prototype.hasOwnProperty.call(firstPipe, "$match") &&
+    Object.prototype.hasOwnProperty.call(firstPipe.$match, "$text")
+  );
+};

@@ -1,5 +1,6 @@
 /* eslint-disable no-prototype-builtins */
 import * as mongoose from "mongoose";
+import { isWithSearch } from "../../helpers/aggregation";
 import { shouldSkipPlugins } from "../../helpers/context";
 import {
   postGetAllFunctionTypes,
@@ -62,12 +63,8 @@ export function populatePlugin<T>(
       next: mongoose.HookNextFunction
     ) {
       if (!shouldSkipPlugins()) {
-        const firstPipe = this.pipeline()[0];
-        const isWithSearch =
-          firstPipe.hasOwnProperty("$match") &&
-          firstPipe.$match.hasOwnProperty("$text");
         options.forEach((p) => {
-          this.pipeline().splice(isWithSearch ? 2 : 0, 0, {
+          this.pipeline().splice(isWithSearch(this.pipeline()) ? 2 : 0, 0, {
             $lookup: {
               from: p.ref,
               localField: p.property,
