@@ -139,7 +139,7 @@ export const joiContentCreator = (contentValidator: Joi.Schema) =>
       item: Joi.object({
         title: Joi.string().required(),
         description: Joi.string().required(),
-        timeToRead: Joi.number().required(),
+        timeToRead: Joi.number().integer().required(),
         thumbNail: joiBlob.required(),
         unit: joiMongoId(ItemRPCService.getUnitById).required(),
         similarItems: joiMongoIdArray(ItemRPCService.getItemById),

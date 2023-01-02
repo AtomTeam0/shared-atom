@@ -5,7 +5,7 @@ export const paginationPipline = (skip: number, limit: number) => [
         { $count: "totalDocs" },
         {
           $addFields: {
-            page: { $ceil: { $divide: [skip, limit] } },
+            page: { $sum: [{ $floor: { $divide: [skip, limit] } }, 1] },
           },
         },
       ],
