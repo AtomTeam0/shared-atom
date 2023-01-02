@@ -14,13 +14,13 @@ export const validateUserAndPermission = (
     user: IUser | undefined,
     permissionsToValidate: Permission[]
   ) => {
-    if (!user || !user.id) {
+    if (!user || !user._id) {
       return new AuthenticationError();
     }
 
     let userFromDb;
     try {
-      userFromDb = await UsersRPCService.getUserById(user.id);
+      userFromDb = await UsersRPCService.getUserById(user._id);
       setContext(Global.USER, userFromDb);
     } catch (err) {
       return err;

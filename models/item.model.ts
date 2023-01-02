@@ -86,15 +86,7 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
     },
   },
   {
-    toJSON: {
-      virtuals: true,
-      transform(_doc: any, ret: any): void {
-        // eslint-disable-next-line no-param-reassign
-        delete ret._id;
-      },
-    },
     versionKey: false,
-    id: true,
     timestamps: { createdAt: false, updatedAt: true },
   }
 );

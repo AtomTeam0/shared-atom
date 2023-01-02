@@ -1,13 +1,8 @@
 import * as mongoose from "mongoose";
 import * as jayson from "jayson/promise";
+import { Router } from "express";
 import { Server } from "./server";
 import { IServerConfig } from "./common/interfaces/helpers/serverConfig.interface";
-import { virtualsPlugin } from "./utils/schema/plugins/virtualsPlugin";
-
-mongoose.plugin(virtualsPlugin);
-
-// eslint-disable-next-line import/order, import/first
-import { Router } from "express";
 
 export const initApp = (
   nodeProcess: any,
