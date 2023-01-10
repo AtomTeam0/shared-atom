@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import * as http from "http";
 import { getContext } from "../../helpers/context";
 import { Global } from "../../../common/enums/helpers/Global";
+import { AreaNames } from "../../../common/enums/AreaNames";
 
 let socketServer: Server;
 
@@ -26,12 +27,14 @@ export const emitEvent = (
 };
 
 export const updateSocketRoom = async (roomOptions: {
-  joinRoomId: string;
-  leaveRoomId: string;
+  joinRoomId: AreaNames;
+  leaveRoomId?: AreaNames;
 }): Promise<void> => {
   const socket = socketServer.sockets.sockets.get(getContext(Global.USER).id);
   if (socket) {
-    socket?.leave(roomOptions.leaveRoomId);
+    if (roomOptions.leaveRoomId) {
+      socket?.leave(roomOptions.leaveRoomId);
+    }
     socket?.join(roomOptions.joinRoomId);
   }
 };
