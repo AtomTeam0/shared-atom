@@ -24,8 +24,6 @@ const mongoIdRegex = /^[0-9a-fA-F]{24}$/;
 
 const personalIdRegex = /^[0-9]{9}$/;
 
-const pdfURLRegex = /^(http.+)(\.pdf)$/;
-
 const coordinateAxisRegex = /^-?[0-9]{1,3}(?:\.[0-9]{1,15})?$/;
 
 // exported types
@@ -126,8 +124,6 @@ export const joiEnum = (enumObj: { [k: string]: string }) =>
 export const joiBlob = Joi.binary();
 
 export const joiPersonalId = Joi.string().regex(personalIdRegex);
-
-export const joiPdfURL = Joi.string().regex(pdfURLRegex);
 
 export const joiPriority = Joi.number().integer().min(1).max(100);
 
