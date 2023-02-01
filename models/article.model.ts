@@ -15,7 +15,7 @@ const ArticleSchema: mongoose.Schema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    pdfURL: {
+    pdf: {
       type: String,
       required: true,
     },

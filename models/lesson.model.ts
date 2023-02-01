@@ -1,5 +1,7 @@
 import * as mongoose from "mongoose";
 import { ILesson } from "../common/interfaces/lesson.interface";
+import { config } from "../config";
+import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { ChapterModel } from "./chapter.model";
 import { ItemModel } from "./item.model";
@@ -15,7 +17,7 @@ const LessonSchema: mongoose.Schema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    pdfURL: {
+    pdf: {
       type: String,
       required: true,
     },
@@ -47,6 +49,7 @@ LessonSchema.plugin(populatePlugin<ILesson>, [
   { property: "preKnowledge", ref: "items", isArray: true },
   { property: "test", ref: "tests" },
 ]);
+LessonSchema.plugin(blobPlugin<ILesson>, config.multer.propertyConfigs.lesson);
 
 export const LessonModel = mongoose.model<ILesson & mongoose.Document>(
   "lessons",

@@ -71,6 +71,22 @@ export const config = {
           property: "bestSoldier.image",
           fileType: FileTypes.IMAGE,
         },
+        {
+          property: "pdf",
+          fileType: FileTypes.PDF,
+        },
+      ],
+      lesson: [
+        {
+          property: "pdf",
+          fileType: FileTypes.PDF,
+        },
+      ],
+      pakal: [
+        {
+          property: "pdf",
+          fileType: FileTypes.PDF,
+        },
       ],
       media: [
         {
