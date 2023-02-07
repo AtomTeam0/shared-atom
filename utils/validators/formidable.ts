@@ -38,7 +38,7 @@ export function formidableMiddleware<T>(
       const form = formidable({ multiples: true });
       const allProperties = [
         ...porpertyArray,
-        ...(isItemCreation ? config.multer.propertyConfigs.item : []),
+        ...(isItemCreation ? config.formidable.propertyConfigs.item : []),
       ];
 
       // validations

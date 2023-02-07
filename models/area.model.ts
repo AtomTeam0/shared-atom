@@ -29,7 +29,7 @@ const AreaSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-AreaSchema.plugin(blobPlugin<IArea>, config.multer.propertyConfigs.area);
+AreaSchema.plugin(blobPlugin<IArea>, config.formidable.propertyConfigs.area);
 
 export const AreaModel = mongoose.model<IArea & mongoose.Document>(
   "areas",

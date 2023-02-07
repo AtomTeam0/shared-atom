@@ -19,7 +19,7 @@ const InfographicSchema: mongoose.Schema = new mongoose.Schema(
 // plugins
 InfographicSchema.plugin(
   blobPlugin<IInfographic>,
-  config.multer.propertyConfigs.infographic
+  config.formidable.propertyConfigs.infographic
 );
 
 export const InfographicModel = mongoose.model<

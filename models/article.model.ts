@@ -74,7 +74,7 @@ ArticleSchema.plugin(populatePlugin<IArticle>, [
 ]);
 ArticleSchema.plugin(
   blobPlugin<IArticle>,
-  config.multer.propertyConfigs.article
+  config.formidable.propertyConfigs.article
 );
 
 export const ArticleModel = mongoose.model<IArticle & mongoose.Document>(

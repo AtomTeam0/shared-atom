@@ -100,7 +100,7 @@ ItemSchema.plugin(populatePlugin<IItem>, [
 ItemSchema.plugin(indexPlugin<IItem>, {
   properties: ["title"],
 });
-ItemSchema.plugin(blobPlugin<IItem>, config.multer.propertyConfigs.item);
+ItemSchema.plugin(blobPlugin<IItem>, config.formidable.propertyConfigs.item);
 
 export const ItemModel = mongoose.model<IItem & mongoose.Document>(
   "items",

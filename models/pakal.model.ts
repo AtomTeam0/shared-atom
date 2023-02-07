@@ -33,7 +33,10 @@ PakalSchema.plugin(populatePlugin<IPakal>, [
   { property: "chapters", ref: "chapters", isArray: true },
   { property: "test", ref: "tests" },
 ]);
-PakalSchema.plugin(blobPlugin<IPakal>, config.multer.propertyConfigs.lesson);
+PakalSchema.plugin(
+  blobPlugin<IPakal>,
+  config.formidable.propertyConfigs.lesson
+);
 
 export const PakalModel = mongoose.model<IPakal & mongoose.Document>(
   "pakals",

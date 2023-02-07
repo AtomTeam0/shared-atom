@@ -36,7 +36,7 @@ export const config = {
       rpcHostname: process.env.NEWS_COMPOSITOR_RPC_HOST || "localhost",
     },
   },
-  multer: {
+  formidable: {
     propertyConfigs: {
       item: [
         {

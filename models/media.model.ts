@@ -29,7 +29,7 @@ const MediaSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-MediaSchema.plugin(blobPlugin<IMedia>, config.multer.propertyConfigs.media);
+MediaSchema.plugin(blobPlugin<IMedia>, config.formidable.propertyConfigs.media);
 
 export const MediaModel = mongoose.model<IMedia & mongoose.Document>(
   "media",

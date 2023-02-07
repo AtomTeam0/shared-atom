@@ -49,7 +49,10 @@ LessonSchema.plugin(populatePlugin<ILesson>, [
   { property: "preKnowledge", ref: "items", isArray: true },
   { property: "test", ref: "tests" },
 ]);
-LessonSchema.plugin(blobPlugin<ILesson>, config.multer.propertyConfigs.lesson);
+LessonSchema.plugin(
+  blobPlugin<ILesson>,
+  config.formidable.propertyConfigs.lesson
+);
 
 export const LessonModel = mongoose.model<ILesson & mongoose.Document>(
   "lessons",

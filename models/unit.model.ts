@@ -23,7 +23,7 @@ const UnitSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-UnitSchema.plugin(blobPlugin<IUnit>, config.multer.propertyConfigs.unit);
+UnitSchema.plugin(blobPlugin<IUnit>, config.formidable.propertyConfigs.unit);
 
 export const UnitModel = mongoose.model<IUnit & mongoose.Document>(
   "units",
