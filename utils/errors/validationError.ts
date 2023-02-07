@@ -56,12 +56,6 @@ export class InvalidAnswersTestByUser extends ServerError {
   }
 }
 
-export class UnsupportedFileType extends UserError {
-  constructor(fileType: string) {
-    super(`Invalid file type: ${fileType}`, 403);
-  }
-}
-
 export class InvalidCoordinateError extends UserError {
   constructor() {
     super(

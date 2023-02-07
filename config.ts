@@ -6,8 +6,10 @@ export const config = {
     withDeepPlungin: (process.env.WITH_DEEP_PULGINS || "true") === "true",
   },
   azure: {
-    azureAccountName: process.env.AZURE_ACCOUNT_NAME || "",
-    azureAccountKey: process.env.AZURE_ACCOUNT_KEY || "",
+    azureAccountName: process.env.AZURE_ACCOUNT_NAME || "mynetappstorage",
+    azureAccountKey:
+      process.env.AZURE_ACCOUNT_KEY ||
+      "Jh/Zzyow6JnYs9N5yJZ2f3FTCErIn9/QffR5nRpnfIjVmv+l5FLbDhB7V/0FPh2BH9jy3eHl0ad3+AStI4wcXQ==",
   },
   jwt: {
     secretKey: process.env.SECRET_KEY || "atomTeam",
@@ -35,12 +37,10 @@ export const config = {
     },
   },
   multer: {
-    maxSize: +(process.env.MAX_FILE_SIZE || 2 * 1024 * 1024), // 2MB by default
-    encoding: process.env.FILE_ENCODING || "binary",
     propertyConfigs: {
       item: [
         {
-          property: "thunbNail",
+          property: "thumbNail",
           fileType: FileTypes.IMAGE,
         },
       ],
