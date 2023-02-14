@@ -131,6 +131,43 @@ export function blobPlugin<T>(
     }
   );
 
+  schema.pre(
+    "aggregate",
+    async function (
+      this: mongoose.Aggregate<any>,
+      next: (err?: mongoose.CallbackError) => void
+    ) {
+      (this as any).skipPlugins = getContext(Global.SKIP_PLUGINS);
+      next();
+    }
+  );
+
+  postGetSingleFunctionTypes.map((type: string) =>
+    schema.pre(
+      type,
+      async function (
+        this: mongoose.Query<any, any>,
+        next: (err?: mongoose.CallbackError) => void
+      ) {
+        (this as any).skipPlugins = getContext(Global.SKIP_PLUGINS);
+        next();
+      }
+    )
+  );
+
+  postGetManyFunctionTypes.map((type: string) =>
+    schema.pre(
+      type,
+      async function (
+        this: mongoose.Query<any, any>,
+        next: (err?: mongoose.CallbackError) => void
+      ) {
+        (this as any).skipPlugins = getContext(Global.SKIP_PLUGINS);
+        next();
+      }
+    )
+  );
+
   schema.post(
     "aggregate",
     async function (
@@ -138,7 +175,7 @@ export function blobPlugin<T>(
       res: any[],
       next: (err?: mongoose.CallbackError) => void
     ) {
-      if (!shouldSkipPlugins() && !!res) {
+      if (!shouldSkipPlugins((this as any).skipPlugins) && !!res) {
         await Promise.all(
           res.map(async (item) => {
             Object.assign(item, ...(await downloadProperties(item)));
@@ -157,7 +194,7 @@ export function blobPlugin<T>(
         res: any,
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!shouldSkipPlugins() && !!res) {
+        if (!shouldSkipPlugins((this as any).skipPlugins) && !!res) {
           Object.assign(res._doc, ...(await downloadProperties(res._doc)));
         }
         next();
@@ -173,7 +210,7 @@ export function blobPlugin<T>(
         res: any[],
         next: (err?: mongoose.CallbackError) => void
       ) {
-        if (!shouldSkipPlugins() && !!res) {
+        if (!shouldSkipPlugins((this as any).skipPlugins) && !!res) {
           await Promise.all(
             res.map(async (item: any) => {
               Object.assign(

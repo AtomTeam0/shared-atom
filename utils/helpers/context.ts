@@ -15,18 +15,17 @@ export const setContext = (property: Global, value: any): void => {
   session.set(property, value);
 };
 
-export const shouldSkipPlugins = (): any => {
+export const shouldSkipPlugins = (alternativeValue?: boolean): any => {
   const isDeep = !session.active;
-  return !config.server.withDeepPlungin
-    ? isDeep || getContext(Global.SKIP_PLUGINS)
-    : getContext(Global.SKIP_PLUGINS);
+  const val =
+    alternativeValue !== undefined
+      ? alternativeValue
+      : getContext(Global.SKIP_PLUGINS);
+  return config.server.withDeepPlugin ? val : isDeep || val;
 };
 
 export const runWithContext = (callBack: any) =>
-  session.runAndReturn(() => {
-    setContext(Global.SKIP_PLUGINS, false);
-    return callBack();
-  });
+  session.runAndReturn(() => callBack());
 
 export const runWithContextMiddleWare = () =>
   wrapAsyncMiddleware(

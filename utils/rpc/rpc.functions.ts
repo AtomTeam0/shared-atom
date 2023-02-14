@@ -44,9 +44,10 @@ export const RPCServerRequest =
       let result;
       try {
         if (schemaValidation) {
-          await schemaValidation
-            .unknown()
-            .validateAsync(payload.params, defaultValidationOptions);
+          await schemaValidation.validateAsync(
+            payload.params,
+            defaultValidationOptions
+          );
         }
 
         setContext(Global.USER, payload.user);
