@@ -17,7 +17,7 @@ export function formidableMiddleware<T>(
   }[],
   isItemCreation = false
 ) {
-  function mergeDataIntoJSON(data: Record<string, any>, targetJSON: object) {
+  const mergeDataIntoJSON = (data: Record<string, any>, targetJSON: object) => {
     Object.entries(data).forEach(([key, value]) => {
       const keys = key.split(".");
       let current: any = targetJSON;
@@ -31,7 +31,7 @@ export function formidableMiddleware<T>(
       });
     });
     return targetJSON;
-  }
+  };
 
   return wrapAsyncMiddleware(
     async (req: Request, _res: Response, next: NextFunction) => {
@@ -74,11 +74,14 @@ export function formidableMiddleware<T>(
         if (err) {
           next(err);
         }
+        const modifyKey = (key: string) =>
+          key.replace("]", "").replace("[", ".");
+        const modifyValue = (val: Record<string, any>): string => val.filepath;
         req.body = mergeDataIntoJSON(
           Object.assign(
             {},
             ...Object.entries(files).map(([key, value]: any) => ({
-              [key.replace("]", "").replace("[", ".")]: value,
+              [modifyKey(key)]: modifyValue(value),
             }))
           ),
           fields

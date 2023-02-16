@@ -8,8 +8,7 @@ import {
   StoragePipelineOptions,
 } from "@azure/storage-blob";
 import { promisify } from "util";
-import { writeFile, unlink } from "fs";
-import * as path from "path";
+import { readFileSync, unlink } from "fs";
 import {
   FileTypes,
   getContainerNameByFileType,
@@ -70,7 +69,7 @@ const createSasUrl = async (containerName: string, blobName: string) => {
 };
 
 const uploadFile = async (
-  fileBuffer: Buffer,
+  path: string,
   fileType: FileTypes,
   fileName = uuidv4()
 ) => {
@@ -78,16 +77,13 @@ const uploadFile = async (
     const containerName = getContainerNameByFileType(fileType);
     const containerClient = getBlobClient().getContainerClient(containerName);
     const blockBlobClient = containerClient.getBlockBlobClient(fileName);
-    const filePath = path.join(__dirname, "../uploads", fileName);
-
-    // save file on the server locally
-    await promisify(writeFile)(filePath, fileBuffer);
 
     // upload the file to azure
-    await blockBlobClient.uploadFile(filePath);
+    const buffer = readFileSync(path);
+    await blockBlobClient.upload(buffer, buffer.length);
 
     // delete the file from the server
-    await promisify(unlink)(filePath);
+    await promisify(unlink)(path);
 
     return fileName;
   } catch {
@@ -95,14 +91,14 @@ const uploadFile = async (
   }
 };
 
-export const createBlob = async (fileBuffer: Buffer, fileType: FileTypes) =>
-  uploadFile(fileBuffer, fileType);
+export const createBlob = async (path: string, fileType: FileTypes) =>
+  uploadFile(path, fileType);
 
 export const updateBlob = async (
-  fileBuffer: Buffer,
+  path: string,
   fileType: FileTypes,
   fileName: string
-) => uploadFile(fileBuffer, fileType, fileName);
+) => uploadFile(path, fileType, fileName);
 
 export const downloadBlob = async (blobName: string, fileType: FileTypes) =>
   createSasUrl(getContainerNameByFileType(fileType), blobName);

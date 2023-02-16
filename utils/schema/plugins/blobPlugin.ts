@@ -77,28 +77,26 @@ export function blobPlugin<T>(
     modifyProperties(
       doc,
       (
-        fileBuffer: Buffer,
+        path: string,
         property: {
           property: PorpertyOptionalDeep<T>;
           fileType: FileTypes;
         }
-      ) => createBlob(fileBuffer, property.fileType)
+      ) => createBlob(path, property.fileType)
     );
 
   const updateProperties = (doc: any, query: mongoose.Query<any, any>) =>
     modifyProperties(
       doc,
       async (
-        fileBuffer: Buffer,
+        path: string,
         property: {
           property: PorpertyOptionalDeep<T>;
           fileType: FileTypes;
         }
       ) => {
         const oldBlobId = await getOldBlobId(query, property.property);
-        return (
-          oldBlobId && updateBlob(fileBuffer, property.fileType, oldBlobId)
-        );
+        return oldBlobId && updateBlob(path, property.fileType, oldBlobId);
       }
     );
 

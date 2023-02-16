@@ -8,7 +8,6 @@ import {
   InvalidMongoIdError,
   PoligonIntersectionError,
   InvalidCoordinateError,
-  InvalidWeekNumError,
 } from "../errors/validationError";
 import { getContext, setContext } from "../helpers/context";
 import { IArea } from "../../common/interfaces/area.interface";
@@ -16,7 +15,6 @@ import { ItemRPCService } from "../rpc/services/item.RPCservice";
 import { Section } from "../../common/enums/Section";
 import { Category } from "../../common/enums/Category";
 import { Corp } from "../../common/enums/Corp";
-import { ContentType } from "../../common/enums/ContentType";
 import { Grade } from "../../common/enums/Grade";
 
 // regex
@@ -25,6 +23,8 @@ const mongoIdRegex = /^[0-9a-fA-F]{24}$/;
 const personalIdRegex = /^[0-9]{9}$/;
 
 const coordinateAxisRegex = /^-?[0-9]{1,3}(?:\.[0-9]{1,15})?$/;
+
+const filePathRegex = /^\/tmp\/[a-z0-9]+$/;
 
 // exported types
 export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
@@ -121,11 +121,7 @@ export const joiMongoIdArray = (getByIdFunc?: (id: string) => any) =>
 export const joiEnum = (enumObj: { [k: string]: string }) =>
   Joi.string().valid(...Object.values(enumObj));
 
-export const joiBlob = Joi.object({
-  originalFilename: Joi.string().required(),
-  mimetype: Joi.string().required(),
-  size: Joi.number().integer().required(),
-}).unknown();
+export const joiBlob = Joi.string().regex(filePathRegex);
 
 export const joiPersonalId = Joi.string().regex(personalIdRegex);
 
