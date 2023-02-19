@@ -10,6 +10,14 @@ export const config = {
     azureAccountKey:
       process.env.AZURE_ACCOUNT_KEY ||
       "Jh/Zzyow6JnYs9N5yJZ2f3FTCErIn9/QffR5nRpnfIjVmv+l5FLbDhB7V/0FPh2BH9jy3eHl0ad3+AStI4wcXQ==",
+    tenantID: process.env.TENANT_ID || "78820852-55fa-450b-908d-45c0d911e76b",
+    clientID: process.env.CLIENT_ID || "19dafc85-8847-4768-a0c8-390ac4697d65",
+    issuer:
+      process.env.ISSUER ||
+      "https://sts.windows.net/78820852-55fa-450b-908d-45c0d911e76b/",
+    audience:
+      process.env.AUDIENCE || "https://mefakdim-frontend.azurewebsites.net",
+    scope: process.env.SCOPE || "api",
   },
   jwt: {
     secretKey: process.env.SECRET_KEY || "atomTeam",
