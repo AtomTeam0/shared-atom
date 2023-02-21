@@ -4,6 +4,7 @@ import {
   generateBlobSASQueryParameters,
   SASProtocol,
   BlobSASPermissions,
+  StorageSharedKeyCredential,
 } from "@azure/storage-blob";
 import { promisify } from "util";
 import { unlink } from "fs";
@@ -36,29 +37,31 @@ const createSasUrl = async (containerName: string, blobName: string) => {
   const HOUR_AFTER_NOW = new Date(NOW.valueOf() + HOUR);
 
   try {
-    const userDelegationKey = await getBlobClient().getUserDelegationKey(
-      HOUR_BEFORE_NOW,
-      HOUR_AFTER_NOW
+    const containerClient = getBlobClient().getContainerClient(containerName);
+    const blobClientUrl = containerClient.getBlobClient(blobName).url;
+
+    const sharedKeyCredential = new StorageSharedKeyCredential(
+      accountName,
+      accountKey
     );
 
     const sasOptions = {
-      blobName,
       containerName,
-      permissions: BlobSASPermissions.parse("r"),
-      protocol: SASProtocol.HttpsAndHttp,
+      blobName,
       startsOn: HOUR_BEFORE_NOW,
       expiresOn: HOUR_AFTER_NOW,
+      permissions: BlobSASPermissions.parse("r"),
+      protocol: SASProtocol.HttpsAndHttp,
     };
 
-    const sasToken = generateBlobSASQueryParameters(
+    const sasQueryParams = generateBlobSASQueryParameters(
       sasOptions,
-      userDelegationKey,
-      accountName
-    ).toString();
+      sharedKeyCredential
+    );
 
-    return `https://${accountName}.blob.core.windows.net/${containerName}/${blobName}?${sasToken}`;
-  } catch {
-    throw new ConnectionError("Azure accountName or accountKey are invalid");
+    return `${blobClientUrl}?${sasQueryParams.toString()}`;
+  } catch (err: any) {
+    throw new ConnectionError(`Azure error: ${err.message}`);
   }
 };
 
@@ -85,8 +88,8 @@ const uploadFile = async (
     await promisify(unlink)(file.filepath);
 
     return fileName;
-  } catch {
-    throw new ConnectionError("Azure accountName or accountKey are invalid");
+  } catch (err: any) {
+    throw new ConnectionError(`Azure error: ${err.message}`);
   }
 };
 
