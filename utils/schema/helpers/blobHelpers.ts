@@ -95,7 +95,7 @@ export const createBlob = async (
   fileType: FileTypes
 ) => {
   const fileNameParts = file.originalFilename.split(".");
-  uploadFile(
+  return uploadFile(
     file,
     fileType,
     `${fileNameParts[0]}_${uuidv4()}.${fileNameParts[1]}`
