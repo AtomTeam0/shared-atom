@@ -4,11 +4,9 @@ import {
   generateBlobSASQueryParameters,
   SASProtocol,
   BlobSASPermissions,
-  StorageSharedKeyCredential,
-  StoragePipelineOptions,
 } from "@azure/storage-blob";
 import { promisify } from "util";
-import { readFileSync, unlink } from "fs";
+import { unlink } from "fs";
 import {
   FileTypes,
   getContainerNameByFileType,
@@ -24,13 +22,9 @@ const getBlobClient = () => {
   if (blobClient) {
     return blobClient;
   }
-  const credential = new StorageSharedKeyCredential(accountName, accountKey);
-  const options: StoragePipelineOptions = { retryOptions: { maxTries: 1 } };
-  const blobServiceClient = new BlobServiceClient(
-    `https://${accountName}.blob.core.windows.net`,
-    credential,
-    options
-  );
+  const connectionString = `DefaultEndpointsProtocol=https;AccountName=${accountName};AccountKey=${accountKey};EndpointSuffix=core.windows.net`;
+  const blobServiceClient =
+    BlobServiceClient.fromConnectionString(connectionString);
   return blobServiceClient;
 };
 
@@ -69,21 +63,26 @@ const createSasUrl = async (containerName: string, blobName: string) => {
 };
 
 const uploadFile = async (
-  path: string,
+  file: { filepath: string; originalFilename: string },
   fileType: FileTypes,
-  fileName = uuidv4()
+  fileName: string
 ) => {
   try {
     const containerName = getContainerNameByFileType(fileType);
     const containerClient = getBlobClient().getContainerClient(containerName);
+
+    // Create container if it does not exist
+    const exists = await containerClient.exists();
+    if (!exists) {
+      await containerClient.create({ access: "blob" });
+    }
     const blockBlobClient = containerClient.getBlockBlobClient(fileName);
 
     // upload the file to azure
-    const buffer = readFileSync(path);
-    await blockBlobClient.upload(buffer, buffer.length);
+    await blockBlobClient.uploadFile(file.filepath);
 
     // delete the file from the server
-    await promisify(unlink)(path);
+    await promisify(unlink)(file.filepath);
 
     return fileName;
   } catch {
@@ -91,14 +90,23 @@ const uploadFile = async (
   }
 };
 
-export const createBlob = async (path: string, fileType: FileTypes) =>
-  uploadFile(path, fileType);
+export const createBlob = async (
+  file: { filepath: string; originalFilename: string },
+  fileType: FileTypes
+) => {
+  const fileNameParts = file.originalFilename.split(".");
+  uploadFile(
+    file,
+    fileType,
+    `${fileNameParts[0]}_${uuidv4()}.${fileNameParts[1]}`
+  );
+};
 
 export const updateBlob = async (
-  path: string,
+  file: { filepath: string; originalFilename: string },
   fileType: FileTypes,
   fileName: string
-) => uploadFile(path, fileType, fileName);
+) => uploadFile(file, fileType, fileName);
 
 export const downloadBlob = async (blobName: string, fileType: FileTypes) =>
   createSasUrl(getContainerNameByFileType(fileType), blobName);

@@ -6,10 +6,10 @@ export const config = {
     withDeepPlugin: (process.env.WITH_DEEP_PULGINS || "true") === "true",
   },
   azure: {
-    azureAccountName: process.env.AZURE_ACCOUNT_NAME || "mynetappstorage",
+    azureAccountName: process.env.AZURE_ACCOUNT_NAME || "mynetstoragetest",
     azureAccountKey:
       process.env.AZURE_ACCOUNT_KEY ||
-      "Jh/Zzyow6JnYs9N5yJZ2f3FTCErIn9/QffR5nRpnfIjVmv+l5FLbDhB7V/0FPh2BH9jy3eHl0ad3+AStI4wcXQ==",
+      "oCHRlFQyrvEDpHBBBn+MZgBb/U6b/jYfGRIGsAawOLmel3wKZE7tSp1jpRox7M6MYn+8DsMyAuQ6+AStoyClDQ==",
   },
   jwt: {
     secretKey: process.env.SECRET_KEY || "atomTeam",

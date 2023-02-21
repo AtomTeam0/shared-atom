@@ -33,6 +33,17 @@ export function formidableMiddleware<T>(
     return targetJSON;
   };
 
+  const modifyKey = (key: string) => key.replace("]", "").replace("[", ".");
+
+  const modifyValue = (key: string, val: Record<string, any>): string => {
+    const { filepath, originalFilename } = val;
+    const json = {
+      filepath,
+      originalFilename,
+    };
+    return JSON.stringify(json);
+  };
+
   return wrapAsyncMiddleware(
     async (req: Request, _res: Response, next: NextFunction) => {
       const form = formidable({ multiples: true });
@@ -74,14 +85,11 @@ export function formidableMiddleware<T>(
         if (err) {
           next(err);
         }
-        const modifyKey = (key: string) =>
-          key.replace("]", "").replace("[", ".");
-        const modifyValue = (val: Record<string, any>): string => val.filepath;
         req.body = mergeDataIntoJSON(
           Object.assign(
             {},
             ...Object.entries(files).map(([key, value]: any) => ({
-              [modifyKey(key)]: modifyValue(value),
+              [modifyKey(key)]: modifyValue(key, value),
             }))
           ),
           fields

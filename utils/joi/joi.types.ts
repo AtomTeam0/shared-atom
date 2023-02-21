@@ -24,7 +24,7 @@ const personalIdRegex = /^[0-9]{9}$/;
 
 const coordinateAxisRegex = /^-?[0-9]{1,3}(?:\.[0-9]{1,15})?$/;
 
-const filePathRegex = /^\/tmp\/[a-z0-9]+$/;
+const blobRegex = /^{(?=.*filepath)(?=.*originalFilename).*}$/;
 
 // exported types
 export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
@@ -121,7 +121,7 @@ export const joiMongoIdArray = (getByIdFunc?: (id: string) => any) =>
 export const joiEnum = (enumObj: { [k: string]: string }) =>
   Joi.string().valid(...Object.values(enumObj));
 
-export const joiBlob = Joi.string().regex(filePathRegex);
+export const joiBlob = Joi.string().regex(blobRegex);
 
 export const joiPersonalId = Joi.string().regex(personalIdRegex);
 

@@ -82,7 +82,7 @@ export function blobPlugin<T>(
           property: PorpertyOptionalDeep<T>;
           fileType: FileTypes;
         }
-      ) => createBlob(path, property.fileType)
+      ) => createBlob(JSON.parse(path), property.fileType)
     );
 
   const updateProperties = (doc: any, query: mongoose.Query<any, any>) =>
@@ -96,7 +96,10 @@ export function blobPlugin<T>(
         }
       ) => {
         const oldBlobId = await getOldBlobId(query, property.property);
-        return oldBlobId && updateBlob(path, property.fileType, oldBlobId);
+        return (
+          oldBlobId &&
+          updateBlob(JSON.parse(path), property.fileType, oldBlobId)
+        );
       }
     );
 
