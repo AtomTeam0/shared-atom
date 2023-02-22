@@ -25,13 +25,15 @@ export const getValidatorByFileType = (fileType: FileTypes): IFileValidator =>
   config.formidable.fileValidators[fileType] as IFileValidator;
 
 const SEPERATOR = "__";
+const SLASH_REPLACER = "-";
 
 export const getBlobName = (file: IFileDetails): string => {
   const fileNameParts = file.originalFilename.split(".");
-  return `${fileNameParts[0]}${SEPERATOR}${
-    file.mimetype
-  }${SEPERATOR}${uuidv4()}.${fileNameParts[1]}`;
+  return `${fileNameParts[0]}${SEPERATOR}${file.mimetype.replace(
+    "/",
+    SLASH_REPLACER
+  )}${SEPERATOR}${uuidv4()}.${fileNameParts[1]}`;
 };
 
 export const getMimetypeByBlobName = (blobName: string): string =>
-  blobName.split(SEPERATOR)[1];
+  blobName.split(SEPERATOR)[1].replace(SLASH_REPLACER, "/");
