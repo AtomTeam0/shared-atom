@@ -41,10 +41,11 @@ export function formidableMiddleware<T>(
   const modifyKey = (key: string) => key.replace("]", "").replace("[", ".");
 
   const modifyValue = (val: Record<string, any>): string => {
-    const { filepath, originalFilename } = val;
+    const { filepath, originalFilename, mimetype } = val;
     const json: IFileDetails = {
       filepath,
       originalFilename,
+      mimetype,
     };
     return JSON.stringify(json);
   };

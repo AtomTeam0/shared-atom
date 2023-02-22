@@ -29,7 +29,7 @@ const SEPERATOR = "__";
 export const getBlobName = (file: IFileDetails): string => {
   const fileNameParts = file.originalFilename.split(".");
   return `${fileNameParts[0]}${SEPERATOR}${
-    file.mimeType
+    file.mimetype
   }${SEPERATOR}${uuidv4()}.${fileNameParts[1]}`;
 };
 
