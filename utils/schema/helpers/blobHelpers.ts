@@ -8,12 +8,11 @@ import {
 } from "@azure/storage-blob";
 import { promisify } from "util";
 import { unlink } from "fs";
-import {
-  FileTypes,
-  getContainerNameByFileType,
-} from "../../../common/enums/helpers/FileTypes";
+import { FileTypes } from "../../../common/enums/helpers/FileTypes";
 import { config } from "../../../config";
 import { ConnectionError } from "../../errors/applicationError";
+import { IFileDetails } from "../../../common/interfaces/helpers/file.interface";
+import { getContainerNameByFileType } from "../../helpers/files";
 
 let blobClient: BlobServiceClient;
 const accountName = config.azure.azureAccountName;
@@ -29,7 +28,7 @@ const getBlobClient = () => {
   return blobServiceClient;
 };
 
-const createSasUrl = async (containerName: string, blobName: string) => {
+const createSasUrl = async (fileType: FileTypes, blobName: string) => {
   const HOUR = 60 * 60 * 1000;
   const NOW = new Date();
 
@@ -37,6 +36,7 @@ const createSasUrl = async (containerName: string, blobName: string) => {
   const HOUR_AFTER_NOW = new Date(NOW.valueOf() + HOUR);
 
   try {
+    const containerName = getContainerNameByFileType(fileType);
     const containerClient = getBlobClient().getContainerClient(containerName);
     const blobClientUrl = containerClient.getBlobClient(blobName).url;
 
@@ -66,7 +66,7 @@ const createSasUrl = async (containerName: string, blobName: string) => {
 };
 
 const uploadFile = async (
-  file: { filepath: string; originalFilename: string },
+  file: IFileDetails,
   fileType: FileTypes,
   fileName: string
 ) => {
@@ -93,10 +93,7 @@ const uploadFile = async (
   }
 };
 
-export const createBlob = async (
-  file: { filepath: string; originalFilename: string },
-  fileType: FileTypes
-) => {
+export const createBlob = async (file: IFileDetails, fileType: FileTypes) => {
   const fileNameParts = file.originalFilename.split(".");
   return uploadFile(
     file,
@@ -106,10 +103,10 @@ export const createBlob = async (
 };
 
 export const updateBlob = async (
-  file: { filepath: string; originalFilename: string },
+  file: IFileDetails,
   fileType: FileTypes,
   fileName: string
 ) => uploadFile(file, fileType, fileName);
 
 export const downloadBlob = async (blobName: string, fileType: FileTypes) =>
-  createSasUrl(getContainerNameByFileType(fileType), blobName);
+  createSasUrl(fileType, blobName);

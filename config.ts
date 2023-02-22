@@ -1,5 +1,7 @@
 import { FileTypes } from "./common/enums/helpers/FileTypes";
 
+const MB = 1024 * 1024;
+
 export const config = {
   server: {
     nodeEnv: process.env.NODE_ENV || "development",
@@ -37,6 +39,39 @@ export const config = {
     },
   },
   formidable: {
+    fileValidators: {
+      [FileTypes.IMAGE]: {
+        maxFileSize: +(process.env.IMAGE_MAX_FILE_SIZE || 2) * MB,
+        allowedMimeTypes: process.env.IMAGE_ALLOWED_MIME_TYPES || [
+          "image/jpeg",
+          "image/png",
+          "image/gif",
+          "image/svg+xml",
+        ],
+      },
+      [FileTypes.AUDIO]: {
+        maxFileSize: +(process.env.AUDIO_MAX_FILE_SIZE || 10) * MB,
+        allowedMimeTypes: process.env.AUDIO_ALLOWED_MIME_TYPES || [
+          "audio/mpeg",
+          "audio/x-wav",
+        ],
+      },
+      [FileTypes.VIDEO]: {
+        maxFileSize: +(process.env.VIDEO_MAX_FILE_SIZE || 20) * MB,
+        allowedMimeTypes: process.env.VIDEO_ALLOWED_MIME_TYPES || [
+          "video/mp4",
+          "video/x-msvideo",
+          "video/x-ms-wmv",
+          "image/gif",
+        ],
+      },
+      [FileTypes.PDF]: {
+        maxFileSize: +(process.env.PDF_MAX_FILE_SIZE || 15) * MB,
+        allowedMimeTypes: process.env.PDF_ALLOWED_MIME_TYPES || [
+          "application/pdf",
+        ],
+      },
+    },
     propertyConfigs: {
       item: [
         {

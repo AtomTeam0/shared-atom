@@ -1,12 +1,17 @@
 import { Request, Response, NextFunction } from "express";
 import * as formidable from "formidable";
+import { FileTypes } from "../../common/enums/helpers/FileTypes";
 import {
-  FileTypes,
-  getFileSizeByFileType,
-  getMimeTypeByFileType,
-} from "../../common/enums/helpers/FileTypes";
+  IFileDetails,
+  IFileValidator,
+} from "../../common/interfaces/helpers/file.interface";
 import { config } from "../../config";
-import { UnsupportedFileSize, UnsupportedFileType } from "../errors/filesError";
+import {
+  UnsupportedFile,
+  UnsupportedFileSize,
+  UnsupportedFileType,
+} from "../errors/filesError";
+import { getValidatorByFileType } from "../helpers/files";
 import { PorpertyOptionalDeep } from "../helpers/types";
 import { wrapAsyncMiddleware } from "../helpers/wrapper";
 
@@ -35,9 +40,9 @@ export function formidableMiddleware<T>(
 
   const modifyKey = (key: string) => key.replace("]", "").replace("[", ".");
 
-  const modifyValue = (key: string, val: Record<string, any>): string => {
+  const modifyValue = (val: Record<string, any>): string => {
     const { filepath, originalFilename } = val;
-    const json = {
+    const json: IFileDetails = {
       filepath,
       originalFilename,
     };
@@ -57,27 +62,33 @@ export function formidableMiddleware<T>(
         const property = allProperties.find((prop) =>
           formname.includes(prop.property)
         );
-        const isValidSize =
-          property &&
-          file.size &&
-          file.size <= getFileSizeByFileType(property.fileType);
-        const isValidMimeType =
-          property &&
-          file.mimetype &&
-          getMimeTypeByFileType(property.fileType).includes(file.mimetype);
+        if (!property) {
+          next(new UnsupportedFile(formname));
+        } else {
+          const validator: IFileValidator = getValidatorByFileType(
+            property.fileType
+          );
 
-        if (!isValidSize) {
-          next(new UnsupportedFileSize(file.size || undefined));
-        }
-        if (!isValidMimeType) {
-          next(new UnsupportedFileType(file.mimetype || undefined));
-        }
+          const isValidSize =
+            property && file.size && file.size <= validator.maxFileSize;
+          const isValidMimeType =
+            property &&
+            file.mimetype &&
+            validator.allowedMimeTypes.includes(file.mimetype);
 
-        form.emit("data", {
-          name: "file",
-          formname,
-          value: file,
-        });
+          if (!isValidSize) {
+            next(new UnsupportedFileSize(file.size || undefined));
+          }
+          if (!isValidMimeType) {
+            next(new UnsupportedFileType(file.mimetype || undefined));
+          }
+
+          form.emit("data", {
+            name: "file",
+            formname,
+            value: file,
+          });
+        }
       });
 
       // convertion
@@ -89,7 +100,7 @@ export function formidableMiddleware<T>(
           Object.assign(
             {},
             ...Object.entries(files).map(([key, value]: any) => ({
-              [modifyKey(key)]: modifyValue(key, value),
+              [modifyKey(key)]: modifyValue(value),
             }))
           ),
           fields
