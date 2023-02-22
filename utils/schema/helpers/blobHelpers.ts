@@ -1,10 +1,10 @@
-import { v4 as uuidv4 } from "uuid";
 import {
   BlobServiceClient,
   generateBlobSASQueryParameters,
   SASProtocol,
   BlobSASPermissions,
   StorageSharedKeyCredential,
+  BlobSASSignatureValues,
 } from "@azure/storage-blob";
 import { promisify } from "util";
 import { unlink } from "fs";
@@ -12,7 +12,11 @@ import { FileTypes } from "../../../common/enums/helpers/FileTypes";
 import { config } from "../../../config";
 import { ConnectionError } from "../../errors/applicationError";
 import { IFileDetails } from "../../../common/interfaces/helpers/file.interface";
-import { getContainerNameByFileType } from "../../helpers/files";
+import {
+  getContainerNameByFileType,
+  getBlobName,
+  getMimetypeByBlobName,
+} from "../../helpers/files";
 
 let blobClient: BlobServiceClient;
 const accountName = config.azure.azureAccountName;
@@ -45,13 +49,15 @@ const createSasUrl = async (fileType: FileTypes, blobName: string) => {
       accountKey
     );
 
-    const sasOptions = {
+    const sasOptions: BlobSASSignatureValues = {
       containerName,
       blobName,
       startsOn: HOUR_BEFORE_NOW,
       expiresOn: HOUR_AFTER_NOW,
       permissions: BlobSASPermissions.parse("r"),
       protocol: SASProtocol.HttpsAndHttp,
+      contentDisposition: "inline",
+      contentType: getMimetypeByBlobName(blobName),
     };
 
     const sasQueryParams = generateBlobSASQueryParameters(
@@ -68,7 +74,7 @@ const createSasUrl = async (fileType: FileTypes, blobName: string) => {
 const uploadFile = async (
   file: IFileDetails,
   fileType: FileTypes,
-  fileName: string
+  fileName = getBlobName(file)
 ) => {
   try {
     const containerName = getContainerNameByFileType(fileType);
@@ -93,14 +99,8 @@ const uploadFile = async (
   }
 };
 
-export const createBlob = async (file: IFileDetails, fileType: FileTypes) => {
-  const fileNameParts = file.originalFilename.split(".");
-  return uploadFile(
-    file,
-    fileType,
-    `${fileNameParts[0]}_${uuidv4()}.${fileNameParts[1]}`
-  );
-};
+export const createBlob = async (file: IFileDetails, fileType: FileTypes) =>
+  uploadFile(file, fileType);
 
 export const updateBlob = async (
   file: IFileDetails,

@@ -1,5 +1,9 @@
+import { v4 as uuidv4 } from "uuid";
 import { FileTypes } from "../../common/enums/helpers/FileTypes";
-import { IFileValidator } from "../../common/interfaces/helpers/file.interface";
+import {
+  IFileDetails,
+  IFileValidator,
+} from "../../common/interfaces/helpers/file.interface";
 import { config } from "../../config";
 
 export const getContainerNameByFileType = (fileType: FileTypes): string => {
@@ -19,3 +23,15 @@ export const getContainerNameByFileType = (fileType: FileTypes): string => {
 
 export const getValidatorByFileType = (fileType: FileTypes): IFileValidator =>
   config.formidable.fileValidators[fileType] as IFileValidator;
+
+const SEPERATOR = "__";
+
+export const getBlobName = (file: IFileDetails): string => {
+  const fileNameParts = file.originalFilename.split(".");
+  return `${fileNameParts[0]}${SEPERATOR}${
+    file.mimeType
+  }${SEPERATOR}${uuidv4()}.${fileNameParts[1]}`;
+};
+
+export const getMimetypeByBlobName = (blobName: string): string =>
+  blobName.split(SEPERATOR)[1];
