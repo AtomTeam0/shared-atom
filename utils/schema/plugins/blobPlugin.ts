@@ -5,6 +5,7 @@ import { FileTypes } from "../../../common/enums/helpers/FileTypes";
 import { Global } from "../../../common/enums/helpers/Global";
 import {
   getContext,
+  runWithContext,
   setContext,
   shouldSkipPlugins,
 } from "../../helpers/context";
@@ -28,15 +29,15 @@ export function blobPlugin<T>(
     fileType: FileTypes;
   }[]
 ) {
-  const getOldBlobId = async (
+  const getOldBlobName = async (
     query: mongoose.Query<any, any>,
     property: PorpertyOptionalDeep<T>
   ) => {
     const wantedId = query.getFilter()._id;
-    const skipPlugins = getContext(Global.SKIP_PLUGINS);
-    setContext(Global.SKIP_PLUGINS, true);
-    const oldDoc = await query.model.findById(wantedId).exec();
-    setContext(Global.SKIP_PLUGINS, skipPlugins);
+    const oldDoc = await runWithContext(() => {
+      setContext(Global.SKIP_PLUGINS, true);
+      return query.model.findById(wantedId).exec();
+    });
     if (oldDoc) {
       return propertyValGetter<T>(oldDoc, property);
     }
@@ -95,10 +96,10 @@ export function blobPlugin<T>(
           fileType: FileTypes;
         }
       ) => {
-        const oldBlobId = await getOldBlobId(query, property.property);
+        const oldBlobName = await getOldBlobName(query, property.property);
         return (
-          oldBlobId &&
-          updateBlob(JSON.parse(path), property.fileType, oldBlobId)
+          oldBlobName &&
+          updateBlob(JSON.parse(path), property.fileType, oldBlobName)
         );
       }
     );

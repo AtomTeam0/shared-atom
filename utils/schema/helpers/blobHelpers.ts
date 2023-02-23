@@ -74,9 +74,10 @@ const createSasUrl = async (fileType: FileTypes, blobName: string) => {
 const uploadFile = async (
   file: IFileDetails,
   fileType: FileTypes,
-  fileName = getBlobName(file)
+  oldFileName?: string
 ) => {
   try {
+    const fileName = getBlobName(file, oldFileName);
     const containerName = getContainerNameByFileType(fileType);
     const containerClient = getBlobClient().getContainerClient(containerName);
 
@@ -85,12 +86,17 @@ const uploadFile = async (
     if (!exists) {
       await containerClient.create({ access: "blob" });
     }
-    const blockBlobClient = containerClient.getBlockBlobClient(fileName);
 
-    // upload the file to azure
+    // upload the file to azure, if old blob is given, delete it
+    if (oldFileName) {
+      const oldBlockBlobClient =
+        containerClient.getBlockBlobClient(oldFileName);
+      oldBlockBlobClient.deleteIfExists();
+    }
+    const blockBlobClient = containerClient.getBlockBlobClient(fileName);
     await blockBlobClient.uploadFile(file.filepath);
 
-    // delete the file from the server
+    // delete the file from the local server
     await promisify(unlink)(file.filepath);
 
     return fileName;
@@ -105,8 +111,8 @@ export const createBlob = async (file: IFileDetails, fileType: FileTypes) =>
 export const updateBlob = async (
   file: IFileDetails,
   fileType: FileTypes,
-  fileName: string
-) => uploadFile(file, fileType, fileName);
+  oldFileName: string
+) => uploadFile(file, fileType, oldFileName);
 
 export const downloadBlob = async (blobName: string, fileType: FileTypes) =>
   createSasUrl(fileType, blobName);

@@ -27,8 +27,15 @@ export const getValidatorByFileType = (fileType: FileTypes): IFileValidator =>
 const SEPERATOR = "__";
 const SLASH_REPLACER = "-";
 
-export const getBlobName = (file: IFileDetails): string => {
+export const getBlobName = (
+  file: IFileDetails,
+  oldFileName?: string
+): string => {
   const fileNameParts = file.originalFilename.split(".");
+  if (oldFileName) {
+    const oldFileNameParts = oldFileName.split(SEPERATOR);
+    return oldFileName.replace(oldFileNameParts[0], fileNameParts[0]);
+  }
   return `${fileNameParts[0]}${SEPERATOR}${file.mimetype.replace(
     "/",
     SLASH_REPLACER
