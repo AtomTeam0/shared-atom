@@ -1,6 +1,6 @@
 import { Global } from "../../common/enums/helpers/Global";
 import { IUser } from "../../common/interfaces/user.interface";
-import { getContext } from "../helpers/context";
+import { getContext, shouldSkipPlugins } from "../helpers/context";
 
 export function patchDocsWithObject<T>(
   docs: T | T[],
@@ -11,7 +11,7 @@ export function patchDocsWithObject<T>(
   },
   isLean = false
 ): T | T[] {
-  if (getContext(Global.SKIP_PLUGINS)) {
+  if (shouldSkipPlugins()) {
     return docs;
   }
   const userPatcher = (
@@ -51,7 +51,7 @@ export function patchDocsWithBoolean<T>(
   },
   isLean = false
 ): T | T[] {
-  if (getContext(Global.SKIP_PLUGINS)) {
+  if (shouldSkipPlugins()) {
     return docs;
   }
   const userPatcherBoolean = (

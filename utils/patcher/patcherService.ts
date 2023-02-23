@@ -1,5 +1,5 @@
 import { WatchMode } from "../../common/enums/WatchMode";
-import { IItem, IItemGroup } from "../../common/interfaces/item.interface";
+import { IItem } from "../../common/interfaces/item.interface";
 import { IChapter } from "../../common/interfaces/chapter.interface";
 import { IUser } from "../../common/interfaces/user.interface";
 import { patchDocsWithBoolean, patchDocsWithObject } from "./patcher";
@@ -44,23 +44,6 @@ export class PatcherService {
   }
 
   // with child properties
-  static async itemGroupPatcher(
-    itemGroups: IItemGroup[]
-  ): Promise<IItemGroup[]> {
-    const isArray = Array.isArray(itemGroups);
-    return Promise.all(
-      (isArray ? itemGroups : [itemGroups]).map(
-        async (itemGroup: IItemGroup) => ({
-          ...(itemGroup as any),
-          items: (await PatcherService.itemPatcher(
-            itemGroup.items as IItem[],
-            true
-          )) as IItem[],
-        })
-      )
-    );
-  }
-
   static async paginatedItemsPatcher(
     paginatedItems: IPaginator<IItem>
   ): Promise<IPaginator<IItem>> {
