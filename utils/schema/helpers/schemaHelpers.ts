@@ -1,8 +1,12 @@
-export const preCreationFunctionType = "save";
+export const aggregationType = ["aggregate"];
 
-export const preUpdateFunctionType = "findOneAndUpdate";
+export const creationFunctionType = ["save"];
 
-export const postGetSingleFunctionTypes = [
+export const updateFunctionType = ["findOneAndUpdate"];
+
+export const getManyFunctionTypes = ["count", "find", "update"];
+
+export const getSingleFunctionTypes = [
   "findOne",
   "findOneAndDelete",
   "findOneAndRemove",
@@ -10,9 +14,7 @@ export const postGetSingleFunctionTypes = [
   "updateOne",
 ];
 
-export const postGetManyFunctionTypes = ["count", "find", "update"];
-
-export const postGetAllFunctionTypes = [
-  ...postGetSingleFunctionTypes,
-  ...postGetManyFunctionTypes,
+export const getAllFunctionTypes = [
+  ...getManyFunctionTypes,
+  ...getSingleFunctionTypes,
 ];

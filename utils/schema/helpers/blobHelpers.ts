@@ -1,118 +1,115 @@
-import {
-  BlobServiceClient,
-  generateBlobSASQueryParameters,
-  SASProtocol,
-  BlobSASPermissions,
-  StorageSharedKeyCredential,
-  BlobSASSignatureValues,
-} from "@azure/storage-blob";
-import { promisify } from "util";
-import { unlink } from "fs";
+import * as mongoose from "mongoose";
 import { FileTypes } from "../../../common/enums/helpers/FileTypes";
-import { config } from "../../../config";
-import { ConnectionError } from "../../errors/applicationError";
-import { IFileDetails } from "../../../common/interfaces/helpers/file.interface";
+import { Global } from "../../../common/enums/helpers/Global";
+import { runWithContext, setContext } from "../../helpers/context";
 import {
-  getContainerNameByFileType,
-  getBlobName,
-  getMimetypeByBlobName,
-} from "../../helpers/files";
+  PorpertyOptionalDeep,
+  propertyValGetter,
+  propertyValSetter,
+} from "../../helpers/types";
+import { downloadBlob, createBlob, updateBlob } from "./azureHelpers";
 
-let blobClient: BlobServiceClient;
-const accountName = config.azure.azureAccountName;
-const accountKey = config.azure.azureAccountKey;
-
-const getBlobClient = () => {
-  if (blobClient) {
-    return blobClient;
+async function getOldBlobName<T>(
+  query: mongoose.Query<any, any>,
+  property: PorpertyOptionalDeep<T>
+) {
+  const wantedId = query.getFilter()._id;
+  const oldDoc = await runWithContext(() => {
+    setContext(Global.SKIP_PLUGINS, true);
+    return query.model.findById(wantedId).exec();
+  });
+  if (oldDoc) {
+    return propertyValGetter<T>(oldDoc, property);
   }
-  const connectionString = `DefaultEndpointsProtocol=https;AccountName=${accountName};AccountKey=${accountKey};EndpointSuffix=core.windows.net`;
-  const blobServiceClient =
-    BlobServiceClient.fromConnectionString(connectionString);
-  return blobServiceClient;
-};
+  return undefined;
+}
 
-const createSasUrl = async (fileType: FileTypes, blobName: string) => {
-  const HOUR = 60 * 60 * 1000;
-  const NOW = new Date();
+async function modifyProperties<T>(
+  doc: any,
+  options: {
+    property: PorpertyOptionalDeep<T>;
+    fileType: FileTypes;
+  }[],
+  blobAction: (...args: any) => Promise<string>
+) {
+  return Promise.all(
+    options.map(async (option) => {
+      const currentVal = propertyValGetter<T>(doc, option.property);
+      return (
+        currentVal &&
+        propertyValSetter<T>(
+          doc,
+          option.property,
+          await blobAction(currentVal, option)
+        )
+      );
+    })
+  );
+}
 
-  const HOUR_BEFORE_NOW = new Date(NOW.valueOf() - HOUR);
-  const HOUR_AFTER_NOW = new Date(NOW.valueOf() + HOUR);
+export async function downloadProperties<T>(
+  doc: any,
+  options: {
+    property: PorpertyOptionalDeep<T>;
+    fileType: FileTypes;
+  }[]
+) {
+  return modifyProperties<T>(
+    doc,
+    options,
+    (
+      blobName: string,
+      property: {
+        property: PorpertyOptionalDeep<T>;
+        fileType: FileTypes;
+      }
+    ) => downloadBlob(blobName, property.fileType)
+  );
+}
 
-  try {
-    const containerName = getContainerNameByFileType(fileType);
-    const containerClient = getBlobClient().getContainerClient(containerName);
-    const blobClientUrl = containerClient.getBlobClient(blobName).url;
+export async function createProperties<T>(
+  doc: any,
+  options: {
+    property: PorpertyOptionalDeep<T>;
+    fileType: FileTypes;
+  }[]
+) {
+  return modifyProperties<T>(
+    doc,
+    options,
+    (
+      path: string,
+      property: {
+        property: PorpertyOptionalDeep<T>;
+        fileType: FileTypes;
+      }
+    ) => createBlob(JSON.parse(path), property.fileType)
+  );
+}
 
-    const sharedKeyCredential = new StorageSharedKeyCredential(
-      accountName,
-      accountKey
-    );
-
-    const sasOptions: BlobSASSignatureValues = {
-      containerName,
-      blobName,
-      startsOn: HOUR_BEFORE_NOW,
-      expiresOn: HOUR_AFTER_NOW,
-      permissions: BlobSASPermissions.parse("r"),
-      protocol: SASProtocol.HttpsAndHttp,
-      contentDisposition: "inline",
-      contentType: getMimetypeByBlobName(blobName),
-    };
-
-    const sasQueryParams = generateBlobSASQueryParameters(
-      sasOptions,
-      sharedKeyCredential
-    );
-
-    return `${blobClientUrl}?${sasQueryParams.toString()}`;
-  } catch (err: any) {
-    throw new ConnectionError(`Azure error: ${err.message}`);
-  }
-};
-
-const uploadFile = async (
-  file: IFileDetails,
-  fileType: FileTypes,
-  oldFileName?: string
-) => {
-  try {
-    const fileName = getBlobName(file, oldFileName);
-    const containerName = getContainerNameByFileType(fileType);
-    const containerClient = getBlobClient().getContainerClient(containerName);
-
-    // Create container if it does not exist
-    const exists = await containerClient.exists();
-    if (!exists) {
-      await containerClient.create({ access: "blob" });
+export async function updateProperties<T>(
+  doc: any,
+  options: {
+    property: PorpertyOptionalDeep<T>;
+    fileType: FileTypes;
+  }[],
+  query: mongoose.Query<any, any>
+) {
+  return modifyProperties<T>(
+    doc,
+    options,
+    async (
+      path: string,
+      property: {
+        property: PorpertyOptionalDeep<T>;
+        fileType: FileTypes;
+      }
+    ) => {
+      const oldBlobName = await getOldBlobName<T>(query, property.property);
+      return (
+        oldBlobName &&
+        updateBlob(JSON.parse(path), property.fileType, oldBlobName)
+      );
     }
-
-    // upload the file to azure, if old blob is given, delete it
-    if (oldFileName) {
-      const oldBlockBlobClient =
-        containerClient.getBlockBlobClient(oldFileName);
-      oldBlockBlobClient.deleteIfExists();
-    }
-    const blockBlobClient = containerClient.getBlockBlobClient(fileName);
-    await blockBlobClient.uploadFile(file.filepath);
-
-    // delete the file from the local server
-    await promisify(unlink)(file.filepath);
-
-    return fileName;
-  } catch (err: any) {
-    throw new ConnectionError(`Azure error: ${err.message}`);
-  }
-};
-
-export const createBlob = async (file: IFileDetails, fileType: FileTypes) =>
-  uploadFile(file, fileType);
-
-export const updateBlob = async (
-  file: IFileDetails,
-  fileType: FileTypes,
-  oldFileName: string
-) => uploadFile(file, fileType, oldFileName);
-
-export const downloadBlob = async (blobName: string, fileType: FileTypes) =>
-  createSasUrl(fileType, blobName);
+  );
+}

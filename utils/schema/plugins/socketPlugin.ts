@@ -1,6 +1,7 @@
 import * as mongoose from "mongoose";
 import { PorpertyOptionalDeep, propertyValGetter } from "../../helpers/types";
-import { preCreationFunctionType } from "../helpers/schemaHelpers";
+import { genericPostMiddleware } from "../helpers/pluginHelpers";
+import { creationFunctionType } from "../helpers/schemaHelpers";
 import { emitEvent } from "../helpers/socketHelpers";
 
 export function socketPlugin<T>(
@@ -10,23 +11,20 @@ export function socketPlugin<T>(
     roomNameProperty?: PorpertyOptionalDeep<T>;
   }
 ) {
-  schema.post(
-    preCreationFunctionType,
-    async function (
-      this: any,
-      res: any[],
-      next: (err?: mongoose.CallbackError) => void
-    ) {
+  genericPostMiddleware(
+    schema,
+    creationFunctionType,
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    async (thisObject: any, _res: any) => {
       if (options.roomNameProperty) {
         emitEvent(
           options.eventName,
-          this,
-          propertyValGetter<T>(this, options.roomNameProperty)
+          thisObject,
+          propertyValGetter<T>(thisObject, options.roomNameProperty)
         );
       } else {
-        emitEvent(options.eventName, this);
+        emitEvent(options.eventName, thisObject);
       }
-      next();
     }
   );
 }

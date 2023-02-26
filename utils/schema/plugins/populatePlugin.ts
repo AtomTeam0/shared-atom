@@ -1,121 +1,85 @@
-/* eslint-disable no-prototype-builtins */
 import * as mongoose from "mongoose";
 import { isWithSearch } from "../../helpers/aggregation";
-import { shouldSkipPlugins } from "../../helpers/context";
+import { genericPreMiddleware } from "../helpers/pluginHelpers";
 import {
-  postGetAllFunctionTypes,
-  preCreationFunctionType,
-  preUpdateFunctionType,
+  aggregationType,
+  getAllFunctionTypes,
+  creationFunctionType,
+  updateFunctionType,
 } from "../helpers/schemaHelpers";
 
 export function populatePlugin<T>(
   schema: mongoose.Schema,
   options: { property: keyof T; ref: string; isArray?: boolean }[]
 ) {
-  schema.pre(
-    preCreationFunctionType,
-    async function (this: any, next: (err?: mongoose.CallbackError) => void) {
-      if (!shouldSkipPlugins()) {
-        Object.assign(
-          this,
-          ...options.map(
-            (p) =>
-              this[p.property] && {
-                [p.property]: p.isArray
-                  ? this[p.property].map((innerId: string) =>
-                      mongoose.Types.ObjectId(innerId)
-                    )
-                  : mongoose.Types.ObjectId(this[p.property]),
-              }
-          )
-        );
-      }
-      next();
+  genericPreMiddleware(
+    schema,
+    [...creationFunctionType, ...updateFunctionType],
+    async (thisObject: any) => {
+      Object.assign(
+        thisObject,
+        ...options.map(
+          (p) =>
+            thisObject[p.property] && {
+              [p.property]: p.isArray
+                ? thisObject[p.property].map((innerId: string) =>
+                    mongoose.Types.ObjectId(innerId)
+                  )
+                : mongoose.Types.ObjectId(thisObject[p.property]),
+            }
+        )
+      );
     }
   );
 
-  schema.pre(
-    preUpdateFunctionType,
-    async function (this: any, next: (err?: mongoose.CallbackError) => void) {
-      if (!shouldSkipPlugins()) {
-        Object.assign(
-          this,
-          ...options.map(
-            (p) =>
-              this[p.property] && {
-                [p.property]: p.isArray
-                  ? this[p.property].map((innerId: string) =>
-                      mongoose.Types.ObjectId(innerId)
-                    )
-                  : mongoose.Types.ObjectId(this[p.property]),
-              }
-          )
-        );
-      }
-      next();
-    }
-  );
-
-  schema.pre(
-    "aggregate",
-    async function (
-      this: mongoose.Aggregate<any>,
-      next: mongoose.HookNextFunction
-    ) {
-      if (!shouldSkipPlugins()) {
-        options.forEach((p) => {
-          if (p.isArray) {
-            this.pipeline().splice(isWithSearch(this.pipeline()) ? 2 : 0, 0, {
-              $lookup: {
-                from: p.ref,
-                localField: p.property,
-                foreignField: "_id",
-                as: p.property,
-              },
-            });
-          } else {
-            this.pipeline().splice(
-              isWithSearch(this.pipeline()) ? 2 : 0,
-              0,
-              {
-                $lookup: {
-                  from: p.ref,
-                  localField: p.property,
-                  foreignField: "_id",
-                  as: p.property,
-                },
-              },
-              {
-                $addFields: {
-                  [p.property]: {
-                    $cond: {
-                      if: {
-                        $eq: [0, { $size: `$${p.property as string}` }],
-                      },
-                      then: [],
-                      else: {
-                        $arrayElemAt: [`$${p.property as string}`, 0],
-                      },
-                    },
+  genericPreMiddleware(schema, aggregationType, async (thisObject: any) => {
+    options.forEach((p) => {
+      if (p.isArray) {
+        thisObject
+          .pipeline()
+          .splice(isWithSearch(thisObject.pipeline()) ? 2 : 0, 0, {
+            $lookup: {
+              from: p.ref,
+              localField: p.property,
+              foreignField: "_id",
+              as: p.property,
+            },
+          });
+      } else {
+        thisObject.pipeline().splice(
+          isWithSearch(thisObject.pipeline()) ? 2 : 0,
+          0,
+          {
+            $lookup: {
+              from: p.ref,
+              localField: p.property,
+              foreignField: "_id",
+              as: p.property,
+            },
+          },
+          {
+            $addFields: {
+              [p.property]: {
+                $cond: {
+                  if: {
+                    $eq: [0, { $size: `$${p.property as string}` }],
+                  },
+                  then: [],
+                  else: {
+                    $arrayElemAt: [`$${p.property as string}`, 0],
                   },
                 },
-              }
-            );
+              },
+            },
           }
-        });
-      }
-      next();
-    }
-  );
-
-  postGetAllFunctionTypes.map((type: string) =>
-    schema.pre(type, function (next: mongoose.HookNextFunction) {
-      if (!shouldSkipPlugins()) {
-        options.map((p) =>
-          this.populate({ path: p.property, justOne: !p.isArray })
         );
       }
-      next();
-    })
-  );
+    });
+  });
+
+  genericPreMiddleware(schema, getAllFunctionTypes, async (thisObject: any) => {
+    options.map((p) =>
+      thisObject.populate({ path: p.property, justOne: !p.isArray })
+    );
+  });
 }

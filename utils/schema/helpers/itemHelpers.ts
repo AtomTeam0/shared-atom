@@ -1,6 +1,6 @@
 import { IItem } from "../../../common/interfaces/item.interface";
 import { config } from "../../../config";
-import { createBlob } from "./blobHelpers";
+import { createBlob } from "./azureHelpers";
 
 export const handleItemBlobCreation = async (item: IItem) => {
   const fileObjects = await Promise.all(
