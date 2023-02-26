@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from "express";
+import * as context from "cls-hooked";
 import { Global } from "../../common/enums/helpers/Global";
 import { Permission } from "../../common/enums/Permission";
 import { config } from "../../config";
 import { wrapAsyncMiddleware } from "./wrapper";
-
-const context = require("cls-hooked");
 
 const nameSpace = "global";
 const session = context.createNamespace(nameSpace);
@@ -30,7 +29,10 @@ export const runWithContext = (callBack: any) =>
 export const runWithContextMiddleWare = () =>
   wrapAsyncMiddleware(
     async (_req: Request, _res: Response, next: NextFunction) =>
-      runWithContext(next)
+      runWithContext(() => {
+        setContext(Global.SKIP_PLUGINS, false);
+        return next();
+      })
   );
 
 export const isDirector = () =>
