@@ -15,6 +15,12 @@ export class UsersRPCService {
     });
   }
 
+  static async getUserByPersonalId(personalId: string): Promise<IUser> {
+    return RPCClientRequest(UsersRPCService.rpcClient, "getUserByPersonalId", {
+      personalId,
+    });
+  }
+
   static async getAmountOfUsers(): Promise<number> {
     return RPCClientRequest(UsersRPCService.rpcClient, "getAmountOfUsers");
   }

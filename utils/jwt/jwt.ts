@@ -1,13 +1,15 @@
 import { Request, Response, NextFunction } from "express";
 import * as jwt from "jsonwebtoken";
+import { ITokenPayload } from "passport-azure-ad";
+import { Global } from "../../common/enums/helpers/Global";
 import { config } from "../../config";
-import { IUser } from "../../common/interfaces/user.interface";
 import { InvalidToken, TokenNotProvided } from "../errors/validationError";
+import { setContext } from "../helpers/context";
 import { wrapAsyncMiddleware } from "../helpers/wrapper";
 
 export const verifyToken = wrapAsyncMiddleware(
   async (
-    req: Request & { user?: IUser },
+    req: Request & { user?: ITokenPayload },
     _res: Response,
     next: NextFunction
   ) => {
@@ -21,7 +23,8 @@ export const verifyToken = wrapAsyncMiddleware(
       if (err) {
         throw new InvalidToken();
       }
-      req.user = user as IUser;
+      req.user = user as ITokenPayload;
+      setContext(Global.AZURE_USER, req.user);
       next();
     });
   }
