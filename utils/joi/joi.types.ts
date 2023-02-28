@@ -24,11 +24,11 @@ const personalIdRegex = /^[0-9]{9}$/;
 
 const coordinateAxisRegex = /^-?[0-9]{1,3}(?:\.[0-9]{1,15})?$/;
 
-const blobRegex = /^{(?=.*filepath)(?=.*originalFilename).*}$/;
+const blobRegex = /^{(?=.*filepath)(?=.*originalFilename)(?=.*mimetype).*}$/;
 
 // exported types
 export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
-  Joi.string().external(async (value: string | undefined, helpers: any) => {
+  Joi.string().external(async (value: string | undefined, _helpers: any) => {
     if (value !== undefined) {
       const isValid = mongoIdRegex.test(value);
       if (!isValid) {
@@ -47,7 +47,7 @@ export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
   });
 
 export const joiContentId = Joi.string().external(
-  async (value: string | undefined, helpers: any) => {
+  async (value: string | undefined, _helpers: any) => {
     if (value !== undefined) {
       const isValid = mongoIdRegex.test(value);
       if (!isValid) {
@@ -67,7 +67,7 @@ export const joiContentId = Joi.string().external(
 
 export const joiPoligon = Joi.array()
   .items(Joi.array().items(Joi.number()))
-  .external(async (value: number[][] | undefined, helpers: any) => {
+  .external(async (value: number[][] | undefined, _helpers: any) => {
     if (value !== undefined) {
       const isValid =
         value.length &&
@@ -101,7 +101,7 @@ export const joiPoligon = Joi.array()
 
 export const joiCoordinate = Joi.array()
   .items(Joi.number())
-  .external(async (value: number[] | undefined, helpers: any) => {
+  .external(async (value: number[] | undefined, _helpers: any) => {
     if (value !== undefined) {
       const isValid =
         value.length === 2 &&
