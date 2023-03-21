@@ -18,11 +18,6 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    personalId: {
-      type: String,
-      required: true,
-      unique: true,
-    },
     permission: {
       type: String,
       required: true,
@@ -101,7 +96,7 @@ UserSchema.plugin(populatePlugin<IUser>, [
   { property: "employees", ref: "users", isArray: true },
 ]);
 UserSchema.plugin(indexPlugin<IUser>, {
-  properties: ["firstName", "lastName", "personalId"],
+  properties: ["_id", "firstName", "lastName"],
 });
 
 export const UserModel = mongoose.model<IUser & mongoose.Document>(
