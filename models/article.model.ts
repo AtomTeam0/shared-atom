@@ -3,7 +3,6 @@ import { IArticle } from "../common/interfaces/article.interface";
 import { config } from "../config";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
-import { CommentModel } from "./comment.model";
 
 const ArticleSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -54,7 +53,7 @@ const ArticleSchema: mongoose.Schema = new mongoose.Schema(
     comments: {
       type: [mongoose.Types.ObjectId],
       required: true,
-      ref: CommentModel,
+      ref: "comments",
       default: [],
     },
     thumbNail: {

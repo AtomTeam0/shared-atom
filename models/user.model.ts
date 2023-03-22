@@ -4,9 +4,6 @@ import { WatchMode } from "../common/enums/WatchMode";
 import { IUser } from "../common/interfaces/user.interface";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
-import { AreaModel } from "./area.model";
-import { ChapterModel } from "./chapter.model";
-import { MediaModel } from "./media.model";
 
 const UserSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -26,7 +23,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
     area: {
       type: mongoose.Types.ObjectId,
       required: true,
-      ref: AreaModel,
+      ref: "areas",
     },
     favorites: {
       type: [mongoose.Types.ObjectId],
@@ -42,42 +39,46 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
       default: [],
     },
     employees: {
-      type: [mongoose.Types.ObjectId],
+      type: [String],
       ref: "users",
     },
     chapters: {
-      type: {
-        chapterId: {
-          type: mongoose.Types.ObjectId,
-          required: true,
-          ref: ChapterModel,
+      type: [
+        {
+          chapterId: {
+            type: mongoose.Types.ObjectId,
+            required: true,
+            ref: "chapters",
+          },
+          mode: {
+            type: WatchMode,
+            required: true,
+            default: WatchMode.UNREAD,
+          },
         },
-        mode: {
-          type: WatchMode,
-          required: true,
-          default: WatchMode.UNREAD,
-        },
-      },
+      ],
       required: true,
       default: [],
     },
     media: {
-      type: {
-        mediaId: {
-          type: mongoose.Types.ObjectId,
-          required: true,
-          ref: MediaModel,
+      type: [
+        {
+          mediaId: {
+            type: mongoose.Types.ObjectId,
+            required: true,
+            ref: "media",
+          },
+          mode: {
+            type: WatchMode,
+            required: true,
+            default: WatchMode.UNREAD,
+          },
+          note: {
+            type: String,
+            required: false,
+          },
         },
-        mode: {
-          type: WatchMode,
-          required: true,
-          default: WatchMode.UNREAD,
-        },
-        note: {
-          type: String,
-          required: false,
-        },
-      },
+      ],
       required: true,
       default: [],
     },

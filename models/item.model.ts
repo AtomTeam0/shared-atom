@@ -1,12 +1,9 @@
-/* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
 import { IItem } from "../common/interfaces/item.interface";
 import { config } from "../config";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
-import { AreaModel } from "./area.model";
-import { UnitModel } from "./unit.model";
 
 const ItemSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -44,6 +41,10 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
       default: false,
     },
+    updatedAt: {
+      type: Date,
+      required: true,
+    },
     sections: {
       type: [String],
     },
@@ -62,19 +63,19 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
     },
     unit: {
       type: mongoose.Types.ObjectId,
-      ref: UnitModel,
+      ref: "units",
     },
     editedBy: {
-      type: mongoose.Types.ObjectId,
+      type: String,
+      required: true,
       ref: "users",
     },
     areas: {
       type: [mongoose.Types.ObjectId],
-      ref: AreaModel,
+      ref: "areas",
     },
     similarItems: {
       type: [mongoose.Types.ObjectId],
-      required: true,
       ref: "items",
       default: [],
     },
@@ -87,7 +88,7 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
   },
   {
     versionKey: false,
-    timestamps: { createdAt: false, updatedAt: true },
+    timestamps: { createdAt: false, updatedAt: false },
   }
 );
 

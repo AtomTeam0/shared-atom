@@ -1,4 +1,3 @@
-/* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
 import { AreaNames } from "../common/enums/AreaNames";
 import { IArea } from "../common/interfaces/area.interface";

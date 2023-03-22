@@ -3,9 +3,6 @@ import { ILesson } from "../common/interfaces/lesson.interface";
 import { config } from "../config";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
-import { ChapterModel } from "./chapter.model";
-import { ItemModel } from "./item.model";
-import { TestModel } from "./test.model";
 
 const LessonSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -24,17 +21,17 @@ const LessonSchema: mongoose.Schema = new mongoose.Schema(
     chapters: {
       type: [mongoose.Types.ObjectId],
       required: true,
-      ref: ChapterModel,
+      ref: "chapters",
     },
     preKnowledge: {
       type: [mongoose.Types.ObjectId],
       required: true,
-      ref: ItemModel,
+      ref: "items",
       default: [],
     },
     test: {
       type: mongoose.Types.ObjectId,
-      ref: TestModel,
+      ref: "tests",
     },
   },
   {

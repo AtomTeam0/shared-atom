@@ -2,7 +2,6 @@ import * as mongoose from "mongoose";
 import { INews } from "../common/interfaces/news.interface";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { socketPlugin } from "../utils/schema/plugins/socketPlugin";
-import { AreaModel } from "./area.model";
 
 const NewsSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -13,7 +12,7 @@ const NewsSchema: mongoose.Schema = new mongoose.Schema(
     area: {
       type: mongoose.Types.ObjectId,
       required: true,
-      ref: AreaModel,
+      ref: "areas",
     },
   },
   {

@@ -1,7 +1,6 @@
 import * as mongoose from "mongoose";
 import { IComment } from "../common/interfaces/comment.interface";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
-import { UserModel } from "./user.model";
 
 const CommentSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -10,9 +9,9 @@ const CommentSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
     },
     user: {
-      type: mongoose.Types.ObjectId,
+      type: String,
       required: true,
-      ref: UserModel,
+      ref: "users",
     },
   },
   {

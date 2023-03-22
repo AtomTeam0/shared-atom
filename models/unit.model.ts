@@ -1,4 +1,3 @@
-/* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
 import { IUnit } from "../common/interfaces/unit.interface";
 import { config } from "../config";

@@ -1,9 +1,6 @@
-/* eslint-disable prefer-arrow-callback */
 import * as mongoose from "mongoose";
 import { WatchMode } from "../common/enums/WatchMode";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
-import { UserModel } from "./user.model";
-import { ItemModel } from "./item.model";
 import { IMission } from "../common/interfaces/mission.interface";
 
 const MissionSchema: mongoose.Schema = new mongoose.Schema(
@@ -25,19 +22,19 @@ const MissionSchema: mongoose.Schema = new mongoose.Schema(
       default: WatchMode.UNREAD,
     },
     director: {
-      type: mongoose.Types.ObjectId,
+      type: String,
       required: true,
-      ref: UserModel,
+      ref: "users",
     },
     editor: {
-      type: mongoose.Types.ObjectId,
+      type: String,
       required: true,
-      ref: UserModel,
+      ref: "users",
     },
     item: {
       type: mongoose.Types.ObjectId,
-      ref: ItemModel,
       required: true,
+      ref: "items",
     },
   },
   {
