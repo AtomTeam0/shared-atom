@@ -1,6 +1,6 @@
 import * as jayson from "jayson/promise";
 import { config } from "../../../config";
-import { IUser } from "../../../common/interfaces/user.interface";
+import { IUser, IUserAuthUpdater } from "../../../common/interfaces/user.interface";
 import { RPCClientRequest } from "../rpc.functions";
 
 export class UsersRPCService {
@@ -21,7 +21,7 @@ export class UsersRPCService {
 
   static async updateUser(
     userId: string,
-    dataToUpdate: {firstName?: string, lastName?: string}): Promise<IUser> {
+    dataToUpdate: IUserAuthUpdater): Promise<IUser> {
     return RPCClientRequest(
       UsersRPCService.rpcClient,
       "updateUser",
