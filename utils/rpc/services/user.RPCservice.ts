@@ -24,4 +24,16 @@ export class UsersRPCService {
       itemId,
     });
   }
+
+  static async updateUserAndGet(user: {
+    _id: string;
+    firstName?: string;
+    lastName: string;
+  }): Promise<IUser> {
+    return RPCClientRequest(
+      UsersRPCService.rpcClient,
+      "updateUserAndGet",
+      user
+    );
+  }
 }

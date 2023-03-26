@@ -7,6 +7,10 @@ import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 
 const UserSchema: mongoose.Schema = new mongoose.Schema(
   {
+    _id: {
+      type: String,
+      required: true,
+    },
     firstName: {
       type: String,
       required: true,
