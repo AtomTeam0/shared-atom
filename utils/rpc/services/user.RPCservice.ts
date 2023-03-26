@@ -9,12 +9,6 @@ export class UsersRPCService {
     port: config.rpc.userService.rpcPort,
   });
 
-  static async getUserById(userId: string): Promise<IUser> {
-    return RPCClientRequest(UsersRPCService.rpcClient, "getUserById", {
-      userId,
-    });
-  }
-
   static async getAmountOfUsers(): Promise<number> {
     return RPCClientRequest(UsersRPCService.rpcClient, "getAmountOfUsers");
   }
@@ -25,15 +19,13 @@ export class UsersRPCService {
     });
   }
 
-  static async updateUserAndGet(user: {
-    _id: string;
-    firstName?: string;
-    lastName: string;
-  }): Promise<IUser> {
+  static async updateUser(
+    userId: string,
+    dataToUpdate: {firstName?: string, lastName?: string}): Promise<IUser> {
     return RPCClientRequest(
       UsersRPCService.rpcClient,
-      "updateUserAndGet",
-      user
+      "updateUser",
+      {userId, dataToUpdate}
     );
   }
 }
