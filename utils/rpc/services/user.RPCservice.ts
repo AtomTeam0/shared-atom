@@ -21,11 +21,11 @@ export class UsersRPCService {
 
   static async updateUser(
     userId: string,
-    dataToUpdate: IUserAuthUpdater): Promise<IUser> {
-    return RPCClientRequest(
-      UsersRPCService.rpcClient,
-      "updateUser",
-      {userId, dataToUpdate}
-    );
+    dataToUpdate: IUserAuthUpdater
+  ): Promise<IUser> {
+    return RPCClientRequest(UsersRPCService.rpcClient, "updateUser", {
+      userId,
+      dataToUpdate,
+    });
   }
 }
