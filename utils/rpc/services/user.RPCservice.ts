@@ -19,6 +19,12 @@ export class UsersRPCService {
     });
   }
 
+  static async getUserById(userId: string): Promise<IUser> {
+    return RPCClientRequest(UsersRPCService.rpcClient, "getUserById", {
+      userId,
+    });
+  }
+
   static async updateUser(
     userId: string,
     dataToUpdate: IUserAuthUpdater
