@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
-import { FileTypes } from "../../common/enums/helpers/FileTypes";
+import { FileTypes } from "common-atom/enums/helpers/FileTypes";
 import {
   IFileDetails,
   IFileValidator,
-} from "../../common/interfaces/helpers/file.interface";
+} from "common-atom/interfaces/helpers/file.interface";
 import { config } from "../../config";
 
 export const getContainerNameByFileType = (fileType: FileTypes): string => {

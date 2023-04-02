@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import * as context from "cls-hooked";
-import { Global } from "../../common/enums/helpers/Global";
-import { Permission } from "../../common/enums/Permission";
+import { Global } from "common-atom/enums/helpers/Global";
+import { Permission } from "common-atom/enums/Permission";
 import { config } from "../../config";
 import { wrapAsyncMiddleware } from "./wrapper";
 
