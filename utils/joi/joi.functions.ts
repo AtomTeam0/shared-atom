@@ -1,11 +1,11 @@
 import * as Joi from "joi";
 import { Request } from "express";
 import { ObjectSchema } from "joi";
+import { Global } from "common-atom/enums/helpers/Global";
+import { Permission } from "common-atom/enums/Permission";
 import { wrapValidator } from "../helpers/wrapper";
 import { PermissionError } from "../errors/generalError";
 import { getContext } from "../helpers/context";
-import { Global } from "../../common/enums/helpers/Global";
-import { Permission } from "../../common/enums/Permission";
 
 export const defaultValidationOptions: Joi.ValidationOptions = {
   abortEarly: false,
