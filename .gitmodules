@@ -1,3 +1,0 @@
-[submodule "common"]
-	path = common
-	url = https://gitlab.com/yesodot/iron/atom/mynet/common.git
