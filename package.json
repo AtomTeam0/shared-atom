@@ -6,7 +6,7 @@
     "url": "git+https://github.com/AtomTeam0/shared-atom.git"
   },
   "main": "./dist/index.js",
-  "files": ["/dist"],
+  "files": ["/dist/"],
   "scripts": {
     "lint:fix": "eslint \"**/*.{ts,js}\" --fix",
     "build": "tsc && lint:fix"
