@@ -1,6 +1,6 @@
 import * as jayson from "jayson/promise";
+import { IUser, IUserAuthUpdater } from "common-atom/interfaces/user.interface";
 import { config } from "../../../config";
-import { IUser, IUserAuthUpdater } from "../../../common/interfaces/user.interface";
 import { RPCClientRequest } from "../rpc.functions";
 
 export class UsersRPCService {

@@ -1,5 +1,5 @@
 import * as jayson from "jayson/promise";
-import { AreaNames } from "../../../common/enums/AreaNames";
+import { AreaNames } from "common-atom/enums/AreaNames";
 import { config } from "../../../config";
 import { RPCClientRequest } from "../rpc.functions";
 

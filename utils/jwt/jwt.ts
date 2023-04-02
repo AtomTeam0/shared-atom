@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import * as jwt from "jsonwebtoken";
 import { ITokenPayload } from "passport-azure-ad";
-import { Global } from "../../common/enums/helpers/Global";
+import { Global } from "common-atom/enums/helpers/Global";
 import { config } from "../../config";
 import { InvalidToken, TokenNotProvided } from "../errors/validationError";
 import { setContext } from "../helpers/context";
