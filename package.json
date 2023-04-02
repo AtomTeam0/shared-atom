@@ -1,15 +1,18 @@
 {
   "name": "shared-atom",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AtomTeam0/shared-atom.git"
   },
-  "main": "./dist/index.js",
-  "files": ["/dist/"],
+  "main": "./index.js",
   "scripts": {
     "lint:fix": "eslint \"**/*.{ts,js}\" --fix",
-    "build": "tsc && lint:fix"
+    "build": "tsc",
+    "prepublishOnly": "npm run build && cp -r ./dist/* . && rm -rf ./dist",
+    "postpublish": "git clean -fd",
+    "prepack": "npm run build && cp -r ./dist/* . && rm -rf ./dist",
+    "postpack": "git clean -fd"
   },
   "dependencies": {
     "@azure/identity": "^3.0.0",
