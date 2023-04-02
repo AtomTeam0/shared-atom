@@ -1,4 +1,4 @@
-import { IItem } from "../../../common/interfaces/item.interface";
+import { IItem } from "common-atom/interfaces/item.interface";
 import { config } from "../../../config";
 import { createBlob } from "./azureHelpers";
 

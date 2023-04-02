@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { FileTypes } from "../../../common/enums/helpers/FileTypes";
+import { FileTypes } from "common-atom/enums/helpers/FileTypes";
 import { PorpertyOptionalDeep } from "../../helpers/types";
 import {
   createProperties,

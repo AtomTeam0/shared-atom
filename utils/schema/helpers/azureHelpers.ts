@@ -8,10 +8,10 @@ import {
 } from "@azure/storage-blob";
 import { promisify } from "util";
 import { unlink } from "fs";
-import { FileTypes } from "../../../common/enums/helpers/FileTypes";
+import { FileTypes } from "common-atom/enums/helpers/FileTypes";
+import { IFileDetails } from "common-atom/interfaces/helpers/file.interface";
 import { config } from "../../../config";
 import { ConnectionError } from "../../errors/applicationError";
-import { IFileDetails } from "../../../common/interfaces/helpers/file.interface";
 import {
   getContainerNameByFileType,
   getBlobName,

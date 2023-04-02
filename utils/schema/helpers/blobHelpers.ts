@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
-import { FileTypes } from "../../../common/enums/helpers/FileTypes";
-import { Global } from "../../../common/enums/helpers/Global";
+import { FileTypes } from "common-atom/enums/helpers/FileTypes";
+import { Global } from "common-atom/enums/helpers/Global";
 import { runWithContext, setContext } from "../../helpers/context";
 import {
   PorpertyOptionalDeep,

@@ -1,8 +1,8 @@
 import { Server } from "socket.io";
 import * as http from "http";
+import { Global } from "common-atom/enums/helpers/Global";
+import { AreaNames } from "common-atom/enums/AreaNames";
 import { getContext } from "../../helpers/context";
-import { Global } from "../../../common/enums/helpers/Global";
-import { AreaNames } from "../../../common/enums/AreaNames";
 
 let socketServer: Server;
 

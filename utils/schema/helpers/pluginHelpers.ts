@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { Global } from "../../../common/enums/helpers/Global";
+import { Global } from "common-atom/enums/helpers/Global";
 import { getContext, shouldSkipPlugins } from "../../helpers/context";
 
 export const genericPreMiddleware = (
