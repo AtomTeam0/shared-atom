@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import * as formidable from "formidable";
-import { FileTypes } from "../../common/enums/helpers/FileTypes";
+import { FileTypes } from "common-atom/enums/helpers/FileTypes";
 import {
   IFileDetails,
   IFileValidator,
-} from "../../common/interfaces/helpers/file.interface";
+} from "common-atom/interfaces/helpers/file.interface";
 import { config } from "../../config";
 import {
   UnsupportedFile,

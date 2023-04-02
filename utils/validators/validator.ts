@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ITokenPayload } from "passport-azure-ad";
-import { Global } from "../../common/enums/helpers/Global";
-import { Permission } from "../../common/enums/Permission";
+import { Global } from "common-atom/enums/helpers/Global";
+import { Permission } from "common-atom/enums/Permission";
 import { AuthenticationError, PermissionError } from "../errors/generalError";
 import { setContext } from "../helpers/context";
 import { wrapAsyncMiddleware } from "../helpers/wrapper";
