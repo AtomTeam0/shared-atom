@@ -1,4 +1,4 @@
-import { FileTypes } from "./common/enums/helpers/FileTypes";
+import { FileTypes } from "common-atom/enums/helpers/FileTypes";
 
 const MB = 1024 * 1024;
 

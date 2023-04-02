@@ -7,13 +7,13 @@ import * as cors from "cors";
 import * as winston from "winston";
 import { Router } from "express";
 import * as jayson from "jayson/promise";
+import { IServerConfig } from "common-atom/interfaces/helpers/serverConfig.interface";
 import {
   userErrorHandler,
   serverErrorHandler,
   unknownErrorHandler,
 } from "./utils/errors/errorHandler";
 import { initLogger } from "./utils/helpers/logger";
-import { IServerConfig } from "./common/interfaces/helpers/serverConfig.interface";
 import { setSocketServer } from "./utils/schema/helpers/socketHelpers";
 import { runWithContextMiddleWare } from "./utils/helpers/context";
 import { config } from "./config";

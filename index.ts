@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import * as jayson from "jayson/promise";
+import { IServerConfig } from "common-atom/interfaces/helpers/serverConfig.interface";
 import { Server } from "./server";
-import { IServerConfig } from "./common/interfaces/helpers/serverConfig.interface";
 import { aggregatePlugin } from "./utils/schema/plugins/aggregatePlugin";
 
 mongoose.plugin(aggregatePlugin);
