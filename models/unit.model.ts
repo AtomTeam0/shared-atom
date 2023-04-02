@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { IUnit } from "../common/interfaces/unit.interface";
+import { IUnit } from "common-atom/interfaces/unit.interface";
 import { config } from "../config";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 

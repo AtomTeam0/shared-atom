@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { IMyWiki } from "../common/interfaces/myWiki.interface";
+import { IMyWiki } from "common-atom/interfaces/myWiki.interface";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 
 const MyWikiSchema: mongoose.Schema = new mongoose.Schema(

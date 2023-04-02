@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { IPakal } from "../common/interfaces/pakal.interface";
+import { IPakal } from "common-atom/interfaces/pakal.interface";
 import { config } from "../config";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";

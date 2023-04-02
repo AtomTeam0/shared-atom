@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { INews } from "../common/interfaces/news.interface";
+import { INews } from "common-atom/interfaces/news.interface";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { socketPlugin } from "../utils/schema/plugins/socketPlugin";
 

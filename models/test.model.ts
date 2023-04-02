@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { ITest } from "../common/interfaces/test.interface";
+import { ITest } from "common-atom/interfaces/test.interface";
 
 const TestSchema: mongoose.Schema = new mongoose.Schema(
   {

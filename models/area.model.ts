@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
-import { AreaNames } from "../common/enums/AreaNames";
-import { IArea } from "../common/interfaces/area.interface";
+import { AreaNames } from "common-atom/enums/AreaNames";
+import { IArea } from "common-atom/interfaces/area.interface";
 import { config } from "../config";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 

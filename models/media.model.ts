@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { IMedia } from "../common/interfaces/media.interface";
+import { IMedia } from "common-atom/interfaces/media.interface";
 import { config } from "../config";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 

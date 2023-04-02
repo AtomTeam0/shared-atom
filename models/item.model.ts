@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { IItem } from "../common/interfaces/item.interface";
+import { IItem } from "common-atom/interfaces/item.interface";
 import { config } from "../config";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";

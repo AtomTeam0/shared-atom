@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { IInfographic } from "../common/interfaces/infographic.interface";
+import { IInfographic } from "common-atom/interfaces/infographic.interface";
 import { config } from "../config";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 

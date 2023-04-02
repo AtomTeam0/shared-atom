@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import { ILesson } from "../common/interfaces/lesson.interface";
+import { ILesson } from "common-atom/interfaces/lesson.interface";
 import { config } from "../config";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";

@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
-import { Permission } from "../common/enums/Permission";
-import { WatchMode } from "../common/enums/WatchMode";
-import { IUser } from "../common/interfaces/user.interface";
+import { Permission } from "common-atom/enums/Permission";
+import { WatchMode } from "common-atom/enums/WatchMode";
+import { IUser } from "common-atom/interfaces/user.interface";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 

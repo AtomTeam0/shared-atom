@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
-import { WatchMode } from "../common/enums/WatchMode";
+import { WatchMode } from "common-atom/enums/WatchMode";
+import { IMission } from "common-atom/interfaces/mission.interface";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
-import { IMission } from "../common/interfaces/mission.interface";
 
 const MissionSchema: mongoose.Schema = new mongoose.Schema(
   {
