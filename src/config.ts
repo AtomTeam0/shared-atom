@@ -12,7 +12,7 @@ export const config = {
     accessKeyId: process.env.AWS_S3_ACCESS_KEYID || "aws-access-key",
     secretAccessKey:
       process.env.AWS_S3_SECRET_ACCESSKEY || "supre-duper-secret-key",
-    endpoint: process.env.AWS_S3_endpoint || "http://localhost:4566",
+    endpoint: process.env.AWS_S3_ENDPOINT,
   },
   jwt: {
     secretKey: process.env.SECRET_KEY || "atomTeam",
