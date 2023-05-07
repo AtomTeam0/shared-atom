@@ -7,11 +7,12 @@ export const config = {
     nodeEnv: process.env.NODE_ENV || "development",
     withDeepPlugin: (process.env.WITH_DEEP_PULGINS || "true") === "true",
   },
-  azure: {
-    azureAccountName: process.env.AZURE_ACCOUNT_NAME || "mynetstoragetest",
-    azureAccountKey:
-      process.env.AZURE_ACCOUNT_KEY ||
-      "oCHRlFQyrvEDpHBBBn+MZgBb/U6b/jYfGRIGsAawOLmel3wKZE7tSp1jpRox7M6MYn+8DsMyAuQ6+AStoyClDQ==",
+  aws: {
+    region: process.env.AWS_S3_REGION || "us-east-1",
+    accessKeyId: process.env.AWS_S3_ACCESS_KEYID || "aws-access-key",
+    secretAccessKey:
+      process.env.AWS_S3_SECRET_ACCESSKEY || "supre-duper-secret-key",
+    endpoint: process.env.AWS_S3_endpoint || "http://localhost:4566",
   },
   jwt: {
     secretKey: process.env.SECRET_KEY || "atomTeam",
