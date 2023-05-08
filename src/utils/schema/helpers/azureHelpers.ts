@@ -12,6 +12,7 @@ const s3 = new AWS.S3({
   secretAccessKey: config.aws.secretAccessKey,
   region: config.aws.region,
   endpoint: config.aws.endpoint,
+  s3ForcePathStyle: config.aws.forcePathS3,
 });
 
 const createBucketIfNotExists = async (bucketName: string) => {
