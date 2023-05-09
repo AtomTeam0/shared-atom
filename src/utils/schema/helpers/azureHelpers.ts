@@ -17,6 +17,7 @@ const s3 = new AWS.S3({
 });
 
 const createBucketIfNotExists = async (bucketName: string) => {
+  console.log(config);
   const params = {
     Bucket: bucketName,
   };
@@ -24,6 +25,7 @@ const createBucketIfNotExists = async (bucketName: string) => {
     await s3.headBucket(params).promise();
     return true;
   } catch (err: any) {
+    console.log(err);
     if (err.statusCode === 404) {
       await s3.createBucket(params).promise();
       return true;
@@ -57,6 +59,8 @@ const uploadFile = async (
   try {
     const fileName = getS3Name(file, oldFileName);
     const bucketName = getBucketNameByFileType(fileType);
+    console.log("filename", fileName);
+    console.log("bucketName", bucketName);
 
     // Check if bucket exists, create if not
     await createBucketIfNotExists(bucketName);
@@ -68,7 +72,10 @@ const uploadFile = async (
       Body: file.filepath,
       ContentType: file.mimetype,
     };
+    console.log("params", params);
+
     await s3.upload(params).promise();
+    console.log("after upload");
 
     // Delete the old file if provided
     if (oldFileName) {
