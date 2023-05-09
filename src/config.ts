@@ -14,6 +14,7 @@ export const config = {
       process.env.AWS_S3_SECRET_ACCESSKEY || "supre-duper-secret-key",
     endpoint: process.env.AWS_S3_ENDPOINT,
     forcePathS3: (process.env.AWS_S3_FORCE_PATH || "true") === "true",
+    isBucketPoint: (process.env.AWS_S3_IS_BUCKET_POINT || "true") === "true",
   },
   jwt: {
     secretKey: process.env.SECRET_KEY || "atomTeam",

@@ -13,21 +13,19 @@ const s3 = new AWS.S3({
   region: config.aws.region,
   endpoint: config.aws.endpoint,
   s3ForcePathStyle: config.aws.forcePathS3,
+  s3BucketEndpoint: config.aws.isBucketPoint,
 });
 
 const createBucketIfNotExists = async (bucketName: string) => {
+  const params = {
+    Bucket: bucketName,
+  };
   try {
-    const params = {
-      Bucket: bucketName,
-    };
     await s3.headBucket(params).promise();
     return true;
   } catch (err: any) {
     if (err.statusCode === 404) {
-      const createParams = {
-        Bucket: bucketName,
-      };
-      await s3.createBucket(createParams).promise();
+      await s3.createBucket(params).promise();
       return true;
     }
     throw err;
