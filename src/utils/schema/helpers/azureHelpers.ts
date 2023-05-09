@@ -23,15 +23,17 @@ const createBucketIfNotExists = async (bucketName: string) => {
   };
   try {
     await s3.headBucket(params).promise();
+    console.log("managed to check if exist");
     return true;
   } catch (err: any) {
-    console.log(err);
+    console.log("no bucket", err);
     if (err.statusCode === 404) {
       try {
-        await s3.createBucket(params);
-      } catch (err: any) {
-        console.log(err);
-        throw err;
+        await s3.createBucket(params).promise();
+        console.log("did create");
+      } catch (error: any) {
+        console.log("error at create", error);
+        throw error;
       }
       return true;
     }
@@ -68,7 +70,9 @@ const uploadFile = async (
     console.log("bucketName", bucketName);
 
     // Check if bucket exists, create if not
+    console.log("checking and creating");
     await createBucketIfNotExists(bucketName);
+    console.log("finished create and check");
 
     // Upload the file to S3
     const params = {
@@ -96,6 +100,7 @@ const uploadFile = async (
 
     return fileName;
   } catch (err: any) {
+    console.log("error in upload", err);
     throw new ConnectionError(`AWS error: ${err.message}`);
   }
 };
