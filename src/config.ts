@@ -9,6 +9,7 @@ export const config = {
   },
   aws: {
     region: process.env.AWS_S3_REGION || "us-east-1",
+    defaultRegion: "us-east-1",
     accessKeyId: process.env.AWS_S3_ACCESS_KEYID || "aws-access-key",
     secretAccessKey:
       process.env.AWS_S3_SECRET_ACCESSKEY || "supre-duper-secret-key",

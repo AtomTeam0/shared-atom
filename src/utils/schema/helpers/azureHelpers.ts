@@ -10,36 +10,13 @@ import { getBucketNameByFileType, getS3Name } from "../../helpers/files";
 const s3 = new AWS.S3({
   accessKeyId: config.aws.accessKeyId,
   secretAccessKey: config.aws.secretAccessKey,
-  region: config.aws.region,
+  ...(config.aws.region !== config.aws.defaultRegion && {
+    region: config.aws.region,
+  }),
   endpoint: config.aws.endpoint,
   s3ForcePathStyle: config.aws.forcePathS3,
   s3BucketEndpoint: config.aws.isBucketPoint,
 });
-
-const createBucketIfNotExists = async (bucketName: string) => {
-  console.log(config);
-  const params = {
-    Bucket: bucketName,
-  };
-  try {
-    await s3.headBucket(params).promise();
-    console.log("managed to check if exist");
-    return true;
-  } catch (err: any) {
-    console.log("no bucket", err);
-    if (err.statusCode === 404) {
-      try {
-        await s3.createBucket(params).promise();
-        console.log("did create");
-      } catch (error: any) {
-        console.log("error at create", error);
-        throw error;
-      }
-      return true;
-    }
-    throw err;
-  }
-};
 
 const createSasUrl = async (fileType: FileTypes, objectKey: string) => {
   const HOUR = 60 * 60; // 1 hour in seconds
@@ -66,13 +43,9 @@ const uploadFile = async (
   try {
     const fileName = getS3Name(file, oldFileName);
     const bucketName = getBucketNameByFileType(fileType);
-    console.log("filename", fileName);
-    console.log("bucketName", bucketName);
 
-    // Check if bucket exists, create if not
-    console.log("checking and creating");
-    await createBucketIfNotExists(bucketName);
-    console.log("finished create and check");
+    // Create Bucket if does not exist
+    await s3.createBucket({ Bucket: bucketName }).promise();
 
     // Upload the file to S3
     const params = {
@@ -81,10 +54,7 @@ const uploadFile = async (
       Body: file.filepath,
       ContentType: file.mimetype,
     };
-    console.log("params", params);
-
     await s3.upload(params).promise();
-    console.log("after upload");
 
     // Delete the old file if provided
     if (oldFileName) {
@@ -100,7 +70,6 @@ const uploadFile = async (
 
     return fileName;
   } catch (err: any) {
-    console.log("error in upload", err);
     throw new ConnectionError(`AWS error: ${err.message}`);
   }
 };
