@@ -27,7 +27,12 @@ const createBucketIfNotExists = async (bucketName: string) => {
   } catch (err: any) {
     console.log(err);
     if (err.statusCode === 404) {
-      await s3.createBucket(params).promise();
+      try {
+        await s3.createBucket(params);
+      } catch (err: any) {
+        console.log(err);
+        throw err;
+      }
       return true;
     }
     throw err;
