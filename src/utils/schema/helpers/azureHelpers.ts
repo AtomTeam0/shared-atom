@@ -20,7 +20,6 @@ const s3 = new AWS.S3({
 
 const createSasUrl = async (fileType: FileTypes, objectKey: string) => {
   const HOUR = 60 * 60; // 1 hour in seconds
-
   try {
     const bucketName = getBucketNameByFileType(fileType);
     const objectUrl = s3.getSignedUrl("getObject", {
@@ -28,11 +27,21 @@ const createSasUrl = async (fileType: FileTypes, objectKey: string) => {
       Key: objectKey,
       Expires: HOUR,
     });
-
     return objectUrl;
   } catch (err: any) {
     throw new ConnectionError(`S3 error: ${err.message}`);
   }
+};
+
+const checkIfExistAndCreateBucket = async (bucketName: string) => {
+  const existingBuckets: AWS.S3.Bucket[] | undefined = (
+    await s3.listBuckets().promise()
+  ).Buckets;
+  if (
+    !existingBuckets?.length ||
+    !existingBuckets.some((bucket: AWS.S3.Bucket) => bucket.Name === bucketName)
+  )
+    await s3.createBucket({ Bucket: bucketName }).promise();
 };
 
 const uploadFile = async (
@@ -45,7 +54,7 @@ const uploadFile = async (
     const bucketName = getBucketNameByFileType(fileType);
 
     // Create Bucket if does not exist
-    await s3.createBucket({ Bucket: bucketName }).promise();
+    await checkIfExistAndCreateBucket(bucketName);
 
     // Upload the file to S3
     const params = {
@@ -70,7 +79,7 @@ const uploadFile = async (
 
     return fileName;
   } catch (err: any) {
-    throw new ConnectionError(`AWS error: ${err.message}`);
+    throw new ConnectionError(`S3 error: ${err.message}`);
   }
 };
 
