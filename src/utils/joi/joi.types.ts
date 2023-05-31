@@ -127,6 +127,8 @@ export const joiPersonalId = Joi.string().regex(personalIdRegex);
 
 export const joiPriority = Joi.number().integer().min(1).max(100);
 
+export const joiPriorityTollat = Joi.number().integer().min(1).max(3);
+
 export const joiContentCreator = (contentValidator: Joi.Schema) =>
   Joi.object({
     params: {},
