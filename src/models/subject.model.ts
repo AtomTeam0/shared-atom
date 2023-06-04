@@ -23,8 +23,27 @@ const subjectSchema: mongoose.Schema = new mongoose.Schema(
       },
     },
     pages: {
-      type: [Number],
+      type: [
+        {
+          type: mongoose.Schema.Types.Mixed,
+          validate: {
+            validator: (val: any) =>
+              typeof val === "number" ||
+              (val.from &&
+                val.to &&
+                typeof val.from === "number" &&
+                typeof val.to === "number"),
+            message:
+              "pages must be a number or an object with 'from' and 'to' properties",
+          },
+        },
+      ],
       required: true,
+    },
+    isActive: {
+      type: Boolean,
+      required: true,
+      default: true,
     },
     jobs: {
       type: [Job],

@@ -15,9 +15,10 @@ const playListSchema: mongoose.Schema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    isActice: {
+    isActive: {
       type: Boolean,
       required: true,
+      default: true,
     },
     pdf: {
       type: String,
