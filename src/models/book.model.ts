@@ -44,7 +44,8 @@ const bookSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
     },
     corp: {
-      type: String,
+      type: mongoose.Types.ObjectId,
+      ref: "units",
     },
   },
   {
