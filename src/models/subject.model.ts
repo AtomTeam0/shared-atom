@@ -73,7 +73,7 @@ subjectSchema.plugin(
   config.formidable.propertyConfigs.subject
 );
 
-export const BookModel = mongoose.model<ISubject & mongoose.Document>(
+export const SubjectModel = mongoose.model<ISubject & mongoose.Document>(
   "subjects",
   subjectSchema
 );

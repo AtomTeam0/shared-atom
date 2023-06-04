@@ -46,7 +46,7 @@ playListSchema.plugin(
   config.formidable.propertyConfigs.playlist
 );
 
-export const BookModel = mongoose.model<IPlaylist & mongoose.Document>(
+export const PlaylistModel = mongoose.model<IPlaylist & mongoose.Document>(
   "playlists",
   playListSchema
 );
