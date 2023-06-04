@@ -6,6 +6,9 @@ import { Compound } from "common-atom/enums/Compound";
 import { Degree } from "common-atom/enums/Degree";
 import { Publish } from "common-atom/enums/publish";
 import { Job } from "common-atom/enums/Job";
+import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
+import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
+import { config } from "../config";
 
 const subjectSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -59,6 +62,15 @@ const subjectSchema: mongoose.Schema = new mongoose.Schema(
     versionKey: false,
     timestamps: { createdAt: false, updatedAt: false },
   }
+);
+
+// plugins
+subjectSchema.plugin(populatePlugin<ISubject>, [
+  { property: "book", ref: "books" },
+]);
+subjectSchema.plugin(
+  blobPlugin<ISubject>,
+  config.formidable.propertyConfigs.subject
 );
 
 export const BookModel = mongoose.model<ISubject & mongoose.Document>(
