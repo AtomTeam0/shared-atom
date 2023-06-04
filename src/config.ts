@@ -133,6 +133,28 @@ export const config = {
           fileType: FileTypes.AUDIO,
         },
       ],
+      book: [
+        {
+          property: "thumbNail",
+          fileType: FileTypes.IMAGE,
+        },
+        {
+          property: "pdf",
+          fileType: FileTypes.PDF,
+        },
+      ],
+      subject: [
+        {
+          property: "book",
+          fileType: FileTypes.PDF,
+        },
+      ],
+      playlist: [
+        {
+          property: "thumbNail",
+          fileType: FileTypes.IMAGE,
+        },
+      ],
     },
   },
 };

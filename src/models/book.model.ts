@@ -1,5 +1,7 @@
 import * as mongoose from "mongoose";
 import { IBook } from "common-atom/interfaces/book.interface";
+import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
+import { config } from "../config";
 
 const bookSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -50,6 +52,9 @@ const bookSchema: mongoose.Schema = new mongoose.Schema(
     timestamps: { createdAt: true, updatedAt: true },
   }
 );
+
+// plugins
+bookSchema.plugin(blobPlugin<IBook>, config.formidable.propertyConfigs.book);
 
 export const BookModel = mongoose.model<IBook & mongoose.Document>(
   "books",
