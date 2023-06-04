@@ -56,6 +56,12 @@ export class InvalidAnswersTestByUser extends ServerError {
   }
 }
 
+export class InvalidPageRange extends ServerError {
+  constructor() {
+    super("Page range cannot intersect", 400);
+  }
+}
+
 export class InvalidCoordinateError extends UserError {
   constructor() {
     super(
