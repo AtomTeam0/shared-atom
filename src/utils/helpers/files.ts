@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { FileTypes } from "common-atom/enums/helpers/FileTypes";
+import { PDFDocumentProxy, getDocument } from "pdfjs-dist";
 import {
   IFileDetails,
   IFileValidator,
@@ -44,3 +45,8 @@ export const getBlobName = (
 
 export const getMimetypeByBlobName = (blobName: string): string =>
   blobName.split(SEPERATOR)[1].replace(SLASH_REPLACER, "/");
+
+export const getPdfPageCount = async (pdfFilePath: string): Promise<number> => {
+  const doc: PDFDocumentProxy = await getDocument(pdfFilePath).promise;
+  return doc._pdfInfo.numPages;
+};

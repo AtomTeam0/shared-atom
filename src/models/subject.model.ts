@@ -4,7 +4,7 @@ import { Functions } from "common-atom/enums/Functions";
 import { CombatShapes } from "common-atom/enums/CombatShapes";
 import { Compound } from "common-atom/enums/Compound";
 import { Degree } from "common-atom/enums/Degree";
-import { Publish } from "common-atom/enums/publish";
+import { Publish } from "common-atom/enums/Publish";
 import { Job } from "common-atom/enums/Job";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
