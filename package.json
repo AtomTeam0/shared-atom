@@ -1,6 +1,6 @@
 {
   "name": "shared-atom",
-  "version": "1.0.13-alpha1",
+  "version": "1.0.13",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AtomTeam0/shared-atom.git"
@@ -32,7 +32,7 @@
     "mongoose": "^5.13.15",
     "morgan": "^1.10.0",
     "passport-azure-ad": "^4.3.4",
-    "pdfjs-dist": "^3.7.107",
+    "pdfjs-dist": "2.4.456",
     "socket.io": "^4.5.3",
     "uuid": "^9.0.0",
     "winston": "^3.8.1"
