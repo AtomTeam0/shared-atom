@@ -1,6 +1,6 @@
 {
   "name": "shared-atom",
-  "version": "1.0.12",
+  "version": "1.0.13-alpha1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AtomTeam0/shared-atom.git"
