@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import { FileTypes } from "common-atom/enums/helpers/FileTypes";
-import { PDFDocumentProxy, getDocument } from "pdfjs-dist";
+import { PDFDocumentProxy, getDocument } from "pdfjs-dist/legacy/build/pdf";
 import {
   IFileDetails,
   IFileValidator,
