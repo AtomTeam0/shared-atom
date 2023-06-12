@@ -28,6 +28,8 @@ const coordinateAxisRegex = /^-?[0-9]{1,3}(?:\.[0-9]{1,15})?$/;
 
 const blobRegex = /^{(?=.*filepath)(?=.*originalFilename)(?=.*mimetype).*}$/;
 
+const freeTextRegex = /^[0-9\u0590-\u05FF!?-.,]{0,250}$/;
+
 // exported types
 export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
   Joi.string().external(async (value: string | undefined, _helpers: any) => {
@@ -150,6 +152,8 @@ export const joiEnum = (enumObj: { [k: string]: string }) =>
 export const joiBlob = Joi.string().regex(blobRegex);
 
 export const joiPersonalId = Joi.string().regex(personalIdRegex);
+
+export const joiFreeText = Joi.string().regex(freeTextRegex);
 
 export const joiPriority = Joi.number().integer().min(1).max(100);
 
