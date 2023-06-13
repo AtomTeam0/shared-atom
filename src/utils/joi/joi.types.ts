@@ -28,7 +28,7 @@ const coordinateAxisRegex = /^-?[0-9]{1,3}(?:\.[0-9]{1,15})?$/;
 
 const blobRegex = /^{(?=.*filepath)(?=.*originalFilename)(?=.*mimetype).*}$/;
 
-const freeTextRegex = /^[0-9\u0590-\u05FF!?-.,]{0,250}$/;
+const freeTextRegex = /^[\u0590-\u05FF0-9!?.,\s-]{0,250}$/;
 
 // exported types
 export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
