@@ -1,6 +1,6 @@
 {
   "name": "shared-atom",
-  "version": "1.0.18-msal",
+  "version": "1.0.19-msal",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AtomTeam0/shared-atom.git"
@@ -29,7 +29,7 @@
     "jayson": "^4.0.0",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.13.15",
+    "mongoose": "^7.0.0",
     "morgan": "^1.10.0",
     "passport-azure-ad": "^4.3.4",
     "pdfjs-dist": "2.4.456",
