@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { AuthenticationResult, ConfidentialClientApplication, AccountInfo } from "@azure/msal-node";
+import { AuthenticationResult, ConfidentialClientApplication } from "@azure/msal-node";
 import { Global } from "common-atom/enums/helpers/Global";
 import { config } from "../../config";
 import { InvalidToken, TokenNotProvided } from "../errors/validationError";
