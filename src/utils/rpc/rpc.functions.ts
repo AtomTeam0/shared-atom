@@ -57,8 +57,7 @@ export const RPCServerRequest =
         }
 
         setContext(Global.USER, payload.user);
-        if (!payload.skipPlugins) putSkipPlugins();
-        else putSkipPlugins(payload.skipPlugins);
+        putSkipPlugins(payload.skipPlugins);
 
         result = await managerFunction(
           ...(payload.params ? Object.values(payload.params) : [])
