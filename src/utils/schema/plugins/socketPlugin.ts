@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 import { PorpertyOptionalDeep, propertyValGetter } from "../../helpers/types";
-import { genericPostMiddleware } from "../helpers/pluginHelpers";
+import { Plugins, genericPostMiddleware } from "../helpers/pluginHelpers";
 import { creationFunctionType } from "../helpers/schemaHelpers";
 import { emitEvent } from "../helpers/socketHelpers";
 
@@ -25,6 +25,7 @@ export function socketPlugin<T>(
       } else {
         emitEvent(options.eventName, thisObject);
       }
-    }
+    },
+    Plugins.SOCKET
   );
 }

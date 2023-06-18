@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 import { isWithSearch } from "../../helpers/aggregation";
-import { genericPreMiddleware } from "../helpers/pluginHelpers";
+import { Plugins, genericPreMiddleware } from "../helpers/pluginHelpers";
 import {
   aggregationType,
   getAllFunctionTypes,
@@ -29,57 +29,68 @@ export function populatePlugin<T>(
             }
         )
       );
-    }
+    },
+    Plugins.POPULATE
   );
 
-  genericPreMiddleware(schema, aggregationType, async (thisObject: any) => {
-    options.forEach((p) => {
-      if (p.isArray) {
-        thisObject
-          .pipeline()
-          .splice(isWithSearch(thisObject.pipeline()) ? 2 : 0, 0, {
-            $lookup: {
-              from: p.ref,
-              localField: p.property,
-              foreignField: "_id",
-              as: p.property,
+  genericPreMiddleware(
+    schema,
+    aggregationType,
+    async (thisObject: any) => {
+      options.forEach((p) => {
+        if (p.isArray) {
+          thisObject
+            .pipeline()
+            .splice(isWithSearch(thisObject.pipeline()) ? 2 : 0, 0, {
+              $lookup: {
+                from: p.ref,
+                localField: p.property,
+                foreignField: "_id",
+                as: p.property,
+              },
+            });
+        } else {
+          thisObject.pipeline().splice(
+            isWithSearch(thisObject.pipeline()) ? 2 : 0,
+            0,
+            {
+              $lookup: {
+                from: p.ref,
+                localField: p.property,
+                foreignField: "_id",
+                as: p.property,
+              },
             },
-          });
-      } else {
-        thisObject.pipeline().splice(
-          isWithSearch(thisObject.pipeline()) ? 2 : 0,
-          0,
-          {
-            $lookup: {
-              from: p.ref,
-              localField: p.property,
-              foreignField: "_id",
-              as: p.property,
-            },
-          },
-          {
-            $addFields: {
-              [p.property]: {
-                $cond: {
-                  if: {
-                    $eq: [0, { $size: `$${p.property as string}` }],
-                  },
-                  then: [],
-                  else: {
-                    $arrayElemAt: [`$${p.property as string}`, 0],
+            {
+              $addFields: {
+                [p.property]: {
+                  $cond: {
+                    if: {
+                      $eq: [0, { $size: `$${p.property as string}` }],
+                    },
+                    then: [],
+                    else: {
+                      $arrayElemAt: [`$${p.property as string}`, 0],
+                    },
                   },
                 },
               },
-            },
-          }
-        );
-      }
-    });
-  });
+            }
+          );
+        }
+      });
+    },
+    Plugins.POPULATE
+  );
 
-  genericPreMiddleware(schema, getAllFunctionTypes, async (thisObject: any) => {
-    options.map((p) =>
-      thisObject.populate({ path: p.property, justOne: !p.isArray })
-    );
-  });
+  genericPreMiddleware(
+    schema,
+    getAllFunctionTypes,
+    async (thisObject: any) => {
+      options.map((p) =>
+        thisObject.populate({ path: p.property, justOne: !p.isArray })
+      );
+    },
+    Plugins.POPULATE
+  );
 }
