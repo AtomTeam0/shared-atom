@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { ITokenPayload } from "passport-azure-ad";
 import { AccountInfo } from "@azure/msal-node";
 import { Global } from "common-atom/enums/helpers/Global";
 import { Permission } from "common-atom/enums/Permission";
@@ -7,7 +6,6 @@ import { AuthenticationError, PermissionError } from "../errors/generalError";
 import { setContext } from "../helpers/context";
 import { wrapAsyncMiddleware } from "../helpers/wrapper";
 import { UsersRPCService } from "../rpc/services/user.RPCservice";
-import { config } from "../../config";
 
 export const validateUserAndPermission = (
   permissions: Permission[] = [...Object.values(Permission)]
