@@ -15,7 +15,7 @@ export const setContext = (property: Global, value: any): void => {
   session.set(property, value);
 };
 
-export const putSkipPlugins = (pluginsToSkip: [Plugins] | undefined) => {
+export const putSkipPlugins = (pluginsToSkip?: Plugins[]) => {
   if (!pluginsToSkip) session.set(Global.SKIP_PLUGINS, Object.values(Plugins));
   else session.set(Global.SKIP_PLUGINS, pluginsToSkip);
 };
@@ -39,7 +39,7 @@ export const runWithContextMiddleWare = () =>
   wrapAsyncMiddleware(
     async (_req: Request, _res: Response, next: NextFunction) =>
       runWithContext(() => {
-        setContext(Global.SKIP_PLUGINS, false);
+        putSkipPlugins([]);
         return next();
       })
   );
