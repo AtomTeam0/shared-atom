@@ -1,6 +1,7 @@
 import * as mongoose from "mongoose";
+import { Plugins } from "common-atom/enums/Plugins";
 import { isWithSearch } from "../../helpers/aggregation";
-import { Plugins, genericPreMiddleware } from "../helpers/pluginHelpers";
+import { genericPreMiddleware } from "../helpers/pluginHelpers";
 import {
   aggregationType,
   getAllFunctionTypes,

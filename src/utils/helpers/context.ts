@@ -2,9 +2,9 @@ import { Request, Response, NextFunction } from "express";
 import * as context from "cls-hooked";
 import { Global } from "common-atom/enums/helpers/Global";
 import { Permission } from "common-atom/enums/Permission";
+import { Plugins } from "common-atom/enums/Plugins";
 import { config } from "../../config";
 import { wrapAsyncMiddleware } from "./wrapper";
-import { Plugins } from "../schema/helpers/pluginHelpers";
 
 const nameSpace = "global";
 const session = context.createNamespace(nameSpace);

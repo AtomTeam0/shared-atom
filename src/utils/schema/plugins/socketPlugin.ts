@@ -1,6 +1,7 @@
 import * as mongoose from "mongoose";
+import { Plugins } from "common-atom/enums/Plugins";
 import { PorpertyOptionalDeep, propertyValGetter } from "../../helpers/types";
-import { Plugins, genericPostMiddleware } from "../helpers/pluginHelpers";
+import { genericPostMiddleware } from "../helpers/pluginHelpers";
 import { creationFunctionType } from "../helpers/schemaHelpers";
 import { emitEvent } from "../helpers/socketHelpers";
 

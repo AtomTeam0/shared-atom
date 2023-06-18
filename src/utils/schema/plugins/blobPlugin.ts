@@ -1,5 +1,6 @@
 import * as mongoose from "mongoose";
 import { FileTypes } from "common-atom/enums/helpers/FileTypes";
+import { Plugins } from "common-atom/enums/Plugins";
 import { PorpertyOptionalDeep } from "../../helpers/types";
 import {
   createProperties,
@@ -7,7 +8,6 @@ import {
   downloadProperties,
 } from "../helpers/blobHelpers";
 import {
-  Plugins,
   genericPostMiddleware,
   genericPreMiddleware,
 } from "../helpers/pluginHelpers";

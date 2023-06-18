@@ -1,14 +1,7 @@
 import * as mongoose from "mongoose";
 import { Global } from "common-atom/enums/helpers/Global";
+import { Plugins } from "common-atom/enums/Plugins";
 import { getContext, shouldSkipPlugins } from "../../helpers/context";
-
-export enum Plugins {
-  AGGREGATE = "aggregate_plugin",
-  BLOB = "blob_plugin",
-  INDEX = "index_plugin",
-  POPULATE = "populate_plugin",
-  SOCKET = "socket_plugin",
-}
 
 export const genericPreMiddleware = (
   schema: mongoose.Schema,
