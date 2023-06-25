@@ -1,6 +1,6 @@
 {
   "name": "shared-atom",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AtomTeam0/shared-atom.git"
@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@azure/identity": "^3.0.0",
+    "@azure/msal-node": "^1.17.3",
     "@azure/storage-blob": "^12.11.0",
     "@joi/date": "^2.1.0",
     "@turf/turf": "^6.5.0",

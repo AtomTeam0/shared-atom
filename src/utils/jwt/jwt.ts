@@ -1,11 +1,15 @@
 import { Request, Response, NextFunction } from "express";
-import { AuthenticationResult, ConfidentialClientApplication } from "@azure/msal-node";
+import {
+  AuthenticationResult,
+  ConfidentialClientApplication,
+} from "@azure/msal-node";
 import { Global } from "common-atom/enums/helpers/Global";
 import { config } from "../../config";
 import { InvalidToken, TokenNotProvided } from "../errors/validationError";
 import { setContext } from "../helpers/context";
 import { wrapAsyncMiddleware } from "../helpers/wrapper";
 import clickConfig from "./clickConfig";
+
 const options = {
   identityMetadata: `https://${clickConfig.metadata.authority}/${clickConfig.credentials.tenantID}/${clickConfig.metadata.version}/${clickConfig.metadata.discovery}`,
   issuer: `https://${clickConfig.metadata.authority}/${clickConfig.credentials.tenantID}/${clickConfig.metadata.version}`,
@@ -41,8 +45,8 @@ export const verifyToken = wrapAsyncMiddleware(
         oboAssertion: token,
       })
       .catch((error: any) => {
-        console.log('error on aquireTokenOnBehalf:', error);
-        throw new InvalidToken('Error in aquireTokenOnBehalf');
+        console.log("error on aquireTokenOnBehalf:", error);
+        throw new InvalidToken("Error in aquireTokenOnBehalf");
       });
     if (result && result.account) {
       req.user = result.account;
