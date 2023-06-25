@@ -9,18 +9,18 @@ import { config } from "../../config";
 
 const PDFJS = require("pdfjs-dist");
 
-export const getContainerNameByFileType = (fileType: FileTypes): string => {
+export const getBucketNameByFileType = (fileType: FileTypes): string => {
   switch (fileType) {
     case FileTypes.IMAGE:
-      return "image-container";
+      return "image-bucket";
     case FileTypes.AUDIO:
-      return "audio-container";
+      return "audio-bucket";
     case FileTypes.VIDEO:
-      return "video-container";
+      return "video-bucket";
     case FileTypes.PDF:
-      return "pdf-container";
+      return "pdf-bucket";
     default:
-      return "other-container";
+      return "other-bucket";
   }
 };
 
@@ -30,10 +30,7 @@ export const getValidatorByFileType = (fileType: FileTypes): IFileValidator =>
 const SEPERATOR = "__";
 const SLASH_REPLACER = "-";
 
-export const getBlobName = (
-  file: IFileDetails,
-  oldFileName?: string
-): string => {
+export const getS3Name = (file: IFileDetails, oldFileName?: string): string => {
   const fileNameParts = file.originalFilename.split(".");
   if (oldFileName) {
     const oldFileNameParts = oldFileName.split(SEPERATOR);

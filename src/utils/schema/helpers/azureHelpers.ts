@@ -1,74 +1,47 @@
-import {
-  BlobServiceClient,
-  generateBlobSASQueryParameters,
-  SASProtocol,
-  BlobSASPermissions,
-  StorageSharedKeyCredential,
-  BlobSASSignatureValues,
-} from "@azure/storage-blob";
+import * as AWS from "aws-sdk";
 import { promisify } from "util";
 import { unlink } from "fs";
 import { FileTypes } from "common-atom/enums/helpers/FileTypes";
 import { IFileDetails } from "common-atom/interfaces/helpers/file.interface";
 import { config } from "../../../config";
 import { ConnectionError } from "../../errors/applicationError";
-import {
-  getContainerNameByFileType,
-  getBlobName,
-  getMimetypeByBlobName,
-} from "../../helpers/files";
+import { getBucketNameByFileType, getS3Name } from "../../helpers/files";
 
-let blobClient: BlobServiceClient;
-const accountName = config.azure.azureAccountName;
-const accountKey = config.azure.azureAccountKey;
+const s3 = new AWS.S3({
+  accessKeyId: config.aws.accessKeyId,
+  secretAccessKey: config.aws.secretAccessKey,
+  ...(config.aws.region !== config.aws.defaultRegion && {
+    region: config.aws.region,
+  }),
+  endpoint: config.aws.endpoint,
+  s3ForcePathStyle: config.aws.forcePathS3,
+  s3BucketEndpoint: config.aws.isBucketPoint,
+});
 
-const getBlobClient = () => {
-  if (blobClient) {
-    return blobClient;
+const createSasUrl = async (fileType: FileTypes, objectKey: string) => {
+  const HOUR = 60 * 60; // 1 hour in seconds
+  try {
+    const bucketName = getBucketNameByFileType(fileType);
+    const objectUrl = s3.getSignedUrl("getObject", {
+      Bucket: bucketName,
+      Key: objectKey,
+      Expires: HOUR,
+    });
+    return objectUrl;
+  } catch (err: any) {
+    throw new ConnectionError(`S3 error: ${err.message}`);
   }
-  const connectionString = `DefaultEndpointsProtocol=https;AccountName=${accountName};AccountKey=${accountKey};EndpointSuffix=core.windows.net`;
-  const blobServiceClient =
-    BlobServiceClient.fromConnectionString(connectionString);
-  return blobServiceClient;
 };
 
-const createSasUrl = async (fileType: FileTypes, blobName: string) => {
-  const HOUR = 60 * 60 * 1000;
-  const NOW = new Date();
-
-  const HOUR_BEFORE_NOW = new Date(NOW.valueOf() - HOUR);
-  const HOUR_AFTER_NOW = new Date(NOW.valueOf() + HOUR);
-
-  try {
-    const containerName = getContainerNameByFileType(fileType);
-    const containerClient = getBlobClient().getContainerClient(containerName);
-    const blobClientUrl = containerClient.getBlobClient(blobName).url;
-
-    const sharedKeyCredential = new StorageSharedKeyCredential(
-      accountName,
-      accountKey
-    );
-
-    const sasOptions: BlobSASSignatureValues = {
-      containerName,
-      blobName,
-      startsOn: HOUR_BEFORE_NOW,
-      expiresOn: HOUR_AFTER_NOW,
-      permissions: BlobSASPermissions.parse("r"),
-      protocol: SASProtocol.HttpsAndHttp,
-      contentDisposition: "inline",
-      contentType: getMimetypeByBlobName(blobName),
-    };
-
-    const sasQueryParams = generateBlobSASQueryParameters(
-      sasOptions,
-      sharedKeyCredential
-    );
-
-    return `${blobClientUrl}?${sasQueryParams.toString()}`;
-  } catch (err: any) {
-    throw new ConnectionError(`Azure error: ${err.message}`);
-  }
+const checkIfExistAndCreateBucket = async (bucketName: string) => {
+  const existingBuckets: AWS.S3.Bucket[] | undefined = (
+    await s3.listBuckets().promise()
+  ).Buckets;
+  if (
+    !existingBuckets?.length ||
+    !existingBuckets.some((bucket: AWS.S3.Bucket) => bucket.Name === bucketName)
+  )
+    await s3.createBucket({ Bucket: bucketName }).promise();
 };
 
 const uploadFile = async (
@@ -77,31 +50,36 @@ const uploadFile = async (
   oldFileName?: string
 ) => {
   try {
-    const fileName = getBlobName(file, oldFileName);
-    const containerName = getContainerNameByFileType(fileType);
-    const containerClient = getBlobClient().getContainerClient(containerName);
+    const fileName = getS3Name(file, oldFileName);
+    const bucketName = getBucketNameByFileType(fileType);
 
-    // Create container if it does not exist
-    const exists = await containerClient.exists();
-    if (!exists) {
-      await containerClient.create({ access: "blob" });
-    }
+    // Create Bucket if does not exist
+    await checkIfExistAndCreateBucket(bucketName);
 
-    // upload the file to azure, if old blob is given, delete it
+    // Upload the file to S3
+    const params = {
+      Bucket: bucketName,
+      Key: fileName,
+      Body: file.filepath,
+      ContentType: file.mimetype,
+    };
+    await s3.upload(params).promise();
+
+    // Delete the old file if provided
     if (oldFileName) {
-      const oldBlockBlobClient =
-        containerClient.getBlockBlobClient(oldFileName);
-      oldBlockBlobClient.deleteIfExists();
+      const deleteParams = {
+        Bucket: bucketName,
+        Key: oldFileName,
+      };
+      await s3.deleteObject(deleteParams).promise();
     }
-    const blockBlobClient = containerClient.getBlockBlobClient(fileName);
-    await blockBlobClient.uploadFile(file.filepath);
 
-    // delete the file from the local server
+    // Delete the file from the local server
     await promisify(unlink)(file.filepath);
 
     return fileName;
   } catch (err: any) {
-    throw new ConnectionError(`Azure error: ${err.message}`);
+    throw new ConnectionError(`S3 error: ${err.message}`);
   }
 };
 

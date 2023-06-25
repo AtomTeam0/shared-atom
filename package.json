@@ -1,6 +1,6 @@
 {
   "name": "shared-atom",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AtomTeam0/shared-atom.git"
@@ -20,6 +20,7 @@
     "@azure/storage-blob": "^12.11.0",
     "@joi/date": "^2.1.0",
     "@turf/turf": "^6.5.0",
+    "aws-sdk": "^2.1373.0",
     "body-parser": "^1.20.0",
     "cls-hooked": "^4.2.2",
     "common-atom": "^1.0.15",
