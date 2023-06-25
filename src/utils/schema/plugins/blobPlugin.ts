@@ -1,5 +1,6 @@
 import * as mongoose from "mongoose";
 import { FileTypes } from "common-atom/enums/helpers/FileTypes";
+import { Plugins } from "common-atom/enums/Plugins";
 import { PorpertyOptionalDeep } from "../../helpers/types";
 import {
   createProperties,
@@ -33,18 +34,24 @@ export function blobPlugin<T>(
         thisObject,
         ...(await createProperties<T>(thisObject, options))
       );
-    }
+    },
+    Plugins.BLOB
   );
 
-  genericPreMiddleware(schema, updateFunctionType, async (thisObject: any) => {
-    const updateObj = thisObject.getUpdate();
-    thisObject.setUpdate(
-      Object.assign(
-        updateObj as object,
-        ...(await updateProperties<T>(updateObj, options, thisObject))
-      )
-    );
-  });
+  genericPreMiddleware(
+    schema,
+    updateFunctionType,
+    async (thisObject: any) => {
+      const updateObj = thisObject.getUpdate();
+      thisObject.setUpdate(
+        Object.assign(
+          updateObj as object,
+          ...(await updateProperties<T>(updateObj, options, thisObject))
+        )
+      );
+    },
+    Plugins.BLOB
+  );
 
   genericPostMiddleware(
     schema,
@@ -55,7 +62,8 @@ export function blobPlugin<T>(
           Object.assign(item, ...(await downloadProperties<T>(item, options)));
         })
       );
-    }
+    },
+    Plugins.BLOB
   );
 
   genericPostMiddleware(
@@ -66,7 +74,8 @@ export function blobPlugin<T>(
         res._doc,
         ...(await downloadProperties<T>(res._doc, options))
       );
-    }
+    },
+    Plugins.BLOB
   );
 
   genericPostMiddleware(
@@ -81,6 +90,7 @@ export function blobPlugin<T>(
           );
         })
       );
-    }
+    },
+    Plugins.BLOB
   );
 }

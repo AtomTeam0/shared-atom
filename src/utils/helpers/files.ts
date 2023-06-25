@@ -1,10 +1,13 @@
 import { v4 as uuidv4 } from "uuid";
 import { FileTypes } from "common-atom/enums/helpers/FileTypes";
+import * as fs from "fs";
 import {
   IFileDetails,
   IFileValidator,
 } from "common-atom/interfaces/helpers/file.interface";
 import { config } from "../../config";
+
+const PDFJS = require("pdfjs-dist");
 
 export const getBucketNameByFileType = (fileType: FileTypes): string => {
   switch (fileType) {
@@ -41,3 +44,9 @@ export const getS3Name = (file: IFileDetails, oldFileName?: string): string => {
 
 export const getMimetypeByBlobName = (blobName: string): string =>
   blobName.split(SEPERATOR)[1].replace(SLASH_REPLACER, "/");
+
+export const getPdfPageCount = async (pdfFilePath: string): Promise<number> => {
+  const dataBuffer: Buffer = fs.readFileSync(pdfFilePath);
+  const doc = await PDFJS.getDocument(dataBuffer);
+  return doc.numPages;
+};

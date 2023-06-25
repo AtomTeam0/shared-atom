@@ -1,7 +1,6 @@
 import * as mongoose from "mongoose";
 import { FileTypes } from "common-atom/enums/helpers/FileTypes";
-import { Global } from "common-atom/enums/helpers/Global";
-import { runWithContext, setContext } from "../../helpers/context";
+import { putSkipPlugins, runWithContext } from "../../helpers/context";
 import {
   PorpertyOptionalDeep,
   propertyValGetter,
@@ -15,7 +14,7 @@ async function getOldBlobName<T>(
 ) {
   const wantedId = query.getFilter()._id;
   const oldDoc = await runWithContext(() => {
-    setContext(Global.SKIP_PLUGINS, true);
+    putSkipPlugins();
     return query.model.findById(wantedId).exec();
   });
   if (oldDoc) {

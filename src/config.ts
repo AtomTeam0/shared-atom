@@ -39,7 +39,7 @@ export const config = {
     },
     newsService: {
       rpcPort: +(process.env.APPLICATION_RPC_PORT || 5000),
-      rpcHostname: process.env.NEWS_COMPOSITOR_RPC_HOST || "localhost",
+      rpcHostname: process.env.NEWS_SERVICE_RPC_HOST || "localhost",
     },
   },
   formidable: {
@@ -137,6 +137,29 @@ export const config = {
           fileType: FileTypes.AUDIO,
         },
       ],
+      book: [
+        {
+          property: "thumbNail",
+          fileType: FileTypes.IMAGE,
+        },
+        {
+          property: "pdf",
+          fileType: FileTypes.PDF,
+        },
+      ],
+      subject: [
+        {
+          property: "book",
+          fileType: FileTypes.PDF,
+        },
+      ],
+      playlist: [
+        {
+          property: "thumbNail",
+          fileType: FileTypes.IMAGE,
+        },
+      ],
     },
   },
 };
+console.log(config);
