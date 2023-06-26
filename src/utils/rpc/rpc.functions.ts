@@ -26,7 +26,7 @@ export const RPCClientRequest = async (
     obj ? !!obj.name && !!obj.message && !!obj.status : false;
   const user = getContext(Global.USER);
 
-  console.log(`-- ${route} RPC request was called --`);
+  console.log(`-- ${route} RPC request was called -- with user:`, user);
   const response = await rpcClient.request(route, {
     ...(user && { user }),
     skipPlugins,
