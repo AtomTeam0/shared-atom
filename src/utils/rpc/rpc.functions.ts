@@ -26,7 +26,7 @@ export const RPCClientRequest = async (
     obj ? !!obj.name && !!obj.message && !!obj.status : false;
   const user = getContext(Global.USER);
 
-  console.log(`-- ${route} RPC request was called -- with user:`, user);
+  console.log(`-- ${route} RPC request was called --`);
   const response = await rpcClient.request(route, {
     ...(user && { user }),
     skipPlugins,
@@ -48,7 +48,6 @@ export const RPCServerRequest =
   async (payload: IRPCPayload) =>
     runWithContext(async () => {
       let result;
-      console.log("payload", payload);
       try {
         if (schemaValidation) {
           await schemaValidation.validateAsync(
