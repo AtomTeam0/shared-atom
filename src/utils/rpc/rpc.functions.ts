@@ -48,6 +48,7 @@ export const RPCServerRequest =
   async (payload: IRPCPayload) =>
     runWithContext(async () => {
       let result;
+      console.log("payload", payload);
       try {
         if (schemaValidation) {
           await schemaValidation.validateAsync(
