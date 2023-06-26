@@ -30,7 +30,9 @@ export const shouldSkipPlugins = (
     // eslint-disable-next-line no-nested-ternary
     alternativeValue !== undefined
       ? alternativeValue
-      : skip?.includes(funcType) || false;
+      : skip
+      ? skip.includes(funcType)
+      : true;
   return config.server.withDeepPlugin ? val : isDeep || val;
 };
 
