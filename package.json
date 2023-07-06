@@ -1,6 +1,6 @@
 {
   "name": "shared-atom",
-  "version": "1.0.20-msal",
+  "version": "1.0.20-msal-v2",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AtomTeam0/shared-atom.git"
@@ -31,7 +31,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.0",
     "morgan": "^1.10.0",
-    "passport-azure-ad": "^4.3.4",
+    "passport": "^0.6.0",
+    "passport-azure-ad": "^4.3.5",
     "pdfjs-dist": "2.4.456",
     "socket.io": "^4.5.3",
     "uuid": "^9.0.0",
@@ -46,6 +47,7 @@
     "@types/jsonwebtoken": "^8.5.9",
     "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.3",
+    "@types/passport": "^1.0.12",
     "@types/passport-azure-ad": "^4.3.1",
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
