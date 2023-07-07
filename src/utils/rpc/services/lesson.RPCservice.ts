@@ -18,7 +18,7 @@ export class LessonRPCService {
       {
         lessonId,
       },
-      false
+      []
     );
   }
 
@@ -29,7 +29,7 @@ export class LessonRPCService {
       {
         pakalId,
       },
-      false
+      []
     );
   }
 

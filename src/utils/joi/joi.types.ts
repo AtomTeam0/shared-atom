@@ -17,7 +17,7 @@ import {
   InvalidCoordinateError,
   InvalidPageRange,
 } from "../errors/validationError";
-import { getContext, setContext } from "../helpers/context";
+import { getContext, putSkipPlugins } from "../helpers/context";
 
 // regex
 const mongoIdRegex = /^[0-9a-fA-F]{24}$/;
@@ -39,9 +39,9 @@ export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
         throw new InvalidMongoIdError();
       } else if (getByIdFunc) {
         const skipPlugins = getContext(Global.SKIP_PLUGINS);
-        setContext(Global.SKIP_PLUGINS, true);
+        putSkipPlugins();
         const res = await getByIdFunc(value);
-        setContext(Global.SKIP_PLUGINS, skipPlugins);
+        putSkipPlugins(skipPlugins);
         if (!res) {
           throw new IdNotFoundError();
         }
@@ -58,9 +58,9 @@ export const joiContentId = Joi.string().external(
         throw new InvalidMongoIdError();
       }
       const skipPlugins = getContext(Global.SKIP_PLUGINS);
-      setContext(Global.SKIP_PLUGINS, true);
+      putSkipPlugins();
       const res = await ItemRPCService.getItemByContentId(value);
-      setContext(Global.SKIP_PLUGINS, skipPlugins);
+      putSkipPlugins(skipPlugins);
       if (!res) {
         throw new IdNotFoundError("contentId");
       }

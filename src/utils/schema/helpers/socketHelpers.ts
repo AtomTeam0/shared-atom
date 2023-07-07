@@ -10,7 +10,7 @@ export const setSocketServer = (server: http.Server) => {
   socketServer = new Server(server, {
     cors: { origin: "*", methods: ["GET", "PUT", "POST"] },
   });
-  socketServer.engine.generateId = () => getContext(Global.USER).id;
+  socketServer.engine.generateId = () => getContext(Global.USER)._id;
 };
 
 export const emitEvent = (
@@ -30,7 +30,7 @@ export const updateSocketRoom = async (roomOptions: {
   joinRoomId: AreaNames;
   leaveRoomId?: AreaNames;
 }): Promise<void> => {
-  const socket = socketServer.sockets.sockets.get(getContext(Global.USER).id);
+  const socket = socketServer.sockets.sockets.get(getContext(Global.USER)._id);
   if (socket) {
     if (roomOptions.leaveRoomId) {
       socket?.leave(roomOptions.leaveRoomId);

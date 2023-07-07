@@ -15,17 +15,17 @@ export const validateUserAndPermission = (
     permissionsToValidate: Permission[]
   ) => {
     if (!user || !user.username) {
-      return new AuthenticationError('Missing username');
+      return new AuthenticationError("Missing username");
     }
     if (!user || !user.name) {
-      return new AuthenticationError('Missing user.name');
+      return new AuthenticationError("Missing user.name");
     }
 
     let userFromDb;
     try {
       const personalId = user.username.split("@")[0];
       userFromDb = await UsersRPCService.updateUser(personalId, {
-        name: user.name
+        name: user.name,
       });
       setContext(Global.USER, userFromDb);
     } catch (err) {
