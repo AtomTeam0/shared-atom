@@ -1,21 +1,21 @@
 import { Request, Response, NextFunction } from "express";
-import { AccountInfo } from "@azure/msal-node";
 import { Global } from "common-atom/enums/helpers/Global";
 import { Permission } from "common-atom/enums/Permission";
 import { AuthenticationError, PermissionError } from "../errors/generalError";
 import { setContext } from "../helpers/context";
 import { wrapAsyncMiddleware } from "../helpers/wrapper";
 import { UsersRPCService } from "../rpc/services/user.RPCservice";
+import { ITokenPayload } from "passport-azure-ad";
 
 export const validateUserAndPermission = (
   permissions: Permission[] = [...Object.values(Permission)]
 ) => {
   const permissionValidator = async (
-    user: AccountInfo | undefined,
+    user: ITokenPayload | undefined,
     permissionsToValidate: Permission[]
   ) => {
-    if (!user || !user.username) {
-      return new AuthenticationError("Missing username");
+    if (!user || !user.preferred_username) {
+      return new AuthenticationError("Missing preferred_username");
     }
     if (!user || !user.name) {
       return new AuthenticationError("Missing user.name");
@@ -23,7 +23,7 @@ export const validateUserAndPermission = (
 
     let userFromDb;
     try {
-      const personalId = user.username.split("@")[0];
+      const personalId = user.preferred_username.split("@")[0];
       userFromDb = await UsersRPCService.updateUser(personalId, {
         name: user.name,
       });
