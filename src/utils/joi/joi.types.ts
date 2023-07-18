@@ -26,7 +26,7 @@ const personalIdRegex = /^[0-9]{9}$/;
 
 const coordinateAxisRegex = /^-?[0-9]{1,3}(?:\.[0-9]{1,15})?$/;
 
-const blobRegex = /^{(?=.*filepath)(?=.*originalFilename)(?=.*mimetype).*}$/;
+const blobRegex = /^{(?=.*filepath)(?=.*originalFilename).*}$/;
 
 const freeTextRegex = /^[\u0590-\u05FF0-9!?.,\s-]{0,250}$/;
 

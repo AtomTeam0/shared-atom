@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import { IItem } from "common-atom/interfaces/item.interface";
 import { config } from "../config";
-import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
+import { blobPlugin } from "../utils/schema/plugins/filePlugin";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 

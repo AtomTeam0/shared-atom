@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import { IInfographic } from "common-atom/interfaces/infographic.interface";
 import { config } from "../config";
-import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
+import { blobPlugin } from "../utils/schema/plugins/filePlugin";
 
 const InfographicSchema: mongoose.Schema = new mongoose.Schema(
   {
