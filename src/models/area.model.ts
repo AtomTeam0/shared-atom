@@ -2,7 +2,7 @@ import * as mongoose from "mongoose";
 import { AreaNames } from "common-atom/enums/AreaNames";
 import { IArea } from "common-atom/interfaces/area.interface";
 import { config } from "../config";
-import { blobPlugin } from "../utils/schema/plugins/filePlugin";
+import { filePlugin } from "../utils/schema/plugins/filePlugin";
 
 const AreaSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -28,7 +28,7 @@ const AreaSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-AreaSchema.plugin(blobPlugin<IArea>, config.formidable.propertyConfigs.area);
+AreaSchema.plugin(filePlugin<IArea>, config.formidable.propertyConfigs.area);
 
 export const AreaModel = mongoose.model<IArea & mongoose.Document>(
   "areas",

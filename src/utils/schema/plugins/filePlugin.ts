@@ -14,7 +14,7 @@ import {
   aggregationType,
 } from "../helpers/schemaHelpers";
 
-export function blobPlugin<T>(
+export function filePlugin<T>(
   schema: mongoose.Schema,
   options: PorpertyOptionalDeep<T>[]
 ) {
@@ -30,7 +30,9 @@ export function blobPlugin<T>(
     Plugins.BLOB
   );
 
-  genericPreMiddleware(schema, updateFunctionType, 
+  genericPreMiddleware(
+    schema,
+    updateFunctionType,
     async (thisObject: any) => {
       const updateObj = thisObject.getUpdate();
       thisObject.setUpdate(
@@ -39,7 +41,7 @@ export function blobPlugin<T>(
           ...(await createProperties<T>(thisObject, options))
         )
       );
-    }, 
+    },
     Plugins.BLOB
   );
 
