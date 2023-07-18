@@ -47,27 +47,27 @@ const subjectSchema: mongoose.Schema = new mongoose.Schema(
       default: true,
     },
     jobs: {
-      type: [Job],
+      type: [String],
       required: true,
     },
     publishTypes: {
-      type: [Publish],
+      type: [String],
       required: true,
     },
     degrees: {
-      type: [Degree],
+      type: [String],
       required: true,
     },
     compounds: {
-      type: [Compound],
+      type: [String],
       required: true,
     },
     combatShapes: {
-      type: [CombatShapes],
+      type: [String],
       required: true,
     },
     functions: {
-      type: [Functions],
+      type: [String],
       required: true,
     },
     book: {
