@@ -4,6 +4,8 @@ import { IServerConfig } from "common-atom/interfaces/helpers/serverConfig.inter
 import { Server } from "./server";
 import { aggregatePlugin } from "./utils/schema/plugins/aggregatePlugin";
 
+import "./models/area.model";
+
 mongoose.plugin(aggregatePlugin);
 
 // eslint-disable-next-line import/first, import/order

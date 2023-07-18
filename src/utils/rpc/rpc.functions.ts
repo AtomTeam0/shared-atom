@@ -17,8 +17,8 @@ export const RPCClientRequest = async (
   route: string,
   params?:
     | {
-        [k: string]: any;
-      }
+      [k: string]: any;
+    }
     | undefined,
   skipPlugins?: Plugins[]
 ): Promise<any> => {
@@ -26,7 +26,7 @@ export const RPCClientRequest = async (
     obj ? !!obj.name && !!obj.message && !!obj.status : false;
   const user = getContext(Global.USER);
 
-  console.log(`-- ${route} RPC request was called --`);
+  console.log(`-- ${route} RPC request was called -- with params => `, params);
   const response = await rpcClient.request(route, {
     ...(user && { user }),
     skipPlugins,
@@ -45,26 +45,26 @@ export const RPCServerRequest =
     managerFunction: (...args: any) => Promise<any>,
     schemaValidation?: Joi.ObjectSchema<any>
   ): any =>
-  async (payload: IRPCPayload) =>
-    runWithContext(async () => {
-      let result;
-      try {
-        if (schemaValidation) {
-          await schemaValidation.validateAsync(
-            payload.params,
-            defaultValidationOptions
+    async (payload: IRPCPayload) =>
+      runWithContext(async () => {
+        let result;
+        try {
+          if (schemaValidation) {
+            await schemaValidation.validateAsync(
+              payload.params,
+              defaultValidationOptions
+            );
+          }
+
+          setContext(Global.USER, payload.user);
+          putSkipPlugins(payload.skipPlugins);
+
+          result = await managerFunction(
+            ...(payload.params ? Object.values(payload.params) : [])
           );
+        } catch (error: any) {
+          return new RPCFunctionError(error);
         }
 
-        setContext(Global.USER, payload.user);
-        putSkipPlugins(payload.skipPlugins);
-
-        result = await managerFunction(
-          ...(payload.params ? Object.values(payload.params) : [])
-        );
-      } catch (error: any) {
-        return new RPCFunctionError(error);
-      }
-
-      return result;
-    });
+        return result;
+      });

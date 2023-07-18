@@ -1,53 +1,72 @@
-import { Request, Response, NextFunction } from "express";
-import { AuthenticationResult, ConfidentialClientApplication } from "@azure/msal-node";
-import { Global } from "common-atom/enums/helpers/Global";
-import { config } from "../../config";
-import { InvalidToken, TokenNotProvided } from "../errors/validationError";
-import { setContext } from "../helpers/context";
-import { wrapAsyncMiddleware } from "../helpers/wrapper";
-import clickConfig from "./clickConfig";
-const options = {
-  identityMetadata: `https://${clickConfig.metadata.authority}/${clickConfig.credentials.tenantID}/${clickConfig.metadata.version}/${clickConfig.metadata.discovery}`,
-  issuer: `https://${clickConfig.metadata.authority}/${clickConfig.credentials.tenantID}/${clickConfig.metadata.version}`,
-  clientID: clickConfig.credentials.clientID,
-  audience: clickConfig.credentials.clientID,
-  validateIssuer: clickConfig.settings.validateIssuer,
-  loggingNoPII: true, // great for Debugging
-  scope: clickConfig.metadata.scope,
-  loggingLevel: clickConfig.settings.loggingLevel,
-};
-// Configure the MSAL application
-const msalConfig = {
-  auth: {
-    clientId: options.clientID,
-    authority: `https://${clickConfig.metadata.authority}/${clickConfig.credentials.tenantID}`,
-    clientSecret: config.jwt.secretKey,
-  },
-};
+import { Request, Response, NextFunction } from 'express';
+import * as passport from 'passport';
+import { BearerStrategy, ITokenPayload } from 'passport-azure-ad';
+import { config } from '../../config';
+import { Global } from 'common-atom/enums/helpers/Global';
+import { setContext } from '../helpers/context';
+import { wrapAsyncMiddleware } from '../helpers/wrapper';
+import { InvalidToken, TokenNotProvided } from '../errors/validationError';
+import authConfig from './authConfig';
 
-const msalApp = new ConfidentialClientApplication(msalConfig);
+// Configure the Azure AD bearer strategy
+const azureADBearerStrategy = new BearerStrategy(
+    {
+        identityMetadata: `https://${authConfig.metadata.authority}/${authConfig.credentials.tenantID}/${authConfig.metadata.version}/${authConfig.metadata.discovery}`,
+        // issuer: `https://${authConfig.metadata.authority}/${authConfig.credentials.tenantID}/${authConfig.metadata.version}`,
+        clientID: authConfig.credentials.clientID,
+        scope: authConfig.metadata.scope as string[],
+        // audience: authConfig.credentials.clientID, // audience is this application
+        validateIssuer: authConfig.settings.validateIssuer,
+        passReqToCallback: authConfig.settings.passReqToCallback,
+        loggingLevel: authConfig.settings.loggingLevel,
+        loggingNoPII: authConfig.settings.loggingNoPII,
+    },
+    (req, token, done) => {
+        try {
+            console.log('req', req)
+            console.log('token', token)
+            /**
+     * Access tokens that have neither the 'scp' (for delegated permissions) nor
+     * 'roles' (for application permissions) claim are not to be honored.
+     */
+            if (!token.hasOwnProperty('scp') && !token.hasOwnProperty('roles')) {
+                return done(new InvalidToken('Unauthorized - No delegated or app permission claims found [roles,scp]'), null, "No delegated or app permission claims found");
+            }
+            if (!token) {
+                throw new TokenNotProvided();
+            }
 
+            // You can add custom validation logic here if needed
+
+            return done(null, {}, token);
+        } catch (error) {
+            console.log('Error validating access token:', error);
+            return done(new InvalidToken('Invalid access token'));
+        }
+    }
+);
+
+// Configure Passport to use the Azure AD bearer strategy
+passport.use('oauth-bearer', azureADBearerStrategy);
+
+// configure a middleware to be used in the routes
 export const verifyToken = wrapAsyncMiddleware(
-  async (req: Request, _res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
-      throw new TokenNotProvided();
-    }
+    async (req: Request, res: Response, next: NextFunction) => {
+        passport.authenticate('oauth-bearer', { session: false }, (err: Error, user: any, tokenPayload: ITokenPayload) => {
+            console.log('im here error = ', err)
+            console.log('im here user = ', user)
+            console.log('im here tokenPayload = ', tokenPayload)
+            if (err) {
+                console.log('Error validating access token:', err.message);
+                throw new InvalidToken(`Invalid access token  [${err.message}]`);
+            }
 
-    const token = authHeader.split(" ")[1];
-    const result: AuthenticationResult | null = await msalApp
-      .acquireTokenOnBehalfOf({
-        scopes: clickConfig.metadata.scope, // Replace with your API's client ID
-        oboAssertion: token,
-      })
-      .catch((error: any) => {
-        console.log('error on aquireTokenOnBehalf:', error);
-        throw new InvalidToken('Error in aquireTokenOnBehalf');
-      });
-    if (result && result.account) {
-      req.user = result.account;
-      setContext(Global.AZURE_USER, req.user);
+            if (!tokenPayload) {
+                throw new TokenNotProvided();
+            }
+            req.user = tokenPayload;
+            setContext(Global.AZURE_USER, req.user);
+            next();
+        })(req, res, next);
     }
-    next();
-  }
 );
