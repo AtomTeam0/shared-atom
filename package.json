@@ -1,6 +1,6 @@
 {
   "name": "shared-atom",
-  "version": "1.0.3",
+  "version": "1.1.1",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AtomTeam0/shared-atom.git"
@@ -33,7 +33,6 @@
     "morgan": "^1.10.0",
     "passport-azure-ad": "^4.3.4",
     "socket.io": "^4.5.3",
-    "uuid": "^9.0.0",
     "winston": "^3.8.1"
   },
   "devDependencies": {

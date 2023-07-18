@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import { ILesson } from "common-atom/interfaces/lesson.interface";
 import { config } from "../config";
-import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
+import { blobPlugin } from "../utils/schema/plugins/filePlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 
 const LessonSchema: mongoose.Schema = new mongoose.Schema(

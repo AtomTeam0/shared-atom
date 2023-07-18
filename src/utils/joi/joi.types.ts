@@ -24,7 +24,7 @@ const personalIdRegex = /^[0-9]{9}$/;
 
 const coordinateAxisRegex = /^-?[0-9]{1,3}(?:\.[0-9]{1,15})?$/;
 
-const blobRegex = /^{(?=.*filepath)(?=.*originalFilename)(?=.*mimetype).*}$/;
+const blobRegex = /^{(?=.*filepath)(?=.*originalFilename).*}$/;
 
 // exported types
 export const joiMongoId = (getByIdFunc?: (id: string) => any) =>

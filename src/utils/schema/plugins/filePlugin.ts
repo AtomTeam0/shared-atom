@@ -1,11 +1,6 @@
 import * as mongoose from "mongoose";
-import { FileTypes } from "common-atom/enums/helpers/FileTypes";
 import { PorpertyOptionalDeep } from "../../helpers/types";
-import {
-  createProperties,
-  updateProperties,
-  downloadProperties,
-} from "../helpers/blobHelpers";
+import { createProperties, downloadProperties } from "../helpers/modifyHelpers";
 import {
   genericPostMiddleware,
   genericPreMiddleware,
@@ -20,10 +15,7 @@ import {
 
 export function blobPlugin<T>(
   schema: mongoose.Schema,
-  options: {
-    property: PorpertyOptionalDeep<T>;
-    fileType: FileTypes;
-  }[]
+  options: PorpertyOptionalDeep<T>[]
 ) {
   genericPreMiddleware(
     schema,
@@ -41,7 +33,7 @@ export function blobPlugin<T>(
     thisObject.setUpdate(
       Object.assign(
         updateObj as object,
-        ...(await updateProperties<T>(updateObj, options, thisObject))
+        ...(await createProperties<T>(thisObject, options))
       )
     );
   });

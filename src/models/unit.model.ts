@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import { IUnit } from "common-atom/interfaces/unit.interface";
 import { config } from "../config";
-import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
+import { blobPlugin } from "../utils/schema/plugins/filePlugin";
 
 const UnitSchema: mongoose.Schema = new mongoose.Schema(
   {
