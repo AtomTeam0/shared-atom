@@ -8,14 +8,16 @@ import { Section } from "common-atom/enums/Section";
 import { Category } from "common-atom/enums/Category";
 import { Corp } from "common-atom/enums/Corp";
 import { Grade } from "common-atom/enums/Grade";
+import { IPageRange } from "common-atom/interfaces/subject.interface";
 import { ItemRPCService } from "../rpc/services/item.RPCservice";
 import {
   IdNotFoundError,
   InvalidMongoIdError,
   PoligonIntersectionError,
   InvalidCoordinateError,
+  InvalidPageRange,
 } from "../errors/validationError";
-import { getContext, setContext } from "../helpers/context";
+import { getContext, putSkipPlugins } from "../helpers/context";
 
 // regex
 const mongoIdRegex = /^[0-9a-fA-F]{24}$/;
@@ -26,6 +28,8 @@ const coordinateAxisRegex = /^-?[0-9]{1,3}(?:\.[0-9]{1,15})?$/;
 
 const blobRegex = /^{(?=.*filepath)(?=.*originalFilename).*}$/;
 
+const freeTextRegex = /^[\u0590-\u05FF0-9!?.,\s-'`]{0,250}$/;
+
 // exported types
 export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
   Joi.string().external(async (value: string | undefined, _helpers: any) => {
@@ -35,9 +39,9 @@ export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
         throw new InvalidMongoIdError();
       } else if (getByIdFunc) {
         const skipPlugins = getContext(Global.SKIP_PLUGINS);
-        setContext(Global.SKIP_PLUGINS, true);
+        putSkipPlugins();
         const res = await getByIdFunc(value);
-        setContext(Global.SKIP_PLUGINS, skipPlugins);
+        putSkipPlugins(skipPlugins);
         if (!res) {
           throw new IdNotFoundError();
         }
@@ -54,9 +58,9 @@ export const joiContentId = Joi.string().external(
         throw new InvalidMongoIdError();
       }
       const skipPlugins = getContext(Global.SKIP_PLUGINS);
-      setContext(Global.SKIP_PLUGINS, true);
+      putSkipPlugins();
       const res = await ItemRPCService.getItemByContentId(value);
-      setContext(Global.SKIP_PLUGINS, skipPlugins);
+      putSkipPlugins(skipPlugins);
       if (!res) {
         throw new IdNotFoundError("contentId");
       }
@@ -115,6 +119,30 @@ export const joiCoordinate = Joi.array()
     return value;
   });
 
+export const joiPages = Joi.array()
+  .items(Joi.any())
+  .external(
+    async (value: (IPageRange | number)[] | undefined, _helpers: any) => {
+      if (value !== undefined) {
+        const arrayRange = (start: number, stop: number, step = 1) =>
+          Array.from(
+            { length: (stop - start) / step + 1 },
+            (_value, index) => start + index * step
+          );
+        const arr = value
+          .map((item: IPageRange | number) =>
+            typeof item === "number" ? item : arrayRange(item.from, item.to)
+          )
+          .flat();
+        const isValid = new Set(arr).size === arr.length;
+        if (!isValid) {
+          throw new InvalidPageRange();
+        }
+      }
+      return value;
+    }
+  );
+
 export const joiMongoIdArray = (getByIdFunc?: (id: string) => any) =>
   Joi.array().items(joiMongoId(getByIdFunc));
 
@@ -125,7 +153,11 @@ export const joiBlob = Joi.string().regex(blobRegex);
 
 export const joiPersonalId = Joi.string().regex(personalIdRegex);
 
+export const joiFreeText = Joi.string().regex(freeTextRegex);
+
 export const joiPriority = Joi.number().integer().min(1).max(100);
+
+export const joiPriorityTollat = Joi.number().integer().min(1).max(3);
 
 export const joiContentCreator = (contentValidator: Joi.Schema) =>
   Joi.object({

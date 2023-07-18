@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import { IMedia } from "common-atom/interfaces/media.interface";
 import { config } from "../config";
-import { blobPlugin } from "../utils/schema/plugins/filePlugin";
+import { filePlugin } from "../utils/schema/plugins/filePlugin";
 
 const MediaSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -29,7 +29,7 @@ const MediaSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-MediaSchema.plugin(blobPlugin<IMedia>, config.formidable.propertyConfigs.media);
+MediaSchema.plugin(filePlugin<IMedia>, config.formidable.propertyConfigs.media);
 
 export const MediaModel = mongoose.model<IMedia & mongoose.Document>(
   "media",

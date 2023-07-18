@@ -1,4 +1,5 @@
 import * as mongoose from "mongoose";
+import { Plugins } from "common-atom/enums/Plugins";
 import { PorpertyOptionalDeep, propertyValGetter } from "../../helpers/types";
 import { genericPostMiddleware } from "../helpers/pluginHelpers";
 import { creationFunctionType } from "../helpers/schemaHelpers";
@@ -25,6 +26,7 @@ export function socketPlugin<T>(
       } else {
         emitEvent(options.eventName, thisObject);
       }
-    }
+    },
+    Plugins.SOCKET
   );
 }

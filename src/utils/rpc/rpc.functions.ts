@@ -2,8 +2,14 @@ import * as jayson from "jayson/promise";
 import * as Joi from "joi";
 import { Global } from "common-atom/enums/helpers/Global";
 import { IRPCPayload } from "common-atom/interfaces/helpers/rpcPayload.interface";
+import { Plugins } from "common-atom/enums/Plugins";
 import { RPCFunctionError } from "../errors/validationError";
-import { getContext, runWithContext, setContext } from "../helpers/context";
+import {
+  getContext,
+  putSkipPlugins,
+  runWithContext,
+  setContext,
+} from "../helpers/context";
 import { defaultValidationOptions } from "../joi/joi.functions";
 
 export const RPCClientRequest = async (
@@ -14,7 +20,7 @@ export const RPCClientRequest = async (
         [k: string]: any;
       }
     | undefined,
-  skipPlugins = true
+  skipPlugins?: Plugins[]
 ): Promise<any> => {
   const isError = (obj: any) =>
     obj ? !!obj.name && !!obj.message && !!obj.status : false;
@@ -51,7 +57,7 @@ export const RPCServerRequest =
         }
 
         setContext(Global.USER, payload.user);
-        setContext(Global.SKIP_PLUGINS, payload.skipPlugins);
+        putSkipPlugins(payload.skipPlugins);
 
         result = await managerFunction(
           ...(payload.params ? Object.values(payload.params) : [])

@@ -35,7 +35,7 @@ export const config = {
     },
     newsService: {
       rpcPort: +(process.env.APPLICATION_RPC_PORT || 5000),
-      rpcHostname: process.env.NEWS_COMPOSITOR_RPC_HOST || "localhost",
+      rpcHostname: process.env.NEWS_SERVICE_RPC_HOST || "localhost",
     },
   },
   fileService: {
@@ -68,3 +68,4 @@ export const config = {
     },
   },
 };
+console.log(config);
