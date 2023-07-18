@@ -41,6 +41,7 @@ export const config = {
   fileService: {
     projectId: +(process.env.PROJECT_ID || 1),
     fileNameStarter: process.env.FILE_NAME_STARTER || "mynet",
+    archiveApiKey: process.env.ARCHIVE_API_KEY || "",
     upload: {
       hostname:
         process.env.UPLOAD_FILE_SERVICE_HOSTNAME ||

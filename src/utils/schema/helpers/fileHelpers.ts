@@ -32,6 +32,7 @@ export const uploadFile = async (file: IFileDetails) => {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
+        "Archive-Api-Key": config.fileService.archiveApiKey,
       },
     }
   )
