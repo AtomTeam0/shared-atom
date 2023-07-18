@@ -14,7 +14,7 @@ export const initApp = (
   config: IServerConfig,
   AppRouter: Router,
   RPCServer?: jayson.Server,
-  onClose?: () => void
+  isSocket = false
 ) => {
   nodeProcess.on("uncaughtException", (err: Error) => {
     console.error("Unhandled Exception", err.stack);
@@ -44,13 +44,15 @@ export const initApp = (
 
     console.log(`[MongoDB] connected to port ${config.db.port}`);
     console.log("Starting server");
-    const server: Server = Server.bootstrap(config, AppRouter, RPCServer);
+    const server: Server = Server.bootstrap(
+      config,
+      AppRouter,
+      RPCServer,
+      isSocket
+    );
 
     server.app.on("close", () => {
       mongoose.disconnect();
-      if (onClose) {
-        onClose();
-      }
       console.log("Server closed");
     });
   })();
