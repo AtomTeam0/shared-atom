@@ -47,3 +47,6 @@ export const runWithContextMiddleWare = () =>
 export const isDirector = () =>
   getContext(Global.USER).permission === Permission.DIRECTOR ||
   getContext(Global.USER).permission === Permission.ADMIN;
+
+export const isEditor = () =>
+  getContext(Global.USER).permission === Permission.EDITOR || isDirector();
