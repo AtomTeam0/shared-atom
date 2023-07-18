@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import { IPlaylist } from "common-atom/interfaces/playlist.interface";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
-import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
+import { filePlugin } from "../utils/schema/plugins/filePlugin";
 import { config } from "../config";
 
 const playListSchema: mongoose.Schema = new mongoose.Schema(
@@ -43,7 +43,7 @@ playListSchema.plugin(populatePlugin<IPlaylist>, [
   { property: "subjects", ref: "subjects", isArray: true },
 ]);
 playListSchema.plugin(
-  blobPlugin<IPlaylist>,
+  filePlugin<IPlaylist>,
   config.formidable.propertyConfigs.playlist
 );
 

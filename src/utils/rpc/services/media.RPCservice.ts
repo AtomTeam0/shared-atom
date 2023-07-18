@@ -17,7 +17,7 @@ export class MediaRPCService {
       {
         mediaId,
       },
-      false
+      []
     );
   }
 
@@ -30,7 +30,7 @@ export class MediaRPCService {
       {
         infographicId,
       },
-      false
+      []
     );
   }
 }
