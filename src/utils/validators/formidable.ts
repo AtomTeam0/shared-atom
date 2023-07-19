@@ -35,22 +35,34 @@ export function formidableMiddleware() {
     async (req: Request, _res: Response, next: NextFunction) => {
       const form = formidable({ multiples: true });
 
-      // convertion
-      form.parse(req, (err: any, fields: any, files: any) => {
-        if (err) {
-          next(err);
-        }
-        req.body = mergeDataIntoJSON(
-          Object.assign(
-            {},
-            ...Object.entries(files).map(([key, value]: any) => ({
-              [modifyKey(key)]: modifyValue(value),
-            }))
-          ),
-          fields
-        );
+      // Wrap the form.parse() in a Promise
+      const parseForm = () =>
+        new Promise<void>((resolve, reject) => {
+          form.parse(req, (err: any, fields: any, files: any) => {
+            if (err) {
+              reject(err);
+            } else {
+              req.body = mergeDataIntoJSON(
+                Object.assign(
+                  {},
+                  ...Object.entries(files).map(([key, value]: any) => ({
+                    [modifyKey(key)]: modifyValue(value),
+                  }))
+                ),
+                fields
+              );
+              resolve();
+            }
+          });
+        });
+
+      try {
+        // Await the completion of form parsing
+        await parseForm();
         next();
-      });
+      } catch (error) {
+        next(error);
+      }
     }
   );
 }

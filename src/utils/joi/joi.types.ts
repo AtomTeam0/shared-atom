@@ -149,7 +149,7 @@ export const joiMongoIdArray = (getByIdFunc?: (id: string) => any) =>
 export const joiEnum = (enumObj: { [k: string]: string }) =>
   Joi.string().valid(...Object.values(enumObj));
 
-export const joiBlob = Joi.string().regex(blobRegex);
+export const joiBlob = Joi.string();
 
 export const joiPersonalId = Joi.string().regex(personalIdRegex);
 
