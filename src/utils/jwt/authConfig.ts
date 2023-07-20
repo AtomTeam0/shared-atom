@@ -12,8 +12,8 @@ const authConfig = {
     settings: {
         validateIssuer: false,
         passReqToCallback: true,
-        loggingLevel: "info" as const,
-        loggingNoPII: false,
+        loggingLevel: "error" as const,
+        loggingNoPII: true,
     },
 }
 
