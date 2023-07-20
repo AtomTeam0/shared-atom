@@ -21,18 +21,18 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
       default: Permission.VIEWER,
     },
     area: {
-      type: mongoose.Types.ObjectId,
+      type: String,
       required: true,
       ref: "areas",
     },
     favorites: {
-      type: [mongoose.Types.ObjectId],
+      type: [String],
       required: true,
       ref: "items",
       default: [],
     },
     lastWatched: {
-      type: [mongoose.Types.ObjectId],
+      type: [String],
       required: true,
       ref: "items",
       items: { uniqueItems: true },
@@ -46,7 +46,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
       type: [
         {
           chapterId: {
-            type: mongoose.Types.ObjectId,
+            type: String,
             required: true,
             ref: "chapters",
           },
@@ -64,7 +64,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
       type: [
         {
           mediaId: {
-            type: mongoose.Types.ObjectId,
+            type: String,
             required: true,
             ref: "media",
           },
