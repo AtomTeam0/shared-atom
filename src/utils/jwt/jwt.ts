@@ -53,9 +53,6 @@ passport.use('oauth-bearer', azureADBearerStrategy);
 export const verifyToken = wrapAsyncMiddleware(
     async (req: Request, res: Response, next: NextFunction) => {
         passport.authenticate('oauth-bearer', { session: false }, (err: Error, user: any, tokenPayload: ITokenPayload) => {
-            console.log('im here error = ', err)
-            console.log('im here user = ', user)
-            console.log('im here tokenPayload = ', tokenPayload)
             if (err) {
                 console.log('Error validating access token:', err.message);
                 throw new InvalidToken(`Invalid access token  [${err.message}]`);
