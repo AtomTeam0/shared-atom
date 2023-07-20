@@ -23,8 +23,6 @@ const azureADBearerStrategy = new BearerStrategy(
     },
     (req, token, done) => {
         try {
-            console.log('req', req)
-            console.log('token', token)
             /**
      * Access tokens that have neither the 'scp' (for delegated permissions) nor
      * 'roles' (for application permissions) claim are not to be honored.
