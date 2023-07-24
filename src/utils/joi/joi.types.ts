@@ -168,7 +168,7 @@ export const joiContentCreator = (contentValidator: Joi.Schema) =>
         title: Joi.string().required(),
         description: Joi.string().required(),
         timeToRead: Joi.number().integer().required(),
-        thumbNail: joiBlob.required(),
+        thumbNail: Joi.string().required(),
         unit: joiMongoId(ItemRPCService.getUnitById).required(),
         similarItems: joiMongoIdArray(ItemRPCService.getItemById),
         areas: joiMongoIdArray(ItemRPCService.getAreaById).min(1).required(),
