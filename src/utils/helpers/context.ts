@@ -22,17 +22,13 @@ export const putSkipPlugins = (pluginsToSkip?: Plugins[]) => {
 
 export const shouldSkipPlugins = (
   funcType: Plugins,
-  alternativeValue?: boolean
+  alternativeValue?: Plugins[]
 ): any => {
   const isDeep = !session.active;
   const skip = getContext(Global.SKIP_PLUGINS);
   const val =
-    // eslint-disable-next-line no-nested-ternary
-    alternativeValue !== undefined
-      ? alternativeValue
-      : skip
-      ? skip.includes(funcType)
-      : true;
+  // eslint-disable-next-line no-nested-ternary
+  alternativeValue !== undefined ? alternativeValue.includes(funcType) : skip ? skip.includes(funcType) : true;
   return config.server.withDeepPlugin ? val : isDeep || val;
 };
 
