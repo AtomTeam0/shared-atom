@@ -31,6 +31,7 @@ PakalSchema.plugin(populatePlugin<IPakal>, [
   { property: "chapters", ref: "chapters", isArray: true },
   { property: "test", ref: "tests" },
 ]);
+
 PakalSchema.plugin(
   filePlugin<IPakal>,
   config.formidable.propertyConfigs.lesson
