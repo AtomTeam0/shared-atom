@@ -99,10 +99,16 @@ export const uploadFile = async (file: IFileDetails) => {
       throw new FileUploadError(axiosError.message, axiosError.response.status);
     } else if (axiosError && axiosError.request) {
       // The request was made but no response was received
-      throw new FileUploadError('No response received from upload service (Archive)', 502); // 502 Bad Gateway might be appropriate here
+      throw new FileUploadError(
+        "No response received from upload service (Archive)",
+        502
+      ); // 502 Bad Gateway might be appropriate here
     } else {
       // Something happened in setting up the request that triggered an Error
-      throw new FileUploadError(axiosError ? axiosError.message : 'Unknown upload error', 500);
+      throw new FileUploadError(
+        axiosError ? axiosError.message : "Unknown upload error",
+        500
+      );
     }
   }
 };

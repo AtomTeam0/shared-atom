@@ -39,7 +39,9 @@ export const validateUserAndPermission = (
         userFromDb.permission
       )
     ) {
-      return new PermissionError(`Required permissions: ${permissionsToValidate} users permissions: ${userFromDb.permission}`);
+      return new PermissionError(
+        `Required permissions: ${permissionsToValidate} users permissions: ${userFromDb.permission}`
+      );
     }
 
     return undefined;
