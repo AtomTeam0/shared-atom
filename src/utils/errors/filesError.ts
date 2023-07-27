@@ -8,6 +8,11 @@ export class FileConvertionError extends UserError {
 
 export class FileUploadError extends UserError {
   constructor(message?: string, status?: number) {
-    super(`File upload failed with message ${message}`, 403);
+    super(`File upload failed with message ${message}`, status);
+  }
+}
+export class FileDownloadError extends UserError {
+  constructor(message?: string, status?: number) {
+    super(`File download failed with message ${message}`, status);
   }
 }

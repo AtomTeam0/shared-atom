@@ -1,3 +1,4 @@
+import { FileDownloadError } from "../../errors/filesError";
 import {
   PorpertyOptionalDeep,
   propertyValGetter,
@@ -8,7 +9,7 @@ import { getFileUrl, uploadFile } from "./fileHelpers";
 async function modifyProperties<T>(
   doc: any,
   options: PorpertyOptionalDeep<T>[],
-  blobAction: (...args: any) => Promise<string>
+  blobAction: (...args: any) => Promise<string> | undefined
 ) {
   return Promise.all(
     options.map(async (property) => {
@@ -29,8 +30,19 @@ export async function downloadProperties<T>(
   doc: any,
   options: PorpertyOptionalDeep<T>[]
 ) {
-  return modifyProperties<T>(doc, options, (blobName: string) =>
-    getFileUrl(blobName)
+  return modifyProperties<T>(doc, options, (blobName: string) => {
+    // Fetch the data from Hatch and if data not sanitized return Undefined;
+    try {
+      const file = getFileUrl(blobName)
+      return file;
+    // If error was thrown, if error was expected(403) return 403, else throw it again to be handled by errorHandler
+    } catch (error) {
+      const fileError = error as FileDownloadError;
+      if (fileError.status === 403)
+        return undefined;
+      throw fileError;
+    }
+  }
   );
 }
 

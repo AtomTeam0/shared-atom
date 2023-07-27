@@ -32,19 +32,11 @@ export const config = {
     projectId: +(process.env.PROJECT_ID || 1),
     fileNameStarter: process.env.FILE_NAME_STARTER || "mynet",
     archiveApiKey: process.env.ARCHIVE_API_KEY || "",
-    upload: {
-      hostname:
-        process.env.UPLOAD_FILE_SERVICE_HOSTNAME ||
+    hostname:
+        process.env.FILE_SERVICE_HOSTNAME ||
         "https://api.digital.idf.il/external/hatch",
-      route: process.env.UPLOAD_FILE_SERVICE_ROUTE || "func-upload",
-    },
-    download: {
-      hostname:
-        process.env.DOWNLOAD_FILE_SERVICE_HOSTNAME ||
-        "https://mynet.dev.digital.idf.il",
-      innerDirectory:
-        process.env.DOWNLOAD_FILE_SERVICE_INNER_DIRECTORY || "assets",
-    },
+    uploadRoute: process.env.UPLOAD_FILE_SERVICE_ROUTE || "func-upload",
+    downloadRoute: process.env.DOWNLOAD_FILE_SERVICE_ROUTE || "func-getFile"
   },
   formidable: {
     propertyConfigs: {
