@@ -5,6 +5,8 @@ import { Server } from "./server";
 import { aggregatePlugin } from "./utils/schema/plugins/aggregatePlugin";
 
 import "./models/area.model";
+import "./models/item.model";
+import "./models/user.model";
 
 mongoose.plugin(aggregatePlugin);
 
