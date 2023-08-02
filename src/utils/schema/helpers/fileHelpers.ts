@@ -41,10 +41,10 @@ export const getFileUrl = async (fileId: string) => {
   } catch (error: unknown) {
     const axiosError = error as AxiosError;
     if (axiosError && axiosError.response) {
+      console.log('in getFileUrl error thrown ==>', axiosError.response.status, axiosError.message);
       // The item was not yet sanitized in hatch.
-      if (axiosError.status === 403)
-      {
-        throw new FileDownloadError("File is not sanitized yet", 403);
+      if (axiosError.response.status === 403) {
+        throw new FileDownloadError("File is not sanitized yet!", 403);
       }
       // The request was made and the server responded with a status code that falls out of the range of 2xx
       throw new FileDownloadError(axiosError.message, axiosError.response.status);

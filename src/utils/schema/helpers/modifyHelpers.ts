@@ -37,6 +37,7 @@ export async function downloadProperties<T>(
       return file;
     // If error was thrown, if error was expected(403) return 403, else throw it again to be handled by errorHandler
     } catch (error) {
+      console.log("error was thrown in download", error, "blob", blobName);
       const fileError = error as FileDownloadError;
       if (fileError.status === 403)
         return undefined;
