@@ -4,6 +4,7 @@ import { config } from "../config";
 import { filePlugin } from "../utils/schema/plugins/filePlugin";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
+import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
 
 const ItemSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -102,7 +103,7 @@ ItemSchema.plugin(indexPlugin<IItem>, {
   properties: ["title"],
 });
 ItemSchema.plugin(filePlugin<IItem>, config.formidable.propertyConfigs.item);
-
+ItemSchema.plugin(aggregatePlugin);
 export const ItemModel = mongoose.model<IItem & mongoose.Document>(
   "items",
   ItemSchema

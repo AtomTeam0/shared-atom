@@ -3,6 +3,7 @@ import { AreaNames } from "common-atom/enums/AreaNames";
 import { IArea } from "common-atom/interfaces/area.interface";
 import { config } from "../config";
 import { filePlugin } from "../utils/schema/plugins/filePlugin";
+import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
 
 const AreaSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -29,7 +30,7 @@ const AreaSchema: mongoose.Schema = new mongoose.Schema(
 
 // plugins
 AreaSchema.plugin(filePlugin<IArea>, config.formidable.propertyConfigs.area);
-
+AreaSchema.plugin(aggregatePlugin);
 export const AreaModel = mongoose.model<IArea & mongoose.Document>(
   "areas",
   AreaSchema

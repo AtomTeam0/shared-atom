@@ -4,6 +4,7 @@ import { WatchMode } from "common-atom/enums/WatchMode";
 import { IUser } from "common-atom/interfaces/user.interface";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
+import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
 
 const UserSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -99,7 +100,7 @@ UserSchema.plugin(populatePlugin<IUser>, [
 UserSchema.plugin(indexPlugin<IUser>, {
   properties: ["_id", "name"],
 });
-
+UserSchema.plugin(aggregatePlugin)
 export const UserModel = mongoose.model<IUser & mongoose.Document>(
   "users",
   UserSchema

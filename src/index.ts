@@ -7,8 +7,8 @@ import { aggregatePlugin } from "./utils/schema/plugins/aggregatePlugin";
 import "./models/area.model";
 import "./models/item.model";
 import "./models/user.model";
-
-mongoose.plugin(aggregatePlugin);
+// console.log('loaded models')
+// mongoose.plugin(aggregatePlugin); // this is now done in the models.
 
 // eslint-disable-next-line import/first, import/order
 import { Router } from "express";
