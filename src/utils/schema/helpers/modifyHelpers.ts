@@ -33,9 +33,10 @@ export async function downloadProperties<T>(
   return modifyProperties<T>(doc, options, (blobName: string) => {
     // Fetch the data from Hatch and if data not sanitized return Undefined;
     try {
+      console.log('In modifyProperties getFileUrl with blobName', blobName)
       const file = getFileUrl(blobName)
       return file;
-    // If error was thrown, if error was expected(403) return 403, else throw it again to be handled by errorHandler
+      // If error was thrown, if error was expected(403) return 403, else throw it again to be handled by errorHandler
     } catch (error) {
       console.log("error was thrown in download", error, "blob", blobName);
       const fileError = error as FileDownloadError;
