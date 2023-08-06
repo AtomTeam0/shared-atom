@@ -100,7 +100,7 @@ UserSchema.plugin(populatePlugin<IUser>, [
 UserSchema.plugin(indexPlugin<IUser>, {
   properties: ["_id", "name"],
 });
-UserSchema.plugin(aggregatePlugin)
+UserSchema.plugin(aggregatePlugin);
 export const UserModel = mongoose.model<IUser & mongoose.Document>(
   "users",
   UserSchema
