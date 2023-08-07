@@ -34,6 +34,14 @@ export const paginationPipline = (
   },
 ];
 
+export const emptyPagination = {
+  data: [],
+  metadata: {
+    totalDocs: 0,
+    page: 1,
+  },
+};
+
 export const isWithSearch = (pipeline: any) => {
   const firstPipe = pipeline[0];
   return (
