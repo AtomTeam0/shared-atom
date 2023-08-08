@@ -1,38 +1,30 @@
-export const paginationPipline = (
-  skip: number,
-  limit: number,
-  page: number
-) => [
-  {
-    $group: {
-      _id: null,
-      totalDocs: { $sum: 1 },
-      data: { $push: "$$ROOT" },
-    },
-  },
-  {
-    $addFields: {
-      page: { $sum: [page, 1] },
-    },
-  },
-  {
-    $project: {
-      _id: 0,
-      totalDocs: 1,
-      page: 1,
-      data: { $slice: ["$data", skip, limit] },
-    },
-  },
-  {
-    $project: {
-      metadata: {
-        totalDocs: "$totalDocs",
-        page: "$page",
+export const paginationPipline = (skip: number, limit: number) => {
+  const page = Math.floor(skip / limit);
+  return [
+    {
+      $group: {
+        _id: null,
+        totalDocs: { $sum: 1 },
+        data: { $push: "$$ROOT" },
       },
-      data: 1,
     },
-  },
-];
+    {
+      $addFields: {
+        page: { $sum: [page, 1] },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        metadata: {
+          totalDocs: "$totalDocs",
+          page: "$page",
+        },
+        data: { $slice: ["$data", skip, limit] },
+      },
+    },
+  ];
+};
 
 export const emptyPagination = {
   data: [],
