@@ -3,10 +3,8 @@ import * as jayson from "jayson/promise";
 import { IServerConfig } from "common-atom/interfaces/helpers/serverConfig.interface";
 import { Server } from "./server";
 import { aggregatePlugin } from "./utils/schema/plugins/aggregatePlugin";
+import * as models from './models';
 
-import "./models/area.model";
-import "./models/item.model";
-import "./models/user.model";
 // console.log('loaded models')
 // mongoose.plugin(aggregatePlugin); // this is now done in the models.
 
