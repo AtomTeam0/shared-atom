@@ -27,10 +27,6 @@ const bookSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
       default: true,
     },
-    page: {
-      type: Number,
-      required: true,
-    },
     pdf: {
       type: String,
       required: true,
