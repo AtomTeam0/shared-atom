@@ -3,10 +3,29 @@ import * as jayson from "jayson/promise";
 import { IServerConfig } from "common-atom/interfaces/helpers/serverConfig.interface";
 import { Server } from "./server";
 import { aggregatePlugin } from "./utils/schema/plugins/aggregatePlugin";
-import * as models from './models';
 
-// console.log('loaded models')
-// mongoose.plugin(aggregatePlugin); // this is now done in the models.
+import './area.model';
+import './article.model';
+import './book.model';
+import './chapter.model';
+import './comment.model';
+import './infographic.model';
+import './item.model';
+import './lesson.model';
+import './media.model';
+import './mission.model';
+import './modelLoader';
+import './myWiki.model';
+import './news.model';
+import './pakal.model';
+import './playlist.model';
+import './subject.model';
+import './test.model';
+import './testByUser.model';
+import './unit.model';
+import './user.model';
+console.log('loaded models')
+mongoose.plugin(aggregatePlugin); // this is now done in the models.
 
 // eslint-disable-next-line import/first, import/order
 import { Router } from "express";
