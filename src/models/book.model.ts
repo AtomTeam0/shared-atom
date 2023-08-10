@@ -14,8 +14,8 @@ const bookSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
       default: 1,
       validate: {
-        validator: (val: number) => val <= 3 && val >= 1,
-        message: `priority out of range (1-3)`,
+        validator: (val: number) => val <= 100 && val >= 1,
+        message: `priority out of range (1-100)`,
       },
     },
     length: {
