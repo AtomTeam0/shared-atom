@@ -4,26 +4,26 @@ import { IServerConfig } from "common-atom/interfaces/helpers/serverConfig.inter
 import { Server } from "./server";
 import { aggregatePlugin } from "./utils/schema/plugins/aggregatePlugin";
 
-import './area.model';
-import './article.model';
-import './book.model';
-import './chapter.model';
-import './comment.model';
-import './infographic.model';
-import './item.model';
-import './lesson.model';
-import './media.model';
-import './mission.model';
-import './modelLoader';
-import './myWiki.model';
-import './news.model';
-import './pakal.model';
-import './playlist.model';
-import './subject.model';
-import './test.model';
-import './testByUser.model';
-import './unit.model';
-import './user.model';
+import './models/area.model';
+import './models/article.model';
+import './models/book.model';
+import './models/chapter.model';
+import './models/comment.model';
+import './models/infographic.model';
+import './models/item.model';
+import './models/lesson.model';
+import './models/media.model';
+import './models/mission.model';
+import './models/modelLoader';
+import './models/myWiki.model';
+import './models/news.model';
+import './models/pakal.model';
+import './models/playlist.model';
+import './models/subject.model';
+import './models/test.model';
+import './models/testByUser.model';
+import './models/unit.model';
+import './models/user.model';
 console.log('loaded models')
 mongoose.plugin(aggregatePlugin); // this is now done in the models.
 
