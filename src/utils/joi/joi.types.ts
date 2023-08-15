@@ -31,10 +31,13 @@ const blobRegex = /^{(?=.*filepath)(?=.*originalFilename).*}$/;
 const freeTextRegex = /^[\u0590-\u05FF0-9!?.,\s-'`]{0,250}$/;
 
 // exported types
-export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
+export const joiMongoId = (
+  getByIdFunc?: (id: string) => any,
+  isUserId = false
+) =>
   Joi.string().external(async (value: string | undefined, _helpers: any) => {
     if (value !== undefined) {
-      const isValid = mongoIdRegex.test(value);
+      const isValid = (isUserId ? personalIdRegex : mongoIdRegex).test(value);
       if (!isValid) {
         throw new InvalidMongoIdError();
       } else if (getByIdFunc) {
