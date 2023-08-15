@@ -95,7 +95,7 @@ UserSchema.plugin(populatePlugin<IUser>, [
   { property: "area", ref: "areas" },
   { property: "favorites", ref: "items", isArray: true },
   { property: "lastWatched", ref: "items", isArray: true },
-  { property: "employees", ref: "users", isArray: true },
+  { property: "employees", ref: "users", isArray: true, isTazId: true },
 ]);
 UserSchema.plugin(indexPlugin<IUser>, {
   properties: ["_id", "name"],

@@ -19,6 +19,8 @@ export function populatePlugin<T>(
     isTazId?: boolean;
   }[]
 ) {
+  const convertId = (innerId: string, isTazId?: boolean) =>
+    isTazId ? innerId : mongoose.Types.ObjectId(innerId);
   genericPreMiddleware(
     schema,
     [...creationFunctionType, ...updateFunctionType],
@@ -30,11 +32,9 @@ export function populatePlugin<T>(
             thisObject[p.property] && {
               [p.property]: p.isArray
                 ? thisObject[p.property].map((innerId: string) =>
-                    p.isTazId ? innerId : mongoose.Types.ObjectId(innerId)
+                    convertId(innerId, p.isTazId)
                   )
-                : p.isTazId
-                ? thisObject[p.property]
-                : mongoose.Types.ObjectId(thisObject[p.property]),
+                : convertId(thisObject[p.property], p.isTazId),
             }
         )
       );

@@ -22,7 +22,7 @@ const CommentSchema: mongoose.Schema = new mongoose.Schema(
 
 // plugins
 CommentSchema.plugin(populatePlugin<IComment>, [
-  { property: "user", ref: "user" },
+  { property: "user", ref: "user", isTazId: true },
 ]);
 
 export const CommentModel = mongoose.model<IComment & mongoose.Document>(
