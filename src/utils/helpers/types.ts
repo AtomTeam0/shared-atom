@@ -40,5 +40,5 @@ export function propertyValSetter<T>(
       },
     };
   }
-  return { ...doc, [property]: newVal };
+  return { [property]: newVal };
 }
