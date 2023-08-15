@@ -45,8 +45,8 @@ const MissionSchema: mongoose.Schema = new mongoose.Schema(
 
 // plugins
 MissionSchema.plugin(populatePlugin<IMission>, [
-  { property: "director", ref: "users" },
-  { property: "editor", ref: "users" },
+  { property: "director", ref: "users", isTazId: true },
+  { property: "editor", ref: "users", isTazId: true },
   { property: "item", ref: "items" },
 ]);
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import * as mongoose from "mongoose";
 import { Plugins } from "common-atom/enums/Plugins";
 import { isWithSearch } from "../../helpers/aggregation";
@@ -11,7 +12,12 @@ import {
 
 export function populatePlugin<T>(
   schema: mongoose.Schema,
-  options: { property: keyof T; ref: string; isArray?: boolean }[]
+  options: {
+    property: keyof T;
+    ref: string;
+    isArray?: boolean;
+    isTazId?: boolean;
+  }[]
 ) {
   genericPreMiddleware(
     schema,
@@ -24,8 +30,10 @@ export function populatePlugin<T>(
             thisObject[p.property] && {
               [p.property]: p.isArray
                 ? thisObject[p.property].map((innerId: string) =>
-                    mongoose.Types.ObjectId(innerId)
+                    p.isTazId ? innerId : mongoose.Types.ObjectId(innerId)
                   )
+                : p.isTazId
+                ? thisObject[p.property]
                 : mongoose.Types.ObjectId(thisObject[p.property]),
             }
         )
