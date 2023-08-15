@@ -8,6 +8,8 @@ type DeepKeyString<T> = {
 
 export type PorpertyOptionalDeep<T> = Extract<DeepKeyString<T>, string>;
 
+// get a value from an object in a deep format
+// example: propertyValGetter<Book>({book:{author:''}}, 'book.author')
 export function propertyValGetter<T>(
   doc: any,
   property: PorpertyOptionalDeep<T>
@@ -20,6 +22,8 @@ export function propertyValGetter<T>(
   return doc[property];
 }
 
+// sets a new value in an object in a deep format
+// example: propertyValGetter<Book>({book:{author:''}}, 'book.author', 'Edan Ofer')
 export function propertyValSetter<T>(
   doc: any,
   property: PorpertyOptionalDeep<T>,

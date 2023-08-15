@@ -6,6 +6,7 @@ import {
 } from "../../helpers/types";
 import { getFileUrl, uploadFile } from "./fileHelpers";
 
+// a function used to uplaod & replace a file property within an object
 async function modifyProperties<T>(
   doc: any,
   options: PorpertyOptionalDeep<T>[],
@@ -26,6 +27,7 @@ async function modifyProperties<T>(
   );
 }
 
+// a function used to download a file property within an object
 export async function downloadProperties<T>(
   doc: any,
   options: PorpertyOptionalDeep<T>[]
@@ -33,21 +35,19 @@ export async function downloadProperties<T>(
   return modifyProperties<T>(doc, options, (blobName: string) => {
     // Fetch the data from Hatch and if data not sanitized return Undefined;
     try {
-      console.log('In modifyProperties getFileUrl with blobName', blobName)
-      const file = getFileUrl(blobName)
+      console.log("In modifyProperties getFileUrl with blobName", blobName);
+      const file = getFileUrl(blobName);
       return file;
       // If error was thrown, if error was expected(403) return 403, else throw it again to be handled by errorHandler
     } catch (error) {
       console.log("error was thrown in download", error, "blob", blobName);
       const fileError = error as FileDownloadError;
-      if (fileError.status === 403)
-        return undefined;
+      if (fileError.status === 403) return undefined;
       throw fileError;
     }
-  }
-  );
+  });
 }
-
+// a function used to upload a file property within an object
 export async function createProperties<T>(
   doc: any,
   options: PorpertyOptionalDeep<T>[]

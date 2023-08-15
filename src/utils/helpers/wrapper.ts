@@ -1,5 +1,6 @@
 import { Response, Request, NextFunction } from "express";
 
+// standart wrappers (taken from the internet) that help with error handeling & more
 export const wrapValidator =
   (func: (req: Request) => Promise<void>) =>
   (req: Request, _res: Response, next: NextFunction): void => {

@@ -1,21 +1,27 @@
 import { IFileDetails } from "common-atom/interfaces/helpers/file.interface";
 import { promises as fsPromises } from "fs";
+import axios, { AxiosError } from "axios";
 import { config } from "../../../config";
-import { FileConvertionError, FileDownloadError, FileUploadError } from "../../errors/filesError";
-import axios, { AxiosError } from 'axios';
-
+import {
+  FileConvertionError,
+  FileDownloadError,
+  FileUploadError,
+} from "../../errors/filesError";
 
 // get files from hatch service
 export const getFileUrl = async (fileId: string) => {
-  console.log('get File called', `${config.fileService.hostname}/${config.fileService.downloadRoute}`,
+  console.log(
+    "get File called",
+    `${config.fileService.hostname}/${config.fileService.downloadRoute}`,
     {
-      fileId
-    })
+      fileId,
+    }
+  );
   try {
     const response = await axios.post(
       `${config.fileService.hostname}/${config.fileService.downloadRoute}`,
       {
-        fileId
+        fileId,
       },
       {
         headers: {
@@ -23,7 +29,7 @@ export const getFileUrl = async (fileId: string) => {
         },
       }
     );
-    // response data from the Archive looks like this :  
+    // response data from the Archive looks like this :
     /*
     {
         "FileBase64":<BASE64 DATA>,
@@ -41,24 +47,37 @@ export const getFileUrl = async (fileId: string) => {
   } catch (error: unknown) {
     const axiosError = error as AxiosError;
     if (axiosError && axiosError.response) {
-      console.log('in getFileUrl error thrown ==>', axiosError.response.status, axiosError.message);
+      console.log(
+        "in getFileUrl error thrown ==>",
+        axiosError.response.status,
+        axiosError.message
+      );
       // The item was not yet sanitized in hatch.
       if (axiosError.response.status === 403) {
-        console.log('file is not sanitized yet, returning undefined');
+        console.log("file is not sanitized yet, returning undefined");
         return undefined;
         // throw new FileDownloadError("File is not sanitized yet!", 403);
       }
       // The request was made and the server responded with a status code that falls out of the range of 2xx
-      throw new FileDownloadError(axiosError.message, axiosError.response.status);
+      throw new FileDownloadError(
+        axiosError.message,
+        axiosError.response.status
+      );
     } else if (axiosError && axiosError.request) {
       // The request was made but no response was received
-      throw new FileDownloadError('No response received from download service (Archive)', 502); // 502 Bad Gateway might be appropriate here
+      throw new FileDownloadError(
+        "No response received from download service (Archive)",
+        502
+      ); // 502 Bad Gateway might be appropriate here
     } else {
       // Something happened in setting up the request that triggered an Error
-      throw new FileDownloadError(axiosError ? axiosError.message : 'Unknown download error', 500);
+      throw new FileDownloadError(
+        axiosError ? axiosError.message : "Unknown download error",
+        500
+      );
     }
   }
-}
+};
 
 // upload files to hatch service
 export const uploadFile = async (file: IFileDetails) => {

@@ -3,6 +3,7 @@ import { Global } from "common-atom/enums/helpers/Global";
 import { Plugins } from "common-atom/enums/Plugins";
 import { getContext, shouldSkipPlugins } from "../../helpers/context";
 
+// a generic middleware for inside a plugin witch triggers before the DB operation (Pre)
 export const genericPreMiddleware = (
   schema: mongoose.Schema,
   methods: string[],
@@ -22,6 +23,7 @@ export const genericPreMiddleware = (
   );
 };
 
+// a generic middleware for inside a plugin witch triggers after the DB operation (Post)
 export const genericPostMiddleware = (
   schema: mongoose.Schema,
   methods: string[],

@@ -1,3 +1,4 @@
+// pipeline stages to paginate the data
 export const paginationPipline = (skip: number, limit: number) => {
   const page = Math.floor(skip / limit);
   return [
@@ -34,6 +35,7 @@ export const emptyPagination = {
   },
 };
 
+// check if pipeline contains search operators
 export const isWithSearch = (pipeline: any) => {
   const firstPipe = pipeline[0];
   return (

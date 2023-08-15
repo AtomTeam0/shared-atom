@@ -12,6 +12,7 @@ import {
 } from "../helpers/context";
 import { defaultValidationOptions } from "../joi/joi.functions";
 
+// a generic RPC function for the sending side
 export const RPCClientRequest = async (
   rpcClient: jayson.HttpClient,
   route: string,
@@ -40,6 +41,7 @@ export const RPCClientRequest = async (
   return response.result;
 };
 
+// a generic RPC function for the recieving side
 export const RPCServerRequest =
   (
     managerFunction: (...args: any) => Promise<any>,

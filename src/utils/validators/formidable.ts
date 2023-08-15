@@ -4,6 +4,7 @@ import { IFileDetails } from "common-atom/interfaces/helpers/file.interface";
 import { wrapAsyncMiddleware } from "../helpers/wrapper";
 
 export function formidableMiddleware() {
+  // convert file into JSON object
   const mergeDataIntoJSON = (data: Record<string, any>, targetJSON: object) => {
     Object.entries(data).forEach(([key, value]) => {
       const keys = key.split(".");
@@ -22,6 +23,7 @@ export function formidableMiddleware() {
 
   const modifyKey = (key: string) => key.replace("]", "").replace("[", ".");
 
+  // convert each file to minimized object
   const modifyValue = (val: Record<string, any>): string => {
     const { filepath, originalFilename } = val;
     const json: IFileDetails = {
