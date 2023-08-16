@@ -7,6 +7,7 @@ import { Degree } from "common-atom/enums/Degree";
 import { Publish } from "common-atom/enums/Publish";
 import { Job } from "common-atom/enums/Job";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
+import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
 
 const subjectSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -85,7 +86,7 @@ const subjectSchema: mongoose.Schema = new mongoose.Schema(
 subjectSchema.plugin(populatePlugin<ISubject>, [
   { property: "book", ref: "books" },
 ]);
-
+subjectSchema.plugin(aggregatePlugin);
 export const SubjectModel = mongoose.model<ISubject & mongoose.Document>(
   "subjects",
   subjectSchema
