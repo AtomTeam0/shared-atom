@@ -3,6 +3,7 @@ import { IPlaylist } from "common-atom/interfaces/playlist.interface";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { filePlugin } from "../utils/schema/plugins/filePlugin";
 import { config } from "../config";
+import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
 
 const playListSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -46,6 +47,7 @@ playListSchema.plugin(
   filePlugin<IPlaylist>,
   config.formidable.propertyConfigs.playlist
 );
+playListSchema.plugin(aggregatePlugin);
 
 export const PlaylistModel = mongoose.model<IPlaylist & mongoose.Document>(
   "playlists",

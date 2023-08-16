@@ -1,6 +1,7 @@
 import * as mongoose from "mongoose";
 import { IMyWiki } from "common-atom/interfaces/myWiki.interface";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
+import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
 
 const MyWikiSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -23,7 +24,7 @@ const MyWikiSchema: mongoose.Schema = new mongoose.Schema(
 MyWikiSchema.plugin(indexPlugin<IMyWiki>, {
   properties: ["word", "defenition"],
 });
-
+MyWikiSchema.plugin(aggregatePlugin);
 export const MyWikiModel = mongoose.model<IMyWiki & mongoose.Document>(
   "myWiki",
   MyWikiSchema
