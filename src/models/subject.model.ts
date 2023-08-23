@@ -1,15 +1,9 @@
 import * as mongoose from "mongoose";
 import { ISubject } from "common-atom/interfaces/subject.interface";
-import { Functions } from "common-atom/enums/Functions";
-import { CombatShapes } from "common-atom/enums/CombatShapes";
-import { Compound } from "common-atom/enums/Compound";
-import { Degree } from "common-atom/enums/Degree";
-import { Publish } from "common-atom/enums/Publish";
-import { Job } from "common-atom/enums/Job";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
 
-const subjectSchema: mongoose.Schema = new mongoose.Schema(
+const SubjectSchema: mongoose.Schema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -83,11 +77,11 @@ const subjectSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-subjectSchema.plugin(populatePlugin<ISubject>, [
+SubjectSchema.plugin(populatePlugin<ISubject>, [
   { property: "book", ref: "books" },
 ]);
-subjectSchema.plugin(aggregatePlugin);
+SubjectSchema.plugin(aggregatePlugin);
 export const SubjectModel = mongoose.model<ISubject & mongoose.Document>(
   "subjects",
-  subjectSchema
+  SubjectSchema
 );

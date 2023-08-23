@@ -5,7 +5,7 @@ import { filePlugin } from "../utils/schema/plugins/filePlugin";
 import { config } from "../config";
 import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
 
-const playListSchema: mongoose.Schema = new mongoose.Schema(
+const PlayListSchema: mongoose.Schema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -40,16 +40,16 @@ const playListSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-playListSchema.plugin(populatePlugin<IPlaylist>, [
+PlayListSchema.plugin(populatePlugin<IPlaylist>, [
   { property: "subjects", ref: "subjects", isArray: true },
 ]);
-playListSchema.plugin(
+PlayListSchema.plugin(
   filePlugin<IPlaylist>,
   config.formidable.propertyConfigs.playlist
 );
-playListSchema.plugin(aggregatePlugin);
+PlayListSchema.plugin(aggregatePlugin);
 
 export const PlaylistModel = mongoose.model<IPlaylist & mongoose.Document>(
   "playlists",
-  playListSchema
+  PlayListSchema
 );
