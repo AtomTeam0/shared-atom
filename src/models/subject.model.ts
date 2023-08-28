@@ -34,6 +34,7 @@ const SubjectSchema: mongoose.Schema = new mongoose.Schema(
           },
         },
       ],
+      _id: false,
       required: true,
     },
     isActive: {
