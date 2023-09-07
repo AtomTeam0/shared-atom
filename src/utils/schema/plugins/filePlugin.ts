@@ -49,7 +49,7 @@ export function filePlugin<T>(
     schema,
     aggregationType,
     async (_thisObject: any, res: any) => {
-      const dataArray = (Array.isArray(res) && res[0]?.data) ? res[0].data : res;
+      const dataArray = Array.isArray(res) && res[0]?.data ? res[0].data : res;
       await Promise.all(
         dataArray.map(async (item: any) => {
           Object.assign(item, ...(await downloadProperties<T>(item, options)));

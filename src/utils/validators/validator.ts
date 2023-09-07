@@ -27,9 +27,7 @@ export const validateUserAndPermission = (
     try {
       // extract personal ID from preferred_username
       const personalId = user.preferred_username.split("@")[0];
-      userFromDb = await UsersRPCService.updateUser(personalId, {
-        name: user.name,
-      });
+      userFromDb = await UsersRPCService.getUserById(personalId);
       // set current user in the context
       setContext(Global.USER, userFromDb);
     } catch (err) {
