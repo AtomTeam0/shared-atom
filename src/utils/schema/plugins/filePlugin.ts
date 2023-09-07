@@ -75,16 +75,22 @@ export function filePlugin<T>(
     schema,
     getManyFunctionTypes,
     async (_thisObject: any, res: any) => {
-      await Promise.all(
-        res
-          .map(async (item: any) => {
-            Object.assign(
-              item._doc,
-              ...(await downloadProperties<T>(item._doc, options, true))
-            );
-          })
-          .filter((item: any) => options.every((option) => !!item[option])) // filter out the documents with a problematic file
+      const processedItems = await Promise.all(
+        res.map(async (item: any) => {
+          const newProperties = await downloadProperties<T>(
+            item._doc,
+            options,
+            true
+          );
+          Object.assign(item._doc, ...newProperties);
+          return item;
+        })
       );
+
+      const filteredItems = processedItems.filter((item) =>
+        options.every((option) => !!item._doc[option])
+      );
+      res.splice(0, res.length, ...filteredItems);
     },
     Plugins.BLOB
   );

@@ -34,11 +34,11 @@ export async function downloadProperties<T>(
   options: PorpertyOptionalDeep<T>[],
   isMultipleFunction = false
 ) {
-  return modifyProperties<T>(doc, options, (blobName: string) => {
+  return modifyProperties<T>(doc, options, async (blobName: string) => {
     // Fetch the data from Hatch and if data not sanitized return Undefined;
     try {
       console.log("In modifyProperties getFileUrl with blobName", blobName);
-      const file = getFileUrl(blobName);
+      const file = await getFileUrl(blobName);
       return file;
     } catch (error) {
       // if its a single doc return value function - throw the error
