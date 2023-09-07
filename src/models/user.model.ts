@@ -12,6 +12,11 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    isFirstLogin: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
     name: {
       type: String,
       required: true,
