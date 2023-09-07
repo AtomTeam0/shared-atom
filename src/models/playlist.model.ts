@@ -24,6 +24,10 @@ const PlayListSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
       default: true,
     },
+    thumbNail: {
+      type: String,
+      required: true,
+    },
     subjects: {
       type: [mongoose.Types.ObjectId],
       ref: "books",
