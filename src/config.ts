@@ -48,7 +48,7 @@ export const config = {
       lesson: ["pdf"],
       pakal: ["pdf"],
       media: ["video", "audio"],
-      playlist: ["thumbNail", "pdf"],
+      playlist: ["thumbNail"],
       book: ["thumbNail", "pdf"],
     },
   },
