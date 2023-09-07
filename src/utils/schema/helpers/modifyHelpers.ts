@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import { FileDownloadError } from "../../errors/filesError";
 import {
   PorpertyOptionalDeep,
@@ -30,7 +31,8 @@ async function modifyProperties<T>(
 // a function used to download a file property within an object
 export async function downloadProperties<T>(
   doc: any,
-  options: PorpertyOptionalDeep<T>[]
+  options: PorpertyOptionalDeep<T>[],
+  isMultipleFunction = false
 ) {
   return modifyProperties<T>(doc, options, (blobName: string) => {
     // Fetch the data from Hatch and if data not sanitized return Undefined;
@@ -38,12 +40,20 @@ export async function downloadProperties<T>(
       console.log("In modifyProperties getFileUrl with blobName", blobName);
       const file = getFileUrl(blobName);
       return file;
-      // If error was thrown, if error was expected(403) return 403, else throw it again to be handled by errorHandler
     } catch (error) {
-      console.log("error was thrown in download", error, "blob", blobName);
-      const fileError = error as FileDownloadError;
-      if (fileError.status === 403) return undefined;
-      throw fileError;
+      // if its a single doc return value function - throw the error
+      if (!isMultipleFunction) {
+        if (!(error instanceof FileDownloadError)) {
+          throw new FileDownloadError(
+            "Unknown error",
+            (error as AxiosError).status
+          );
+        }
+        // else its already our error
+        throw error;
+      }
+      // else return undefined instead of the file and ater on filter this document out inside genericPostMiddleware
+      return undefined;
     }
   });
 }

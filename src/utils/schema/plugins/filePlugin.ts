@@ -70,17 +70,20 @@ export function filePlugin<T>(
     },
     Plugins.BLOB
   );
+
   genericPostMiddleware(
     schema,
     getManyFunctionTypes,
     async (_thisObject: any, res: any) => {
       await Promise.all(
-        res.map(async (item: any) => {
-          Object.assign(
-            item._doc,
-            ...(await downloadProperties<T>(item._doc, options))
-          );
-        })
+        res
+          .map(async (item: any) => {
+            Object.assign(
+              item._doc,
+              ...(await downloadProperties<T>(item._doc, options, true))
+            );
+          })
+          .filter((item: any) => options.every((option) => !!item[option])) // filter out the documents with a problematic file
       );
     },
     Plugins.BLOB
