@@ -49,7 +49,7 @@ export const config = {
       pakal: ["pdf"],
       media: ["video", "audio"],
       playlist: ["thumbNail"],
-      book: ["thumbNail", "pdf"],
+      book: ["thumbNail"],
     },
   },
 };
