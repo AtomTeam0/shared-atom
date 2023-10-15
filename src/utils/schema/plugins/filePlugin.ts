@@ -1,12 +1,7 @@
 import * as mongoose from "mongoose";
-import { FileTypes } from "common-atom/enums/helpers/FileTypes";
 import { Plugins } from "common-atom/enums/Plugins";
 import { PorpertyOptionalDeep } from "../../helpers/types";
-import {
-  createProperties,
-  updateProperties,
-  downloadProperties,
-} from "../helpers/blobHelpers";
+import { createProperties, downloadProperties } from "../helpers/modifyHelpers";
 import {
   genericPostMiddleware,
   genericPreMiddleware,
@@ -19,12 +14,9 @@ import {
   aggregationType,
 } from "../helpers/schemaHelpers";
 
-export function blobPlugin<T>(
+export function filePlugin<T>(
   schema: mongoose.Schema,
-  options: {
-    property: PorpertyOptionalDeep<T>;
-    fileType: FileTypes;
-  }[]
+  options: PorpertyOptionalDeep<T>[]
 ) {
   genericPreMiddleware(
     schema,
@@ -46,7 +38,7 @@ export function blobPlugin<T>(
       thisObject.setUpdate(
         Object.assign(
           updateObj as object,
-          ...(await updateProperties<T>(updateObj, options, thisObject))
+          ...(await createProperties<T>(thisObject, options))
         )
       );
     },
@@ -57,8 +49,9 @@ export function blobPlugin<T>(
     schema,
     aggregationType,
     async (_thisObject: any, res: any) => {
+      const dataArray = Array.isArray(res) && res[0]?.data ? res[0].data : res;
       await Promise.all(
-        res.map(async (item: any) => {
+        dataArray.map(async (item: any) => {
           Object.assign(item, ...(await downloadProperties<T>(item, options)));
         })
       );
@@ -82,14 +75,22 @@ export function blobPlugin<T>(
     schema,
     getManyFunctionTypes,
     async (_thisObject: any, res: any) => {
-      await Promise.all(
+      const processedItems = await Promise.all(
         res.map(async (item: any) => {
-          Object.assign(
+          const newProperties = await downloadProperties<T>(
             item._doc,
-            ...(await downloadProperties<T>(item._doc, options))
+            options,
+            true
           );
+          Object.assign(item._doc, ...newProperties);
+          return item;
         })
       );
+
+      const filteredItems = processedItems.filter((item) =>
+        options.every((option) => !!item._doc[option])
+      );
+      res.splice(0, res.length, ...filteredItems);
     },
     Plugins.BLOB
   );

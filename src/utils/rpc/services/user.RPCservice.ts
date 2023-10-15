@@ -24,14 +24,4 @@ export class UsersRPCService {
       userId,
     });
   }
-
-  static async updateUser(
-    userId: string,
-    dataToUpdate: IUserAuthUpdater
-  ): Promise<IUser> {
-    return RPCClientRequest(UsersRPCService.rpcClient, "updateUser", {
-      userId,
-      dataToUpdate,
-    });
-  }
 }

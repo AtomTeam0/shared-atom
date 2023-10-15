@@ -1,22 +1,18 @@
 import { UserError } from "./applicationError";
 
-export class UnsupportedFile extends UserError {
-  constructor(fileProperty = "unknown property") {
-    super(
-      `Invalid file property: ${fileProperty} is not allowed as a file in this route`,
-      403
-    );
+export class FileConvertionError extends UserError {
+  constructor() {
+    super(`File could not be converted to base64`, 403);
   }
 }
 
-export class UnsupportedFileType extends UserError {
-  constructor(fileType = "unknown type") {
-    super(`Invalid file type: ${fileType}`, 403);
+export class FileUploadError extends UserError {
+  constructor(message?: string, status?: number) {
+    super(`File upload failed with message ${message}`, status);
   }
 }
-
-export class UnsupportedFileSize extends UserError {
-  constructor(fileSize = 0) {
-    super(`Invalid file size: ${fileSize} bytes`, 403);
+export class FileDownloadError extends UserError {
+  constructor(message?: string, status?: number) {
+    super(`File download failed with message ${message}`, status);
   }
 }

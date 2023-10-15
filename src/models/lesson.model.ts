@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import { ILesson } from "common-atom/interfaces/lesson.interface";
 import { config } from "../config";
-import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
+import { filePlugin } from "../utils/schema/plugins/filePlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 
 const LessonSchema: mongoose.Schema = new mongoose.Schema(
@@ -47,7 +47,7 @@ LessonSchema.plugin(populatePlugin<ILesson>, [
   { property: "test", ref: "tests" },
 ]);
 LessonSchema.plugin(
-  blobPlugin<ILesson>,
+  filePlugin<ILesson>,
   config.formidable.propertyConfigs.lesson
 );
 

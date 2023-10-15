@@ -4,12 +4,18 @@ import { WatchMode } from "common-atom/enums/WatchMode";
 import { IUser } from "common-atom/interfaces/user.interface";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
+import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
 
 const UserSchema: mongoose.Schema = new mongoose.Schema(
   {
     _id: {
       type: String,
       required: true,
+    },
+    isFirstLogin: {
+      type: Boolean,
+      required: true,
+      default: true,
     },
     name: {
       type: String,
@@ -21,18 +27,18 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
       default: Permission.VIEWER,
     },
     area: {
-      type: mongoose.Types.ObjectId,
+      type: String,
       required: true,
       ref: "areas",
     },
     favorites: {
-      type: [mongoose.Types.ObjectId],
+      type: [String],
       required: true,
       ref: "items",
       default: [],
     },
     lastWatched: {
-      type: [mongoose.Types.ObjectId],
+      type: [String],
       required: true,
       ref: "items",
       items: { uniqueItems: true },
@@ -46,7 +52,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
       type: [
         {
           chapterId: {
-            type: mongoose.Types.ObjectId,
+            type: String,
             required: true,
             ref: "chapters",
           },
@@ -57,6 +63,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
           },
         },
       ],
+      _id: false,
       required: true,
       default: [],
     },
@@ -64,7 +71,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
       type: [
         {
           mediaId: {
-            type: mongoose.Types.ObjectId,
+            type: String,
             required: true,
             ref: "media",
           },
@@ -79,6 +86,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
           },
         },
       ],
+      _id: false,
       required: true,
       default: [],
     },
@@ -94,12 +102,12 @@ UserSchema.plugin(populatePlugin<IUser>, [
   { property: "area", ref: "areas" },
   { property: "favorites", ref: "items", isArray: true },
   { property: "lastWatched", ref: "items", isArray: true },
-  { property: "employees", ref: "users", isArray: true },
+  { property: "employees", ref: "users", isArray: true, isTazId: true },
 ]);
 UserSchema.plugin(indexPlugin<IUser>, {
   properties: ["_id", "name"],
 });
-
+UserSchema.plugin(aggregatePlugin);
 export const UserModel = mongoose.model<IUser & mongoose.Document>(
   "users",
   UserSchema

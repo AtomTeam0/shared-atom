@@ -1,9 +1,10 @@
 import * as mongoose from "mongoose";
 import { IBook } from "common-atom/interfaces/book.interface";
-import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
+import { filePlugin } from "../utils/schema/plugins/filePlugin";
 import { config } from "../config";
+import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 
-const bookSchema: mongoose.Schema = new mongoose.Schema(
+const BookSchema: mongoose.Schema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -14,8 +15,8 @@ const bookSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
       default: 1,
       validate: {
-        validator: (val: number) => val <= 3 && val >= 1,
-        message: `priority out of range (1-3)`,
+        validator: (val: number) => val <= 100 && val >= 1,
+        message: `priority out of range (1-100)`,
       },
     },
     length: {
@@ -26,14 +27,6 @@ const bookSchema: mongoose.Schema = new mongoose.Schema(
       type: Boolean,
       required: true,
       default: true,
-    },
-    // updatedAt: {
-    //   type: Date,
-    //   required: true,
-    // },
-    page: {
-      type: Number,
-      required: true,
     },
     pdf: {
       type: String,
@@ -55,9 +48,10 @@ const bookSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-bookSchema.plugin(blobPlugin<IBook>, config.formidable.propertyConfigs.book);
+BookSchema.plugin(populatePlugin<IBook>, [{ property: "corp", ref: "units" }]);
+BookSchema.plugin(filePlugin<IBook>, config.formidable.propertyConfigs.book);
 
 export const BookModel = mongoose.model<IBook & mongoose.Document>(
   "books",
-  bookSchema
+  BookSchema
 );

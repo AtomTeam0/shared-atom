@@ -1,16 +1,9 @@
 import * as mongoose from "mongoose";
 import { ISubject } from "common-atom/interfaces/subject.interface";
-import { Functions } from "common-atom/enums/Functions";
-import { CombatShapes } from "common-atom/enums/CombatShapes";
-import { Compound } from "common-atom/enums/Compound";
-import { Degree } from "common-atom/enums/Degree";
-import { Publish } from "common-atom/enums/Publish";
-import { Job } from "common-atom/enums/Job";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
-import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
-import { config } from "../config";
+import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
 
-const subjectSchema: mongoose.Schema = new mongoose.Schema(
+const SubjectSchema: mongoose.Schema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -41,6 +34,7 @@ const subjectSchema: mongoose.Schema = new mongoose.Schema(
           },
         },
       ],
+      _id: false,
       required: true,
     },
     isActive: {
@@ -49,27 +43,27 @@ const subjectSchema: mongoose.Schema = new mongoose.Schema(
       default: true,
     },
     jobs: {
-      type: [Job],
+      type: [String],
       required: true,
     },
     publishTypes: {
-      type: [Publish],
+      type: [String],
       required: true,
     },
     degrees: {
-      type: [Degree],
+      type: [String],
       required: true,
     },
     compounds: {
-      type: [Compound],
+      type: [String],
       required: true,
     },
     combatShapes: {
-      type: [CombatShapes],
+      type: [String],
       required: true,
     },
     functions: {
-      type: [Functions],
+      type: [String],
       required: true,
     },
     book: {
@@ -84,15 +78,11 @@ const subjectSchema: mongoose.Schema = new mongoose.Schema(
 );
 
 // plugins
-subjectSchema.plugin(populatePlugin<ISubject>, [
+SubjectSchema.plugin(populatePlugin<ISubject>, [
   { property: "book", ref: "books" },
 ]);
-subjectSchema.plugin(
-  blobPlugin<ISubject>,
-  config.formidable.propertyConfigs.subject
-);
-
+SubjectSchema.plugin(aggregatePlugin);
 export const SubjectModel = mongoose.model<ISubject & mongoose.Document>(
   "subjects",
-  subjectSchema
+  SubjectSchema
 );

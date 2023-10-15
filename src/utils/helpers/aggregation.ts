@@ -1,29 +1,41 @@
-export const paginationPipline = (skip: number, limit: number) => [
-  {
-    $facet: {
-      metadata: [
-        { $count: "totalDocs" },
-        {
-          $addFields: {
-            page: { $sum: [{ $floor: { $divide: [skip, limit] } }, 1] },
-          },
-        },
-      ],
-      data: [{ $skip: skip }, { $limit: limit }],
-    },
-  },
-  {
-    $addFields: {
-      metadata: {
-        $ifNull: [
-          { $arrayElemAt: ["$metadata", 0] },
-          { totalDocs: { $toInt: 0 }, page: { $toInt: 0 } },
-        ],
+// pipeline stages to paginate the data
+export const paginationPipline = (skip: number, limit: number) => {
+  const page = Math.floor(skip / limit);
+  return [
+    {
+      $group: {
+        _id: null,
+        totalDocs: { $sum: 1 },
+        data: { $push: "$$ROOT" },
       },
     },
-  },
-];
+    {
+      $addFields: {
+        page: { $sum: [page, 1] },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        metadata: {
+          totalDocs: "$totalDocs",
+          page: "$page",
+        },
+        data: { $slice: ["$data", skip, limit] },
+      },
+    },
+  ];
+};
 
+export const emptyPagination = {
+  data: [],
+  metadata: {
+    totalDocs: 0,
+    page: 1,
+  },
+};
+
+// check if pipeline contains search operators
 export const isWithSearch = (pipeline: any) => {
   const firstPipe = pipeline[0];
   return (

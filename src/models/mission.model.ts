@@ -2,6 +2,7 @@ import * as mongoose from "mongoose";
 import { WatchMode } from "common-atom/enums/WatchMode";
 import { IMission } from "common-atom/interfaces/mission.interface";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
+import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
 
 const MissionSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -45,10 +46,12 @@ const MissionSchema: mongoose.Schema = new mongoose.Schema(
 
 // plugins
 MissionSchema.plugin(populatePlugin<IMission>, [
-  { property: "director", ref: "users" },
-  { property: "editor", ref: "users" },
+  { property: "director", ref: "users", isTazId: true },
+  { property: "editor", ref: "users", isTazId: true },
   { property: "item", ref: "items" },
 ]);
+
+MissionSchema.plugin(aggregatePlugin);
 
 export const MissionModel = mongoose.model<IMission & mongoose.Document>(
   "missions",

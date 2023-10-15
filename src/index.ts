@@ -2,11 +2,7 @@ import * as mongoose from "mongoose";
 import * as jayson from "jayson/promise";
 import { IServerConfig } from "common-atom/interfaces/helpers/serverConfig.interface";
 import { Server } from "./server";
-import { aggregatePlugin } from "./utils/schema/plugins/aggregatePlugin";
-
-import "./models/area.model";
-
-mongoose.plugin(aggregatePlugin);
+import "./models/modelLoader";
 
 // eslint-disable-next-line import/first, import/order
 import { Router } from "express";
@@ -16,7 +12,6 @@ export const initApp = (
   config: IServerConfig,
   AppRouter: Router,
   RPCServer?: jayson.Server,
-  onClose?: () => void,
   isSocket = false
 ) => {
   nodeProcess.on("uncaughtException", (err: Error) => {
@@ -56,9 +51,6 @@ export const initApp = (
 
     server.app.on("close", () => {
       mongoose.disconnect();
-      if (onClose) {
-        onClose();
-      }
       console.log("Server closed");
     });
   })();

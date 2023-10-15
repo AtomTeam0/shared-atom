@@ -32,7 +32,7 @@ const TestByUserSchema: mongoose.Schema = new mongoose.Schema(
 
 // plugins
 TestByUserSchema.plugin(populatePlugin<ITestByUser>, [
-  { property: "user", ref: "users" },
+  { property: "user", ref: "users", isTazId: true },
   { property: "test", ref: "tests" },
   { property: "item", ref: "items" },
 ]);

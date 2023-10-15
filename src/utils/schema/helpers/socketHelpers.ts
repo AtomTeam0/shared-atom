@@ -6,6 +6,7 @@ import { getContext } from "../../helpers/context";
 
 let socketServer: Server;
 
+// set a new socket server with an overritten generateId method
 export const setSocketServer = (server: http.Server) => {
   socketServer = new Server(server, {
     cors: { origin: "*", methods: ["GET", "PUT", "POST"] },
@@ -13,6 +14,7 @@ export const setSocketServer = (server: http.Server) => {
   socketServer.engine.generateId = () => getContext(Global.USER)._id;
 };
 
+// send the event to the socket clinet by room name
 export const emitEvent = (
   eventName: string,
   data?: any,
@@ -26,6 +28,7 @@ export const emitEvent = (
   }
 };
 
+// updates a socket clients room location
 export const updateSocketRoom = async (roomOptions: {
   joinRoomId: AreaNames;
   leaveRoomId?: AreaNames;

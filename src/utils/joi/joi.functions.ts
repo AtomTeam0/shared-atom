@@ -24,6 +24,7 @@ const normalizeRequest = (req: any, value: any): void => {
   req.params = value.params;
 };
 
+// joi validation for noraml schemas
 export const validateRequest = (
   schema: Joi.ObjectSchema<any>,
   options: Joi.ValidationOptions = defaultValidationOptions,
@@ -39,6 +40,7 @@ export const validateRequest = (
   return doesWrap ? wrapValidator(validator) : validator;
 };
 
+// joi validation for schemas that change accourding to the permission of the user
 export const validateRequestByPermission = (
   allValidations: {
     permissions: Permission[];

@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import { IPakal } from "common-atom/interfaces/pakal.interface";
 import { config } from "../config";
-import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
+import { filePlugin } from "../utils/schema/plugins/filePlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 
 const PakalSchema: mongoose.Schema = new mongoose.Schema(
@@ -31,8 +31,9 @@ PakalSchema.plugin(populatePlugin<IPakal>, [
   { property: "chapters", ref: "chapters", isArray: true },
   { property: "test", ref: "tests" },
 ]);
+
 PakalSchema.plugin(
-  blobPlugin<IPakal>,
+  filePlugin<IPakal>,
   config.formidable.propertyConfigs.lesson
 );
 

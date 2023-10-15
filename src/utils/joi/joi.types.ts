@@ -26,15 +26,18 @@ const personalIdRegex = /^[0-9]{9}$/;
 
 const coordinateAxisRegex = /^-?[0-9]{1,3}(?:\.[0-9]{1,15})?$/;
 
-const blobRegex = /^{(?=.*filepath)(?=.*originalFilename)(?=.*mimetype).*}$/;
+const blobRegex = /^{(?=.*filepath)(?=.*originalFilename).*}$/;
 
-const freeTextRegex = /^[\u0590-\u05FF0-9!?.,\s-]{0,250}$/;
+const freeTextRegex = /^[\u0590-\u05FF0-9!?.,\s-'`]{0,250}$/;
 
 // exported types
-export const joiMongoId = (getByIdFunc?: (id: string) => any) =>
+export const joiMongoId = (
+  getByIdFunc?: (id: string) => any,
+  isUserId = false
+) =>
   Joi.string().external(async (value: string | undefined, _helpers: any) => {
     if (value !== undefined) {
-      const isValid = mongoIdRegex.test(value);
+      const isValid = (isUserId ? personalIdRegex : mongoIdRegex).test(value);
       if (!isValid) {
         throw new InvalidMongoIdError();
       } else if (getByIdFunc) {
@@ -149,7 +152,7 @@ export const joiMongoIdArray = (getByIdFunc?: (id: string) => any) =>
 export const joiEnum = (enumObj: { [k: string]: string }) =>
   Joi.string().valid(...Object.values(enumObj));
 
-export const joiBlob = Joi.string().regex(blobRegex);
+export const joiBlob = Joi.string();
 
 export const joiPersonalId = Joi.string().regex(personalIdRegex);
 
@@ -168,7 +171,7 @@ export const joiContentCreator = (contentValidator: Joi.Schema) =>
         title: Joi.string().required(),
         description: Joi.string().required(),
         timeToRead: Joi.number().integer().required(),
-        thumbNail: joiBlob.required(),
+        thumbNail: Joi.string().required(),
         unit: joiMongoId(ItemRPCService.getUnitById).required(),
         similarItems: joiMongoIdArray(ItemRPCService.getItemById),
         areas: joiMongoIdArray(ItemRPCService.getAreaById).min(1).required(),

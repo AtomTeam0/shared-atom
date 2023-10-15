@@ -1,7 +1,7 @@
 import * as mongoose from "mongoose";
 import { IInfographic } from "common-atom/interfaces/infographic.interface";
 import { config } from "../config";
-import { blobPlugin } from "../utils/schema/plugins/blobPlugin";
+import { filePlugin } from "../utils/schema/plugins/filePlugin";
 
 const InfographicSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -18,7 +18,7 @@ const InfographicSchema: mongoose.Schema = new mongoose.Schema(
 
 // plugins
 InfographicSchema.plugin(
-  blobPlugin<IInfographic>,
+  filePlugin<IInfographic>,
   config.formidable.propertyConfigs.infographic
 );
 
