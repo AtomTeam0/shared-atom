@@ -1,7 +1,6 @@
 import * as mongoose from "mongoose";
 import { IArticle } from "common-atom/interfaces/article.interface";
 import { config } from "../config";
-import { filePlugin } from "../utils/schema/plugins/filePlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 
 const ArticleSchema: mongoose.Schema = new mongoose.Schema(
@@ -71,10 +70,6 @@ const ArticleSchema: mongoose.Schema = new mongoose.Schema(
 ArticleSchema.plugin(populatePlugin<IArticle>, [
   { property: "comments", ref: "comments", isArray: true },
 ]);
-ArticleSchema.plugin(
-  filePlugin<IArticle>,
-  config.formidable.propertyConfigs.article
-);
 
 export const ArticleModel = mongoose.model<IArticle & mongoose.Document>(
   "articles",

@@ -1,6 +1,5 @@
 import * as mongoose from "mongoose";
 import { IBook } from "common-atom/interfaces/book.interface";
-import { filePlugin } from "../utils/schema/plugins/filePlugin";
 import { config } from "../config";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 
@@ -49,7 +48,6 @@ const BookSchema: mongoose.Schema = new mongoose.Schema(
 
 // plugins
 BookSchema.plugin(populatePlugin<IBook>, [{ property: "corp", ref: "units" }]);
-BookSchema.plugin(filePlugin<IBook>, config.formidable.propertyConfigs.book);
 
 export const BookModel = mongoose.model<IBook & mongoose.Document>(
   "books",
