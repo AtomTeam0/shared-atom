@@ -1,7 +1,6 @@
 import * as mongoose from "mongoose";
 import { ILesson } from "common-atom/interfaces/lesson.interface";
 import { config } from "../config";
-import { filePlugin } from "../utils/schema/plugins/filePlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 
 const LessonSchema: mongoose.Schema = new mongoose.Schema(
@@ -46,10 +45,6 @@ LessonSchema.plugin(populatePlugin<ILesson>, [
   { property: "preKnowledge", ref: "items", isArray: true },
   { property: "test", ref: "tests" },
 ]);
-LessonSchema.plugin(
-  filePlugin<ILesson>,
-  config.formidable.propertyConfigs.lesson
-);
 
 export const LessonModel = mongoose.model<ILesson & mongoose.Document>(
   "lessons",

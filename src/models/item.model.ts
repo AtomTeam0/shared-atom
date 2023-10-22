@@ -1,7 +1,6 @@
 import * as mongoose from "mongoose";
 import { IItem } from "common-atom/interfaces/item.interface";
 import { config } from "../config";
-import { filePlugin } from "../utils/schema/plugins/filePlugin";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
@@ -102,7 +101,6 @@ ItemSchema.plugin(populatePlugin<IItem>, [
 ItemSchema.plugin(indexPlugin<IItem>, {
   properties: ["title"],
 });
-ItemSchema.plugin(filePlugin<IItem>, config.formidable.propertyConfigs.item);
 ItemSchema.plugin(aggregatePlugin);
 export const ItemModel = mongoose.model<IItem & mongoose.Document>(
   "items",
