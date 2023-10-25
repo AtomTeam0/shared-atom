@@ -43,6 +43,7 @@ export const getFileUrl = async (fileId: string) => {
     }
     */
     // we only need the FileBase64.
+    console.log("good hutch", response.data)
     return response.data.FileBase64;
   } catch (error: unknown) {
     const axiosError = error as AxiosError;
@@ -54,7 +55,7 @@ export const getFileUrl = async (fileId: string) => {
       );
       // The item was not yet sanitized in hatch.
       if (axiosError.response.status === 403) {
-        console.log("file is not sanitized yet, returning undefined");
+        console.log("file is not sanitized yet, returning undefined", axiosError.response);
         return undefined;
         // throw new FileDownloadError("File is not sanitized yet!", 403);
       }
@@ -66,7 +67,7 @@ export const getFileUrl = async (fileId: string) => {
     } else if (axiosError && axiosError.request) {
       // The request was made but no response was received
       throw new FileDownloadError(
-        "No response received from download service (Archive)",
+          `No response received from download service (Archive) --->${axiosError.message}`,
         502
       ); // 502 Bad Gateway might be appropriate here
     } else {
