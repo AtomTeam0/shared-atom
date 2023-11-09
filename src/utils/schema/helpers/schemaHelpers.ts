@@ -1,4 +1,4 @@
-import {Callback, EnforceDocument, FilterQuery, QueryOptions, QueryWithHelpers} from "mongoose";
+import {Document, Model} from "mongoose";
 
 export const aggregationType = ["aggregate"];
 
@@ -22,21 +22,11 @@ export const getAllFunctionTypes = [
   ...getSingleFunctionTypes,
 ];
 
-type SchemaMethods<T> = {
-  [methodName: string]: (options?: any) => QueryWithHelpers<Array<T>, T>;
-};
-
-type Find1<T> = <T,TQueryHelpers = {}, TMethods = {}>(callback?: Callback<EnforceDocument<T, TMethods>[]>) => QueryWithHelpers<Array<EnforceDocument<T, TMethods>>, EnforceDocument<T, TMethods>, TQueryHelpers, T>;
-type Find2<T> = <T,TQueryHelpers = {}, TMethods = {}>(filter: FilterQuery<T>, callback?: Callback<T[]>) => QueryWithHelpers<Array<EnforceDocument<T, TMethods>>, EnforceDocument<T, TMethods>, TQueryHelpers, T>;
-type Find3<T> = <T,TQueryHelpers = {}, TMethods = {}>(filter: FilterQuery<T>, projection?: any | null, options?: QueryOptions | null, callback?: Callback<EnforceDocument<T, TMethods>[]>) => QueryWithHelpers<Array<EnforceDocument<T, TMethods>>, EnforceDocument<T, TMethods>, TQueryHelpers, T>;
-
-type FindQuery<T> = Find1<T> | Find2<T> | Find3<T>;
-
-export const paginationWrapper = async <T>(
+export const paginationWrapper = async <T extends Model<Document>>(
     skip: number,
     limit: number,
-    query: FindQuery<T>,
+    model: T,
     params: any
 ) => {
-  return query(params).skip(skip).limit(limit);
+  return model.find(params).skip(skip).limit(limit);
 };
