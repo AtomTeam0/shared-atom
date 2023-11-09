@@ -28,6 +28,7 @@ export const paginationWrapper = async <T extends Model<Document>>(
     model: T,
     params: any
 ) => {
+  console.log("Eytan")
   console.log("---------------------------------->>>>>>>>>>", model, typeof model)
   return model.find(params).skip(skip).limit(limit);
 };
