@@ -38,5 +38,6 @@ export const paginationWrapper = async <T>(
     query: FindQuery,
     params: any
 ) => {
+  console.log(query, params, skip, limit)
   return query(params).skip(skip).limit(limit);
 };
