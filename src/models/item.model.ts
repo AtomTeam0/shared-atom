@@ -70,9 +70,9 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
       ref: "users",
     },
-    areas: {
+    filters: {
       type: [mongoose.Types.ObjectId],
-      ref: "areas",
+      ref: "filters",
     },
     similarItems: {
       type: [mongoose.Types.ObjectId],
@@ -94,7 +94,6 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
 
 // plugins
 ItemSchema.plugin(populatePlugin<IItem>, [
-  { property: "areas", ref: "areas", isArray: true },
   { property: "unit", ref: "units" },
   { property: "similarItems", ref: "items", isArray: true },
 ]);
