@@ -14,9 +14,6 @@ export const validateUserAndPermission = (
     user: ITokenPayload | undefined,
     permissionsToValidate: Permission[]
   ) => {
-
-    console.log(user)
-
     // validate user property preferred_username
     if (!user || !user.preferred_username) {
       return new AuthenticationError("Missing preferred_username");

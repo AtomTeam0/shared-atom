@@ -1,4 +1,4 @@
-import { ServerError, UserError } from "./applicationError";
+import {ServerError, UserError} from "./applicationError";
 
 export class RPCFunctionError extends ServerError {
   constructor(err?: Error) {
@@ -79,6 +79,6 @@ export class InvalidWeekNumError extends UserError {
 
 export class PoligonIntersectionError extends UserError {
   constructor() {
-    super("New polygon cannot intesect with existing area`s polygon", 403);
+    super("New polygon cannot intesect with existing filter`s polygon", 403);
   }
 }
