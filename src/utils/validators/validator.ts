@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from "express";
-import { Global } from "common-atom/enums/helpers/Global";
-import { Permission } from "common-atom/enums/Permission";
-import { ITokenPayload } from "passport-azure-ad";
-import { AuthenticationError, PermissionError } from "../errors/generalError";
-import { setContext } from "../helpers/context";
-import { wrapAsyncMiddleware } from "../helpers/wrapper";
-import { UsersRPCService } from "../rpc/services/user.RPCservice";
+import {NextFunction, Request, Response} from "express";
+import {Global} from "common-atom/enums/helpers/Global";
+import {Permission} from "common-atom/enums/Permission";
+import {ITokenPayload} from "passport-azure-ad";
+import {AuthenticationError, PermissionError} from "../errors/generalError";
+import {setContext} from "../helpers/context";
+import {wrapAsyncMiddleware} from "../helpers/wrapper";
+import {UsersRPCService} from "../rpc/services/user.RPCservice";
 
 export const validateUserAndPermission = (
   permissions: Permission[] = [...Object.values(Permission)]
@@ -14,6 +14,9 @@ export const validateUserAndPermission = (
     user: ITokenPayload | undefined,
     permissionsToValidate: Permission[]
   ) => {
+
+    console.log(user)
+
     // validate user property preferred_username
     if (!user || !user.preferred_username) {
       return new AuthenticationError("Missing preferred_username");
