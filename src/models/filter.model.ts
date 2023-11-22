@@ -32,6 +32,6 @@ const FilterSchema: mongoose.Schema = new mongoose.Schema(
 // plugins
 FilterSchema.plugin(aggregatePlugin);
 export const FilterModel = mongoose.model<IFilter & mongoose.Document>(
-    "worlds",
+    "filters",
     FilterSchema
 );
