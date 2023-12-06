@@ -1,12 +1,8 @@
-import { IFileDetails } from "common-atom/interfaces/helpers/file.interface";
-import { promises as fsPromises } from "fs";
-import axios, { AxiosError } from "axios";
-import { config } from "../../../config";
-import {
-  FileConvertionError,
-  FileDownloadError,
-  FileUploadError,
-} from "../../errors/filesError";
+import {IFileDetails} from "common-atom/interfaces/helpers/file.interface";
+import {promises as fsPromises} from "fs";
+import axios, {AxiosError} from "axios";
+import {config} from "../../../config";
+import {FileConvertionError, FileDownloadError, FileUploadError,} from "../../errors/filesError";
 
 // get files from hatch service
 export const getFileUrl = async (fileId: string) => {
@@ -43,7 +39,6 @@ export const getFileUrl = async (fileId: string) => {
     }
     */
     // we only need the FileBase64.
-    console.log("good hutch", response.data)
     return response.data.FileBase64;
   } catch (error: unknown) {
     const axiosError = error as AxiosError;

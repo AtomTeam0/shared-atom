@@ -1,5 +1,3 @@
-import {Document, Model} from "mongoose";
-
 export const aggregationType = ["aggregate"];
 
 export const creationFunctionType = ["save", "create"];
@@ -21,12 +19,3 @@ export const getAllFunctionTypes = [
   ...getManyFunctionTypes,
   ...getSingleFunctionTypes,
 ];
-
-export const paginationWrapper = async <T extends Model<Document>>(
-    skip: number,
-    limit: number,
-    model: T,
-    params: any
-) => {
-  return model.find(params).skip(skip).limit(limit);
-};
