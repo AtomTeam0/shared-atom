@@ -1,12 +1,8 @@
-import { IFileDetails } from "common-atom/interfaces/helpers/file.interface";
-import { promises as fsPromises } from "fs";
-import axios, { AxiosError } from "axios";
-import { config } from "../../../config";
-import {
-  FileConvertionError,
-  FileDownloadError,
-  FileUploadError,
-} from "../../errors/filesError";
+import {IFileDetails} from "common-atom/interfaces/helpers/file.interface";
+import {promises as fsPromises} from "fs";
+import axios, {AxiosError} from "axios";
+import {config} from "../../../config";
+import {FileConvertionError, FileDownloadError, FileUploadError,} from "../../errors/filesError";
 
 // get files from hatch service
 export const getFileUrl = async (fileId: string) => {
@@ -54,7 +50,7 @@ export const getFileUrl = async (fileId: string) => {
       );
       // The item was not yet sanitized in hatch.
       if (axiosError.response.status === 403) {
-        console.log("file is not sanitized yet, returning undefined");
+        console.log("file is not sanitized yet, returning undefined", axiosError.response);
         return undefined;
         // throw new FileDownloadError("File is not sanitized yet!", 403);
       }
@@ -66,7 +62,7 @@ export const getFileUrl = async (fileId: string) => {
     } else if (axiosError && axiosError.request) {
       // The request was made but no response was received
       throw new FileDownloadError(
-        "No response received from download service (Archive)",
+          `No response received from download service (Archive) --->${axiosError.message}`,
         502
       ); // 502 Bad Gateway might be appropriate here
     } else {

@@ -1,6 +1,5 @@
 import * as mongoose from "mongoose";
 import { IItem } from "common-atom/interfaces/item.interface";
-import { config } from "../config";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
@@ -70,9 +69,10 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
       ref: "users",
     },
-    areas: {
+    filters: {
       type: [mongoose.Types.ObjectId],
-      ref: "areas",
+      ref: "filters",
+      required: true,
     },
     similarItems: {
       type: [mongoose.Types.ObjectId],
@@ -94,7 +94,6 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
 
 // plugins
 ItemSchema.plugin(populatePlugin<IItem>, [
-  { property: "areas", ref: "areas", isArray: true },
   { property: "unit", ref: "units" },
   { property: "similarItems", ref: "items", isArray: true },
 ]);

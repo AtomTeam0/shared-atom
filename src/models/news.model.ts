@@ -27,7 +27,7 @@ NewsSchema.index({ createdAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 7 });
 NewsSchema.plugin(populatePlugin<INews>, [{ property: "area", ref: "areas" }]);
 NewsSchema.plugin(socketPlugin<INews>, {
   eventName: "createNews",
-  roomNameProperty: "area.name",
+  roomNameProperty: "filter.name",
 });
 
 export const NewsModel = mongoose.model<INews & mongoose.Document>(
