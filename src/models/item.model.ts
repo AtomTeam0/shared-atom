@@ -74,6 +74,11 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
       ref: "filters",
       required: true,
     },
+    world: {
+        type: String,
+        required: true,
+        ref: "worlds"
+    },
     similarItems: {
       type: [mongoose.Types.ObjectId],
       ref: "items",
@@ -84,11 +89,6 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
     },
     contentId: {
       type: String,
-    },
-    world: {
-        type: mongoose.Types.ObjectId,
-        required: true,
-        ref: "worlds"
     },
   },
   {
