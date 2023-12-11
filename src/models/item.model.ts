@@ -85,6 +85,11 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
     contentId: {
       type: String,
     },
+    world: {
+        type: mongoose.Types.ObjectId,
+        required: true,
+        ref: "worlds"
+    },
   },
   {
     versionKey: false,
