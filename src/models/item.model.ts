@@ -75,7 +75,7 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
     },
     world: {
-        type: String,
+        type: mongoose.Types.ObjectId,
         required: true,
         ref: "worlds"
     },
@@ -99,8 +99,9 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
 
 // plugins
 ItemSchema.plugin(populatePlugin<IItem>, [
-  { property: "unit", ref: "units" },
-  { property: "similarItems", ref: "items", isArray: true },
+    { property: "unit", ref: "units" },
+    { property: "world", ref: "worlds" },
+    { property: "similarItems", ref: "items", isArray: true },
 ]);
 ItemSchema.plugin(indexPlugin<IItem>, {
   properties: ["title"],
