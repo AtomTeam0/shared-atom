@@ -76,8 +76,8 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
     },
     world: {
         type: mongoose.Types.ObjectId,
+        ref: "worlds",
         required: true,
-        ref: "worlds"
     },
     similarItems: {
       type: [mongoose.Types.ObjectId],
