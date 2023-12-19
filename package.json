@@ -1,6 +1,6 @@
 {
   "name": "shared-atom",
-  "version": "1.1.83-eytan-dev-4",
+  "version": "1.1.84",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AtomTeam0/shared-atom.git"
@@ -21,11 +21,12 @@
     "@joi/date": "^2.1.0",
     "@turf/turf": "^6.5.0",
     "@types/axios": "^0.14.0",
+    "@types/lodash": "^4.14.202",
     "aws-sdk": "^2.1404.0",
     "axios": "^1.4.0",
     "body-parser": "^1.20.0",
     "cls-hooked": "^4.2.2",
-    "common-atom": "^1.0.26-new-mynet-1",
+    "common-atom": "1.0.30",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.18.1",
@@ -33,6 +34,7 @@
     "jayson": "^4.0.0",
     "joi": "^17.6.0",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.21",
     "mongoose": "^5.10.0",
     "morgan": "^1.10.0",
     "passport": "^0.6.0",
