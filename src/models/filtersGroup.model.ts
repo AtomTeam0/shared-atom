@@ -23,7 +23,7 @@ const FiltersGroupSchema: mongoose.Schema = new mongoose.Schema(
             ref: "filters",
             validate: atLeastOneInArray<mongoose.Types.ObjectId>
         },
-        conditionFilters: {
+        ancestorFilters: {
             type: [mongoose.Types.ObjectId],
             ref: "filters",
         },
