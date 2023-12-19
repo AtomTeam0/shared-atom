@@ -1,5 +1,6 @@
 import * as mongoose from "mongoose";
 import {aggregatePlugin} from "../utils/schema/plugins/aggregatePlugin";
+import {World} from "common-atom/interfaces/world.interface";
 
 const WorldSchema: mongoose.Schema = new mongoose.Schema(
     {
