@@ -2,6 +2,8 @@ import * as mongoose from "mongoose";
 import {FiltersGroup} from "common-atom/interfaces/filter.interface";
 import {aggregatePlugin} from "../utils/schema/plugins/aggregatePlugin";
 import {atLeastOneInArray} from "./validators/general";
+import {populatePlugin} from "../utils/schema/plugins/populatePlugin";
+import {IItem} from "common-atom/interfaces/item.interface";
 
 const FiltersGroupSchema: mongoose.Schema = new mongoose.Schema(
     {
@@ -33,6 +35,12 @@ const FiltersGroupSchema: mongoose.Schema = new mongoose.Schema(
         timestamps: { createdAt: false, updatedAt: false },
     }
 );
+
+
+FiltersGroupSchema.plugin(populatePlugin<IItem>, [
+    { property: "filters", ref: "filters", isArray: true },
+    { property: "world", ref: "worlds" },
+]);
 
 // plugins
 FiltersGroupSchema.plugin(aggregatePlugin);
