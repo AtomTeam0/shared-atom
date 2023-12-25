@@ -11,12 +11,12 @@ const FiltersGroupSchema: mongoose.Schema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        world: {
-            type: mongoose.Types.ObjectId,
-            required: true,
-        },
         level: {
             type: Number,
+            required: true,
+        },
+        world: {
+            type: mongoose.Types.ObjectId,
             required: true,
         },
         filters: {
@@ -24,6 +24,9 @@ const FiltersGroupSchema: mongoose.Schema = new mongoose.Schema(
             required: true,
             ref: "filters",
             validate: atLeastOneInArray<mongoose.Types.ObjectId>
+        },
+        isLast: {
+            type: Boolean,
         },
         ancestorFilters: {
             type: [mongoose.Types.ObjectId],
