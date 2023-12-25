@@ -1,5 +1,5 @@
 import * as mongoose from "mongoose";
-import {FiltersGroup} from "common-atom/interfaces/filter.interface";
+import {FiltersGroup} from "common-atom/interfaces/filtersGroup.interface";
 import {aggregatePlugin} from "../utils/schema/plugins/aggregatePlugin";
 import {atLeastOneInArray} from "./validators/general";
 import {populatePlugin} from "../utils/schema/plugins/populatePlugin";
