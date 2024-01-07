@@ -100,7 +100,7 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
 // plugins
 ItemSchema.plugin(populatePlugin<IItem>, [
   { property: "unit", ref: "units" },
-  // { property: "world", ref: "worlds" },
+  //TODO: Add populate plugin for world
   { property: "similarItems", ref: "items", isArray: true },
 ]);
 ItemSchema.plugin(indexPlugin<IItem>, {
