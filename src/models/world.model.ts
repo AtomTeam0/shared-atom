@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 import {aggregatePlugin} from "../utils/schema/plugins/aggregatePlugin";
-import {IWorld} from "common-atom/interfaces/world.interface";
+import {World} from "common-atom/interfaces/world.interface";
 
 const WorldSchema: mongoose.Schema = new mongoose.Schema(
     {
@@ -28,7 +28,7 @@ const WorldSchema: mongoose.Schema = new mongoose.Schema(
 
 // plugins
 WorldSchema.plugin(aggregatePlugin);
-export const WorldModel = mongoose.model<IWorld & mongoose.Document>(
+export const WorldModel = mongoose.model<World & mongoose.Document>(
     "worlds",
     WorldSchema
 );

@@ -1,8 +1,8 @@
-import * as mongoose from "mongoose";
 import { IItem } from "common-atom/interfaces/item.interface";
+import * as mongoose from "mongoose";
+import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
-import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
 
 const ItemSchema: mongoose.Schema = new mongoose.Schema(
   {
@@ -74,6 +74,11 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
       ref: "filters",
       required: true,
     },
+    world: {
+      type: mongoose.Types.ObjectId,
+      ref: "worlds",
+      required: true,
+    },
     similarItems: {
       type: [mongoose.Types.ObjectId],
       ref: "items",
@@ -95,6 +100,7 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
 // plugins
 ItemSchema.plugin(populatePlugin<IItem>, [
   { property: "unit", ref: "units" },
+  //TODO: Add populate plugin for world
   { property: "similarItems", ref: "items", isArray: true },
 ]);
 ItemSchema.plugin(indexPlugin<IItem>, {
