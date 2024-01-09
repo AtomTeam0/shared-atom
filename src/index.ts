@@ -12,7 +12,7 @@ export const initApp = (
   config: IServerConfig,
   AppRouter: Router,
   RPCServer?: jayson.Server,
-  isSocket = false
+  isSocket = false,
 ) => {
   nodeProcess.on("uncaughtException", (err: Error) => {
     console.error("Unhandled Exception", err.stack);
@@ -46,7 +46,7 @@ export const initApp = (
       config,
       AppRouter,
       RPCServer,
-      isSocket
+      isSocket,
     );
 
     server.app.on("close", () => {

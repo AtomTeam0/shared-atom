@@ -21,3 +21,4 @@ import "./testByUser.model";
 import "./unit.model";
 import "./user.model";
 import "./video.model";
+import "./world.model";

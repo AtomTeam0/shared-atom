@@ -22,3 +22,4 @@ export * from "./testByUser.model";
 export * from "./unit.model";
 export * from "./user.model";
 export * from "./video.model";
+export * from "./world.model";
