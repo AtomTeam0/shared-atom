@@ -48,6 +48,10 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
       type: [String],
       ref: "users",
     },
+    world: {
+      type: String,
+      ref: "worlds",
+    },
     chapters: {
       type: [
         {
@@ -94,12 +98,13 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
   {
     versionKey: false,
     timestamps: { createdAt: true, updatedAt: false },
-  }
+  },
 );
 
 // plugins
 UserSchema.plugin(populatePlugin<IUser>, [
   { property: "area", ref: "areas" },
+  { property: "world", ref: "worlds" },
   { property: "favorites", ref: "items", isArray: true },
   { property: "lastWatched", ref: "items", isArray: true },
   { property: "employees", ref: "users", isArray: true, isTazId: true },
@@ -110,5 +115,5 @@ UserSchema.plugin(indexPlugin<IUser>, {
 UserSchema.plugin(aggregatePlugin);
 export const UserModel = mongoose.model<IUser & mongoose.Document>(
   "users",
-  UserSchema
+  UserSchema,
 );
