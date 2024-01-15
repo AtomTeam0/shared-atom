@@ -98,6 +98,7 @@ ItemSchema.plugin(indexPlugin<IItem>, {
   properties: ["title"],
 });
 ItemSchema.plugin(aggregatePlugin);
+
 export const ItemModel = mongoose.model<IItem & mongoose.Document>(
   "items",
   ItemSchema,
