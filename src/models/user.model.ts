@@ -49,7 +49,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
       ref: "users",
     },
     world: {
-      type: String,
+      type: mongoose.Types.ObjectId,
       ref: "worlds",
     },
     chapters: {
