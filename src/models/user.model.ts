@@ -104,7 +104,6 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
 // plugins
 UserSchema.plugin(populatePlugin<IUser>, [
   { property: "area", ref: "areas" },
-  { property: "world", ref: "worlds" },
   { property: "favorites", ref: "items", isArray: true },
   { property: "lastWatched", ref: "items", isArray: true },
   { property: "employees", ref: "users", isArray: true, isTazId: true },
