@@ -61,3 +61,8 @@ export const isDirector = () =>
 // does the current user have editor permission or above
 export const isEditor = () =>
   getContext(Global.USER).permission === Permission.EDITOR || isDirector();
+
+
+// preserve context for certain middlewares like multer
+export const preserveContextMiddleware = (func:Function) =>
+    (req: Request, res: Response, next: NextFunction) => func.call(this, req, res, session.bind(next));
