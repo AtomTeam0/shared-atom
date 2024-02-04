@@ -17,7 +17,7 @@ const MyWikiSchema: mongoose.Schema = new mongoose.Schema(
   {
     versionKey: false,
     timestamps: { createdAt: false, updatedAt: false },
-  }
+  },
 );
 
 // plugins
@@ -27,5 +27,5 @@ MyWikiSchema.plugin(indexPlugin<IMyWiki>, {
 MyWikiSchema.plugin(aggregatePlugin);
 export const MyWikiModel = mongoose.model<IMyWiki & mongoose.Document>(
   "myWiki",
-  MyWikiSchema
+  MyWikiSchema,
 );

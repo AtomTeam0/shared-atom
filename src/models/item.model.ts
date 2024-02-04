@@ -3,15 +3,22 @@ import * as mongoose from "mongoose";
 import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
+import { Status } from "common-atom/enums/Status";
+import { ContentType } from "common-atom/enums/ContentType";
 
-const ItemSchema: mongoose.Schema = new mongoose.Schema(
+const ItemSchema = new mongoose.Schema(
   {
+    updatedAt: {
+      type: Date,
+      required: true,
+    },
     title: {
       type: String,
       required: true,
     },
     description: {
       type: String,
+      required: true,
     },
     views: {
       type: Number,
@@ -21,7 +28,6 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
     priority: {
       type: Number,
       required: true,
-      default: 50,
       validate: {
         validator: (val: number) => val <= 100 && val >= 1,
         message: `priority out of range (1-100)`,
@@ -29,45 +35,32 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
     },
     timeToRead: {
       type: Number,
+      required: true,
+      default: 5,
     },
     isActive: {
       type: Boolean,
       required: true,
       default: false,
     },
-    isByMission: {
-      type: Boolean,
-      required: true,
-      default: false,
-    },
-    updatedAt: {
-      type: Date,
-      required: true,
-    },
-    sections: {
-      type: [String],
-    },
-    categories: {
-      type: [String],
-    },
-    corps: {
-      type: [String],
-    },
-    grade: {
-      type: String,
-    },
     contentType: {
+      type: String,
+      enum: ContentType,
+      required: true,
+    },
+    status: {
+      type: String,
+      required: true,
+      enum: Status,
+    },
+    thumbNail: {
       type: String,
       required: true,
     },
     unit: {
       type: mongoose.Types.ObjectId,
       ref: "units",
-    },
-    editedBy: {
-      type: String,
       required: true,
-      ref: "users",
     },
     filters: {
       type: [mongoose.Types.ObjectId],
@@ -79,35 +72,34 @@ const ItemSchema: mongoose.Schema = new mongoose.Schema(
       ref: "worlds",
       required: true,
     },
-    similarItems: {
-      type: [mongoose.Types.ObjectId],
-      ref: "items",
-      default: [],
-    },
-    thumbNail: {
-      type: String,
-    },
     contentId: {
       type: String,
+      required: true,
+    },
+    editedBy: {
+      type: String,
+      required: true,
+      ref: "users",
     },
   },
   {
     versionKey: false,
     timestamps: { createdAt: false, updatedAt: false },
-  }
+  },
 );
 
 // plugins
 ItemSchema.plugin(populatePlugin<IItem>, [
   { property: "unit", ref: "units" },
-  //TODO: Add populate plugin for world
-  { property: "similarItems", ref: "items", isArray: true },
+  { property: "world", ref: "worlds" },
+  { property: "filters", ref: "filters", isArray: true },
 ]);
 ItemSchema.plugin(indexPlugin<IItem>, {
   properties: ["title"],
 });
 ItemSchema.plugin(aggregatePlugin);
+
 export const ItemModel = mongoose.model<IItem & mongoose.Document>(
   "items",
-  ItemSchema
+  ItemSchema,
 );

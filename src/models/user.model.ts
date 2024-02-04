@@ -48,6 +48,10 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
       type: [String],
       ref: "users",
     },
+    world: {
+      type: mongoose.Types.ObjectId,
+      ref: "worlds",
+    },
     chapters: {
       type: [
         {
@@ -94,7 +98,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
   {
     versionKey: false,
     timestamps: { createdAt: true, updatedAt: false },
-  }
+  },
 );
 
 // plugins
@@ -110,5 +114,5 @@ UserSchema.plugin(indexPlugin<IUser>, {
 UserSchema.plugin(aggregatePlugin);
 export const UserModel = mongoose.model<IUser & mongoose.Document>(
   "users",
-  UserSchema
+  UserSchema,
 );

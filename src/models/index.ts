@@ -1,8 +1,11 @@
 export * from "./area.model";
 export * from "./article.model";
+export * from "./audio.model";
 export * from "./book.model";
 export * from "./chapter.model";
 export * from "./comment.model";
+export * from "./document.model";
+export * from "./image.model";
 export * from "./infographic.model";
 export * from "./item.model";
 export * from "./lesson.model";
@@ -18,3 +21,5 @@ export * from "./test.model";
 export * from "./testByUser.model";
 export * from "./unit.model";
 export * from "./user.model";
+export * from "./video.model";
+export * from "./world.model";
