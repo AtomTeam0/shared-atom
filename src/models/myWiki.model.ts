@@ -16,6 +16,12 @@ const MyWikiSchema: mongoose.Schema = new mongoose.Schema(
     isByViewer: {
       type: Boolean,
     },
+    createdBy: {
+      type: String,
+    },
+    approvedBy: {
+      type: String,
+    },
   },
   {
     versionKey: false,

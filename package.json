@@ -1,6 +1,6 @@
 {
   "name": "shared-atom",
-  "version": "1.1.86-dev8",
+  "version": "1.1.86-dev9",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AtomTeam0/shared-atom.git"
@@ -24,7 +24,7 @@
     "axios": "^1.4.0",
     "body-parser": "^1.20.0",
     "cls-hooked": "^4.2.2",
-    "common-atom": "1.0.32-dev10",
+    "common-atom": "1.0.32-dev11",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.18.1",
