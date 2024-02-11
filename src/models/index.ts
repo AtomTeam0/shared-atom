@@ -23,3 +23,5 @@ export * from "./unit.model";
 export * from "./user.model";
 export * from "./video.model";
 export * from "./world.model";
+export * from "./filter.model";
+export * from "./filtersGroup.model";

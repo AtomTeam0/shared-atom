@@ -22,3 +22,5 @@ import "./unit.model";
 import "./user.model";
 import "./video.model";
 import "./world.model";
+import "./filtersGroup.model";
+import "./filter.model";
