@@ -91,7 +91,6 @@ const ItemSchema = new mongoose.Schema(
 // plugins
 ItemSchema.plugin(populatePlugin<IItem>, [
   { property: "unit", ref: "units" },
-  { property: "world", ref: "worlds" },
   { property: "filters", ref: "filters", isArray: true },
 ]);
 ItemSchema.plugin(indexPlugin<IItem>, {
