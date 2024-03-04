@@ -9,6 +9,7 @@ export * from "./image.model";
 export * from "./infographic.model";
 export * from "./item.model";
 export * from "./lesson.model";
+export * from "./link.model";
 export * from "./media.model";
 export * from "./mission.model";
 export * from "./modelLoader";

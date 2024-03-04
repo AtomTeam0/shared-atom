@@ -9,6 +9,7 @@ import "./image.model";
 import "./infographic.model";
 import "./item.model";
 import "./lesson.model";
+import "./link.model";
 import "./media.model";
 import "./mission.model";
 import "./myWiki.model";
