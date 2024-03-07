@@ -36,7 +36,6 @@ const ItemSchema = new mongoose.Schema(
     timeToRead: {
       type: Number,
       required: true,
-      default: 5,
     },
     isActive: {
       type: Boolean,
