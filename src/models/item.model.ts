@@ -80,6 +80,10 @@ const ItemSchema = new mongoose.Schema(
       required: true,
       ref: "users",
     },
+    chapters: {
+      type: [mongoose.Types.ObjectId],
+      ref: "chapters",
+    },
   },
   {
     versionKey: false,
@@ -91,6 +95,7 @@ const ItemSchema = new mongoose.Schema(
 ItemSchema.plugin(populatePlugin<IItem>, [
   { property: "unit", ref: "units" },
   { property: "filters", ref: "filters", isArray: true },
+  { property: "chapters", ref: "chapters", isArray: true },
 ]);
 ItemSchema.plugin(indexPlugin<IItem>, {
   properties: ["title"],
