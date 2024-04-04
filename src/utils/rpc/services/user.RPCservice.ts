@@ -1,5 +1,9 @@
 import * as jayson from "jayson/promise";
-import { IUser, IUserAuthUpdater } from "common-atom/interfaces/user.interface";
+import {
+  IUser,
+  IUserAuthUpdater,
+  userAmountObject,
+} from "common-atom/interfaces/user.interface";
 import { config } from "../../../config";
 import { RPCClientRequest } from "../rpc.functions";
 
@@ -9,7 +13,7 @@ export class UsersRPCService {
     port: config.rpc.userService.rpcPort,
   });
 
-  static async getAmountOfUsers(): Promise<number> {
+  static async getAmountOfUsers(): Promise<userAmountObject> {
     return RPCClientRequest(UsersRPCService.rpcClient, "getAmountOfUsers");
   }
 
