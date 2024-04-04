@@ -1,8 +1,22 @@
-import mongoose from "mongoose";
+import * as mongoose from "mongoose";
+import { ItemViews } from "common-atom/interfaces/itemViews.type";
 
-const itemViewsSchema: mongoose.Schema = new mongoose.Schema(
+const itemViewsSchema: mongoose.Schema<ItemViews> = new mongoose.Schema(
   {
-     
+    itemId: {
+      type: mongoose.Types.ObjectId,
+      ref: "items",
+      required: true,
+    },
+    userId: {
+      type: mongoose.Types.ObjectId,
+      ref: "users",
+      required: true,
+    },
+    timeViewed: {
+      type: Date,
+      required: true,
+    },
   },
   {
     versionKey: false,
@@ -10,7 +24,7 @@ const itemViewsSchema: mongoose.Schema = new mongoose.Schema(
   }
 );
 
-export const ItemViewsModel = mongoose.model<mongoose.Document>(
+export const ItemViewsModel = mongoose.model<ItemViews & mongoose.Document>(
   "itemViews",
   itemViewsSchema
 );
