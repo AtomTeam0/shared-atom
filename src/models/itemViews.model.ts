@@ -13,14 +13,10 @@ const itemViewsSchema: mongoose.Schema<ItemViews> = new mongoose.Schema(
       ref: "users",
       required: true,
     },
-    timeViewed: {
-      type: Date,
-      required: true,
-    },
   },
   {
     versionKey: false,
-    timestamps: { createdAt: false, updatedAt: false },
+    timestamps: { createdAt: "timeViewed", updatedAt: false },
   }
 );
 
