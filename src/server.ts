@@ -1,9 +1,9 @@
-import * as express from "express";
-import * as http from "http";
-import * as bodyParser from "body-parser";
-import * as cookieParser from "cookie-parser";
-import * as morgan from "morgan";
-import * as cors from "cors";
+import express from "express";
+import http from "http";
+import { urlencoded, json } from "body-parser";
+import cookieParser from "cookie-parser";
+import morgan from "morgan";
+import cors from "cors";
 import * as winston from "winston";
 import { Router } from "express";
 import * as jayson from "jayson/promise";
@@ -17,6 +17,7 @@ import { initLogger } from "./utils/helpers/logger";
 import { setSocketServer } from "./utils/schema/helpers/socketHelpers";
 import { runWithContextMiddleWare } from "./utils/helpers/context";
 import { config } from "./config";
+import { serve, setup } from "swagger-ui-express";
 
 export class Server {
   public app: express.Application;
@@ -48,7 +49,10 @@ export class Server {
     this.logger = initLogger(serverConfig);
     this.configureMiddlewares();
     this.app.use(runWithContextMiddleWare());
+
     this.app.use(router);
+    this.app.use('/docs', serve, setup({explorer: true, customCss: '.swagger-ui .topbar { display: none }'}));
+
     this.initializeErrorHandler();
     this.server = http.createServer(this.app);
     this.server.listen(this.serverConfig.server.port, () => {
@@ -92,8 +96,8 @@ export class Server {
     }
 
     this.app.use(express.json({ limit: "500mb" }));
-    this.app.use(bodyParser.json({ limit: "500mb" }));
-    this.app.use(bodyParser.urlencoded({ extended: true }));
+    this.app.use(json({ limit: "500mb" }));
+    this.app.use(urlencoded({ extended: true }));
     this.app.use(cookieParser());
   }
 
