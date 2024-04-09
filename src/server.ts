@@ -18,6 +18,7 @@ import { setSocketServer } from "./utils/schema/helpers/socketHelpers";
 import { runWithContextMiddleWare } from "./utils/helpers/context";
 import { config } from "./config";
 import { serve, setup } from "swagger-ui-express";
+import jsdoc from "swagger-jsdoc";
 
 export class Server {
   public app: express.Application;
@@ -71,7 +72,7 @@ export class Server {
       },
       apis: ['*/Backend/**/router.ts'],
     }
-    this.app.use('/docs', serve, setup(swaggerSettings));
+    this.app.use('/docs', serve, setup(jsdoc(swaggerSettings)));
 
     this.initializeErrorHandler();
     this.server = http.createServer(this.app);
