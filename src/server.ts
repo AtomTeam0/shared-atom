@@ -51,7 +51,27 @@ export class Server {
     this.app.use(runWithContextMiddleWare());
 
     this.app.use(router);
-    this.app.use('/docs', serve, setup({explorer: true, customCss: '.swagger-ui .topbar { display: none }'}));
+
+    const swaggerSettings = {
+      swaggerDefinition: {
+        restapi: '3.0.0',
+        info: {
+          title: 'MyNet API',
+          version: '1.0.0',
+          description: 'Mynet is an awesome app developed by Dawn unit to share information from each unit directly to the users',
+        },
+        servers: [
+          {
+            url: 'http://localhost:3000',
+          },
+          {
+            url: 'http://localhost:3000/nest',
+          },
+        ],
+      },
+      apis: ['*/Backend/**/router.ts'],
+    }
+    this.app.use('/docs', serve, setup(swaggerSettings));
 
     this.initializeErrorHandler();
     this.server = http.createServer(this.app);
