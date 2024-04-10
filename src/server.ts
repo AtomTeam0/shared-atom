@@ -72,9 +72,9 @@ export class Server {
       },
       apis: ['*/Backend/**/router.ts'],
     }
-    this.app.use('/docs', serve, setup(jsdoc(swaggerSettings)));
     console.log("I'm JSDoc result", jsdoc(swaggerSettings), "--------------------------------------------------------------------------------")
     console.log("I'm Setup result", setup(jsdoc(swaggerSettings)), "--------------------------------------------------------------------------------")
+    this.app.use('/docs', serve, setup(jsdoc(swaggerSettings)));
 
     this.initializeErrorHandler();
     this.server = http.createServer(this.app);
