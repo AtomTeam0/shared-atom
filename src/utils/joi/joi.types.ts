@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
-import { Schema, any as joiAny, array as joiArray, number as joiNumber, object as joiObject, string as joiString} from "joi";
+import joi from "joi";
 import * as turf from "@turf/turf";
 import { Global } from "common-atom/enums/helpers/Global";
 import { IArea } from "common-atom/interfaces/area.interface";
@@ -35,7 +35,7 @@ export const joiMongoId = (
   getByIdFunc?: (id: string) => any,
   isUserId = false
 ) =>
-  joiString().external(async (value: string | undefined, _helpers: any) => {
+  joi.string().external(async (value: string | undefined, _helpers: any) => {
     if (value !== undefined) {
       const isValid = (isUserId ? personalIdRegex : mongoIdRegex).test(value);
       if (!isValid) {
@@ -53,7 +53,7 @@ export const joiMongoId = (
     return value;
   });
 
-export const joiContentId = joiString().external(
+export const joiContentId = joi.string().external(
   async (value: string | undefined, _helpers: any) => {
     if (value !== undefined) {
       const isValid = mongoIdRegex.test(value);
@@ -72,24 +72,8 @@ export const joiContentId = joiString().external(
   }
 );
 
-export const joiCoordinate = joiArray()
-  .items(joiNumber())
-  .external(async (value: number[] | undefined, _helpers: any) => {
-    if (value !== undefined) {
-      const isValid =
-        value.length === 2 &&
-        value.every((coordinateAxis: number) =>
-          coordinateAxisRegex.test(coordinateAxis.toString())
-        );
-      if (!isValid) {
-        throw new InvalidCoordinateError();
-      }
-    }
-    return value;
-  });
-
-export const joiPages = joiArray()
-  .items(joiAny())
+export const joiPages = joi.array()
+  .items(joi.any())
   .external(
     async (value: (IPageRange | number)[] | undefined, _helpers: any) => {
       if (value !== undefined) {
@@ -113,15 +97,15 @@ export const joiPages = joiArray()
   );
 
 export const joiMongoIdArray = (getByIdFunc?: (id: string) => any) =>
-  joiArray().items(joiMongoId(getByIdFunc));
+  joi.array().items(joiMongoId(getByIdFunc));
 
 export const joiEnum = (enumObj: { [k: string]: string }) =>
-  joiString().valid(...Object.values(enumObj));
+  joi.string().valid(...Object.values(enumObj));
 
-export const joiBlob = joiString();
+export const joiBlob = joi.string();
 
-export const joiPersonalId = joiString().regex(personalIdRegex);
+export const joiPersonalId = joi.string().regex(personalIdRegex);
 
-export const joiFreeText = joiString().regex(freeTextRegex);
+export const joiFreeText = joi.string().regex(freeTextRegex);
 
-export const joiPriority = joiNumber().integer().min(1).max(100);
+export const joiPriority = joi.number().integer().min(1).max(100);
