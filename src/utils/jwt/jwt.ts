@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { authenticate, use } from "passport";
+import passport from "passport";
 import { BearerStrategy, ITokenPayload } from "passport-azure-ad";
 import { Global } from "common-atom/enums/helpers/Global";
 import { setContext } from "../helpers/context";
@@ -45,11 +45,11 @@ const azureADBearerStrategy = new BearerStrategy(
   }
 );
 
-use("oauth-bearer", azureADBearerStrategy);
+passport.use("oauth-bearer", azureADBearerStrategy);
 
 export const verifyToken = wrapAsyncMiddleware(
   async (req: Request, res: Response, next: NextFunction) => {
-    authenticate(
+    passport.authenticate(
       "oauth-bearer",
       { session: false },
       (err: Error, user: any, tokenPayload: ITokenPayload) => {
