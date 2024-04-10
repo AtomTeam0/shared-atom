@@ -1,7 +1,7 @@
-import * as mongoose from "mongoose";
+import {Schema, Types, Document, model} from "mongoose";
 import { Link } from "common-atom/interfaces/link";
 
-const LinkSchema: mongoose.Schema = new mongoose.Schema(
+const LinkSchema: Schema = new Schema(
   {
     url: {
       type: String,
@@ -14,7 +14,7 @@ const LinkSchema: mongoose.Schema = new mongoose.Schema(
   },
 );
 
-export const LinkModel = mongoose.model<Link & mongoose.Document>(
+export const LinkModel = model<Link & Document>(
   "links",
   LinkSchema,
 );

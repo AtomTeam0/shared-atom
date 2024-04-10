@@ -1,5 +1,5 @@
-import * as jayson from "jayson/promise";
-import * as Joi from "joi";
+import { HttpClient } from "jayson/promise";
+import { ObjectSchema } from "joi";
 import { Global } from "common-atom/enums/helpers/Global";
 import { IRPCPayload } from "common-atom/interfaces/helpers/rpcPayload.interface";
 import { Plugins } from "common-atom/enums/Plugins";
@@ -14,7 +14,7 @@ import { defaultValidationOptions } from "../joi/joi.functions";
 
 // a generic RPC function for the sending side
 export const RPCClientRequest = async (
-  rpcClient: jayson.HttpClient,
+  rpcClient: HttpClient,
   route: string,
   params?:
     | {
@@ -41,11 +41,10 @@ export const RPCClientRequest = async (
   return response.result;
 };
 
-// a generic RPC function for the recieving side
 export const RPCServerRequest =
   (
     managerFunction: (...args: any) => Promise<any>,
-    schemaValidation?: Joi.ObjectSchema<any>
+    schemaValidation?: ObjectSchema
   ): any =>
   async (payload: IRPCPayload) =>
     runWithContext(async () => {

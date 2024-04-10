@@ -1,6 +1,6 @@
 {
   "name": "shared-atom",
-  "version": "1.1.86-dev22",
+  "version": "1.1.86-dev23",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AtomTeam0/shared-atom.git"
@@ -37,7 +37,7 @@
     "morgan": "^1.10.0",
     "passport": "^0.6.0",
     "passport-azure-ad": "^4.3.5",
-    "pdfjs-dist": "2.4.456",
+    "pdfjs-dist": "^2.4.456",
     "socket.io": "^4.5.3",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
@@ -56,6 +56,7 @@
     "@types/morgan": "^1.9.3",
     "@types/passport": "^1.0.12",
     "@types/passport-azure-ad": "^4.3.1",
+    "@types/pdfjs-dist": "^2.10.378",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.6",
     "@types/uuid": "^8.3.4",

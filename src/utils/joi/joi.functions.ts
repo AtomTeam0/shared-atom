@@ -1,13 +1,12 @@
-import * as Joi from "joi";
+import { ValidationOptions, ObjectSchema } from "joi";
 import { Request } from "express";
-import { ObjectSchema } from "joi";
 import { Global } from "common-atom/enums/helpers/Global";
 import { Permission } from "common-atom/enums/Permission";
 import { wrapValidator } from "../helpers/wrapper";
 import { PermissionError } from "../errors/generalError";
 import { getContext } from "../helpers/context";
 
-export const defaultValidationOptions: Joi.ValidationOptions = {
+export const defaultValidationOptions: ValidationOptions = {
   abortEarly: false,
   allowUnknown: false,
   convert: true,
@@ -26,8 +25,8 @@ const normalizeRequest = (req: any, value: any): void => {
 
 // joi validation for noraml schemas
 export const validateRequest = (
-  schema: Joi.ObjectSchema<any>,
-  options: Joi.ValidationOptions = defaultValidationOptions,
+  schema: ObjectSchema,
+  options: ValidationOptions = defaultValidationOptions,
   doesWrap = true
 ): any => {
   const validator = async (req: Request): Promise<void> => {
@@ -40,13 +39,13 @@ export const validateRequest = (
   return doesWrap ? wrapValidator(validator) : validator;
 };
 
-// joi validation for schemas that change accourding to the permission of the user
+// joi validation for schemas that changes according to the permission of the user
 export const validateRequestByPermission = (
   allValidations: {
     permissions: Permission[];
     schema: ObjectSchema<any>;
   }[],
-  options: Joi.ValidationOptions = defaultValidationOptions
+  options: ValidationOptions = defaultValidationOptions
 ) => {
   const validator = async (req: Request): Promise<void> => {
     const wantedValidation = allValidations.find((validation) =>

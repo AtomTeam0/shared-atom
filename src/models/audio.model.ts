@@ -1,7 +1,7 @@
-import * as mongoose from "mongoose";
+import {Schema, Document, model} from "mongoose";
 import { IAudio } from "common-atom/interfaces/audio.interface";
 
-const AudioSchema: mongoose.Schema = new mongoose.Schema(
+const AudioSchema: Schema = new Schema(
   {
     audio: {
       type: String,
@@ -14,7 +14,7 @@ const AudioSchema: mongoose.Schema = new mongoose.Schema(
   },
 );
 
-export const AudioModel = mongoose.model<IAudio & mongoose.Document>(
+export const AudioModel = model<IAudio & Document>(
   "audios",
   AudioSchema,
 );

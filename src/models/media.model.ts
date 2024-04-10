@@ -1,8 +1,8 @@
-import * as mongoose from "mongoose";
+import {Schema, Types, Document, model} from "mongoose";
 import { IMedia } from "common-atom/interfaces/media.interface";
 import { config } from "../config";
 
-const MediaSchema: mongoose.Schema = new mongoose.Schema(
+const MediaSchema: Schema = new Schema(
   {
     title: {
       type: String,
@@ -27,7 +27,7 @@ const MediaSchema: mongoose.Schema = new mongoose.Schema(
   }
 );
 
-export const MediaModel = mongoose.model<IMedia & mongoose.Document>(
+export const MediaModel = model<IMedia & Document>(
   "media",
   MediaSchema
 );

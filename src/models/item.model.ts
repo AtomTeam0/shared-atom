@@ -1,12 +1,12 @@
 import { IItem } from "common-atom/interfaces/item.interface";
-import * as mongoose from "mongoose";
+import {Schema, Types, Document, model} from "mongoose";
 import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { Status } from "common-atom/enums/Status";
 import { ContentType } from "common-atom/enums/ContentType";
 
-const ItemSchema = new mongoose.Schema(
+const ItemSchema = new Schema(
   {
     updatedAt: {
       type: Date,
@@ -57,17 +57,17 @@ const ItemSchema = new mongoose.Schema(
       required: true,
     },
     unit: {
-      type: mongoose.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "units",
       required: true,
     },
     filters: {
-      type: [mongoose.Types.ObjectId],
+      type: [Types.ObjectId],
       ref: "filters",
       required: true,
     },
     world: {
-      type: mongoose.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "worlds",
       required: true,
     },
@@ -81,7 +81,7 @@ const ItemSchema = new mongoose.Schema(
       ref: "users",
     },
     chapters: {
-      type: [mongoose.Types.ObjectId],
+      type: [Types.ObjectId],
       ref: "chapters",
     },
   },
@@ -102,7 +102,7 @@ ItemSchema.plugin(indexPlugin<IItem>, {
 });
 ItemSchema.plugin(aggregatePlugin);
 
-export const ItemModel = mongoose.model<IItem & mongoose.Document>(
+export const ItemModel = model<IItem & Document>(
   "items",
   ItemSchema,
 );

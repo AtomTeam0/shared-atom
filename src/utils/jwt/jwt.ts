@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import * as passport from "passport";
+import { authenticate, use } from "passport";
 import { BearerStrategy, ITokenPayload } from "passport-azure-ad";
-import { config } from "../../config";
 import { Global } from "common-atom/enums/helpers/Global";
 import { setContext } from "../helpers/context";
 import { wrapAsyncMiddleware } from "../helpers/wrapper";
@@ -12,10 +11,8 @@ import authConfig from "./authConfig";
 const azureADBearerStrategy = new BearerStrategy(
   {
     identityMetadata: `https://${authConfig.metadata.authority}/${authConfig.credentials.tenantID}/${authConfig.metadata.version}/${authConfig.metadata.discovery}`,
-    // issuer: `https://${authConfig.metadata.authority}/${authConfig.credentials.tenantID}/${authConfig.metadata.version}`,
     clientID: authConfig.credentials.clientID,
     scope: authConfig.metadata.scope as string[],
-    // audience: authConfig.credentials.clientID, // audience is this application
     validateIssuer: authConfig.settings.validateIssuer,
     passReqToCallback: authConfig.settings.passReqToCallback,
     loggingLevel: authConfig.settings.loggingLevel,
@@ -40,8 +37,6 @@ const azureADBearerStrategy = new BearerStrategy(
         throw new TokenNotProvided();
       }
 
-      // You can add custom validation logic here if needed
-
       return done(null, {}, token);
     } catch (error) {
       console.log("Error validating access token:", error);
@@ -50,13 +45,11 @@ const azureADBearerStrategy = new BearerStrategy(
   }
 );
 
-// Configure Passport to use the Azure AD bearer strategy
-passport.use("oauth-bearer", azureADBearerStrategy);
+use("oauth-bearer", azureADBearerStrategy);
 
-// configure a middleware to be used in the routes
 export const verifyToken = wrapAsyncMiddleware(
   async (req: Request, res: Response, next: NextFunction) => {
-    passport.authenticate(
+    authenticate(
       "oauth-bearer",
       { session: false },
       (err: Error, user: any, tokenPayload: ITokenPayload) => {

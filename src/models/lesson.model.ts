@@ -1,9 +1,9 @@
-import * as mongoose from "mongoose";
+import {Schema, Types, Document, model} from "mongoose";
 import { ILesson } from "common-atom/interfaces/lesson.interface";
 import { config } from "../config";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 
-const LessonSchema: mongoose.Schema = new mongoose.Schema(
+const LessonSchema: Schema = new Schema(
   {
     goal: {
       type: String,
@@ -18,18 +18,18 @@ const LessonSchema: mongoose.Schema = new mongoose.Schema(
       required: true,
     },
     chapters: {
-      type: [mongoose.Types.ObjectId],
+      type: [Types.ObjectId],
       required: true,
       ref: "chapters",
     },
     preKnowledge: {
-      type: [mongoose.Types.ObjectId],
+      type: [Types.ObjectId],
       required: true,
       ref: "items",
       default: [],
     },
     test: {
-      type: mongoose.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "tests",
     },
   },
@@ -46,7 +46,7 @@ LessonSchema.plugin(populatePlugin<ILesson>, [
   { property: "test", ref: "tests" },
 ]);
 
-export const LessonModel = mongoose.model<ILesson & mongoose.Document>(
+export const LessonModel = model<ILesson & Document>(
   "lessons",
   LessonSchema
 );

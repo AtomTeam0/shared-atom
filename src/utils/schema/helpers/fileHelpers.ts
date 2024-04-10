@@ -4,7 +4,6 @@ import axios, {AxiosError} from "axios";
 import {config} from "../../../config";
 import {FileConvertionError, FileDownloadError, FileUploadError,} from "../../errors/filesError";
 
-// get files from hatch service
 export const getFileUrl = async (fileId: string) => {
   console.log(
     "get File called",
@@ -25,20 +24,6 @@ export const getFileUrl = async (fileId: string) => {
         },
       }
     );
-    // response data from the Archive looks like this :
-    /*
-    {
-        "FileBase64":<BASE64 DATA>,
-        "FileProperties": {
-            "FileName": "mynet_2mage.PNG",
-            "FileType": "PNG",
-            "DynamicProperties": null,
-            "CreatedOn": "20/07/2023 13:08:05",
-            "status": "Sanitation Succeeded"
-        }
-    }
-    */
-    // we only need the FileBase64.
     return response.data.FileBase64;
   } catch (error: unknown) {
     const axiosError = error as AxiosError;
@@ -48,25 +33,20 @@ export const getFileUrl = async (fileId: string) => {
         axiosError.response.status,
         axiosError.message
       );
-      // The item was not yet sanitized in hatch.
       if (axiosError.response.status === 403) {
         console.log("file is not sanitized yet, returning undefined", axiosError.response);
         return undefined;
-        // throw new FileDownloadError("File is not sanitized yet!", 403);
       }
-      // The request was made and the server responded with a status code that falls out of the range of 2xx
       throw new FileDownloadError(
         axiosError.message,
         axiosError.response.status
       );
     } else if (axiosError && axiosError.request) {
-      // The request was made but no response was received
       throw new FileDownloadError(
           `No response received from download service (Archive) --->${axiosError.message}`,
         502
-      ); // 502 Bad Gateway might be appropriate here
+      );
     } else {
-      // Something happened in setting up the request that triggered an Error
       throw new FileDownloadError(
         axiosError ? axiosError.message : "Unknown download error",
         500
@@ -106,22 +86,17 @@ export const uploadFile = async (file: IFileDetails) => {
         },
       }
     );
-    // response data from the Archive looks like this :  response data  { FileId: 'fe499ec1-8d15-4974-aa76-44ba69e3452a' }
-    // we only need the id.
     return response.data.FileId;
   } catch (error: unknown) {
     const axiosError = error as AxiosError;
     if (axiosError && axiosError.response) {
-      // The request was made and the server responded with a status code that falls out of the range of 2xx
       throw new FileUploadError(axiosError.message, axiosError.response.status);
     } else if (axiosError && axiosError.request) {
-      // The request was made but no response was received
       throw new FileUploadError(
         "No response received from upload service (Archive)",
         502
-      ); // 502 Bad Gateway might be appropriate here
+      );
     } else {
-      // Something happened in setting up the request that triggered an Error
       throw new FileUploadError(
         axiosError ? axiosError.message : "Unknown upload error",
         500

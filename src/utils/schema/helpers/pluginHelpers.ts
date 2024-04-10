@@ -1,11 +1,11 @@
-import * as mongoose from "mongoose";
+import { CallbackError, Query, Schema } from "mongoose";
 import { Global } from "common-atom/enums/helpers/Global";
 import { Plugins } from "common-atom/enums/Plugins";
 import { getContext, shouldSkipPlugins } from "../../helpers/context";
 
 // a generic middleware for inside a plugin witch triggers before the DB operation (Pre)
 export const genericPreMiddleware = (
-  schema: mongoose.Schema,
+  schema: Schema,
   methods: string[],
   func: (thisObject: any) => Promise<void>,
   funcType: Plugins
@@ -13,7 +13,7 @@ export const genericPreMiddleware = (
   methods.map((method: string) =>
     schema.pre(
       method,
-      async function (this: any, next: (err?: mongoose.CallbackError) => void) {
+      async function (this: any, next: (err?: CallbackError) => void) {
         if (!shouldSkipPlugins(funcType)) {
           await func(this);
         }
@@ -25,7 +25,7 @@ export const genericPreMiddleware = (
 
 // a generic middleware for inside a plugin witch triggers after the DB operation (Post)
 export const genericPostMiddleware = (
-  schema: mongoose.Schema,
+  schema: Schema,
   methods: string[],
   func: (thisObject: any, res: any) => Promise<void>,
   funcType: Plugins
@@ -34,8 +34,8 @@ export const genericPostMiddleware = (
     schema.pre(
       method,
       async function (
-        this: mongoose.Query<any, any>,
-        next: (err?: mongoose.CallbackError) => void
+        this: Query<any, any>,
+        next: (err?: CallbackError) => void
       ) {
         (this as any).skipPlugins = getContext(Global.SKIP_PLUGINS);
         next();
@@ -46,9 +46,9 @@ export const genericPostMiddleware = (
     schema.post(
       method,
       async function (
-        this: mongoose.Query<any, any>,
+        this: Query<any, any>,
         res: any,
-        next: (err?: mongoose.CallbackError) => void
+        next: (err?: CallbackError) => void
       ) {
         if (!shouldSkipPlugins(funcType, (this as any).skipPlugins) && !!res) {
           await func(this, res);
