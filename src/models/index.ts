@@ -3,7 +3,6 @@ export * from "./chapter.model";
 export * from "./document.model";
 export * from "./image.model";
 export * from "./item.model";
-export * from "./lesson.model";
 export * from "./link.model";
 export * from "./media.model";
 export * from "./modelLoader";
