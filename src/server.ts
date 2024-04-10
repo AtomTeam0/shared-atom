@@ -17,8 +17,6 @@ import { initLogger } from "./utils/helpers/logger";
 import { setSocketServer } from "./utils/schema/helpers/socketHelpers";
 import { runWithContextMiddleWare } from "./utils/helpers/context";
 import { config } from "./config";
-import { serve, setup } from "swagger-ui-express";
-import jsdoc from "swagger-jsdoc";
 
 export class Server {
   public app: express.Application;
@@ -44,36 +42,12 @@ export class Server {
     RpcServer?: JaysonServer,
     isSocket = false
   ) {
-    // handle express
     this.app = express();
     this.serverConfig = serverConfig;
     this.logger = initLogger(serverConfig);
     this.configureMiddlewares();
     this.app.use(runWithContextMiddleWare());
-
     this.app.use(router);
-
-    const swaggerSettings = {
-      swaggerDefinition: {
-        restapi: '3.0.0',
-        info: {
-          title: 'MyNet API',
-          version: '1.0.0',
-          description: 'Mynet is an awesome app developed by Dawn unit to share information from each unit directly to the users',
-        },
-        servers: [
-          {
-            url: 'http://localhost:3000',
-          },
-          {
-            url: 'http://localhost:3000/nest',
-          },
-        ],
-      },
-      apis: ['*/Backend/**/router.ts'],
-    }
-    this.app.use('/docs', serve, setup(jsdoc(swaggerSettings)));
-
     this.initializeErrorHandler();
     this.server = http.createServer(this.app);
     this.server.listen(this.serverConfig.server.port, () => {
