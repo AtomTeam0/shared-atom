@@ -43,13 +43,10 @@ export const config = {
       item: ["thumbNail"],
       unit: ["image"],
       infographic: ["image"],
-      area: ["image"],
       article: ["thumbNail", "bestSoldier.image", "pdf"],
       lesson: ["pdf"],
       pakal: ["pdf"],
       media: ["video", "audio"],
-      playlist: ["thumbNail"],
-      book: ["thumbNail", "pdf"],
     },
   },
 };

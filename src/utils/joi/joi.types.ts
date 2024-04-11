@@ -1,20 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 import joi from "joi";
-import * as turf from "@turf/turf";
 import { Global } from "common-atom/enums/helpers/Global";
-import { IArea } from "common-atom/interfaces/area.interface";
-import { Section } from "common-atom/enums/Section";
-import { Category } from "common-atom/enums/Category";
-import { Corp } from "common-atom/enums/Corp";
-import { Grade } from "common-atom/enums/Grade";
 import { IPageRange } from "common-atom/interfaces/subject.interface";
 import { ItemRPCService } from "../rpc/services/item.RPCservice";
 import {
   IdNotFoundError,
   InvalidMongoIdError,
-  PoligonIntersectionError,
-  InvalidCoordinateError,
   InvalidPageRange,
 } from "../errors/validationError";
 import { getContext, putSkipPlugins } from "../helpers/context";

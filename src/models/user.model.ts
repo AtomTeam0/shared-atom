@@ -26,11 +26,6 @@ const UserSchema: Schema = new Schema(
       required: true,
       default: Permission.VIEWER,
     },
-    area: {
-      type: String,
-      required: true,
-      ref: "areas",
-    },
     favorites: {
       type: [String],
       required: true,
@@ -103,7 +98,6 @@ const UserSchema: Schema = new Schema(
 
 // plugins
 UserSchema.plugin(populatePlugin<IUser>, [
-  { property: "area", ref: "areas" },
   { property: "favorites", ref: "items", isArray: true },
   { property: "lastWatched", ref: "items", isArray: true },
   { property: "employees", ref: "users", isArray: true, isTazId: true },
