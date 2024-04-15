@@ -1,4 +1,5 @@
-import {NextFunction, Request, Response} from "express";
+import { NextFunction, Response } from "express";
+import { Request } from "common-atom/interfaces/helpers/request.type";
 
 // standard wrappers (taken from the internet) that help with error handling & more
 export const wrapValidator =
