@@ -4,7 +4,7 @@ export type Paths<T extends object> = {
     ? Paths<T[key]>
     : key extends "METHOD"
       ? T[key] extends string
-        ? "get" | "create" | "delete" | "patch" | "put"
+        ? "get" | "post" | "delete" | "patch" | "put"
         : T[key]
       : T[key];
 };
