@@ -1,15 +1,10 @@
-export type Paths<
-  obj extends Record<
-    string,
-    {
-      METHOD: string;
-      URL: string;
-    }
-  >,
-> = Record<
-  keyof obj,
-  {
-    METHOD: "get" | "post" | "put" | "delete" | "patch";
-    URL: string;
-  }
->;
+//recursively switches every "METHODS" field in T to a valid method string
+export type Paths<T extends object> = {
+  [key in keyof T]: T[key] extends object
+    ? Paths<T[key]>
+    : key extends "METHOD"
+      ? T[key] extends string
+        ? "get" | "create" | "delete" | "patch" | "put"
+        : T[key]
+      : T[key];
+};
