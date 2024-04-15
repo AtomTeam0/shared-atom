@@ -65,7 +65,7 @@
         },
         "DELETE": {
           "METHOD": "delete",
-          "URL": "/"
+          "URL": "/:filterId"
         }
       },
       "filtersGroup": {
