@@ -17,7 +17,7 @@ import { initLogger } from "./utils/helpers/logger";
 import { setSocketServer } from "./utils/schema/helpers/socketHelpers";
 import { runWithContextMiddleWare } from "./utils/helpers/context";
 import { config } from "./config";
-import { serve, setup } from "swagger-ui-express";
+import swagger from "swagger-ui-express";
 import jsdoc from "swagger-jsdoc";
 
 export class Server {
@@ -51,8 +51,6 @@ export class Server {
     this.configureMiddlewares();
     this.app.use(runWithContextMiddleWare());
 
-    this.app.use(router);
-
     const swaggerSettings = {
       swaggerDefinition: {
         restapi: '3.0.0',
@@ -73,8 +71,10 @@ export class Server {
       apis: ['*/Backend/**/router.ts'],
     }
     console.log("I'm JSDoc result", jsdoc(swaggerSettings), "--------------------------------------------------------------------------------")
-    console.log("I'm Setup result", setup(jsdoc(swaggerSettings)), "--------------------------------------------------------------------------------")
-    this.app.use('/docs', serve, setup(jsdoc(swaggerSettings)));
+    console.log("I'm Setup result", swagger.setup(jsdoc(swaggerSettings)), "--------------------------------------------------------------------------------")
+    this.app.use('/docs', swagger.serve, swagger.setup(jsdoc(swaggerSettings)));
+
+    this.app.use(router);
 
     this.initializeErrorHandler();
     this.server = http.createServer(this.app);
