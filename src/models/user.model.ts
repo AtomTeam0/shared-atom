@@ -1,4 +1,4 @@
-import * as mongoose from "mongoose";
+import {Schema, Types, Document, model} from "mongoose";
 import { Permission } from "common-atom/enums/Permission";
 import { WatchMode } from "common-atom/enums/WatchMode";
 import { IUser } from "common-atom/interfaces/user.interface";
@@ -6,7 +6,7 @@ import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
 
-const UserSchema: mongoose.Schema = new mongoose.Schema(
+const UserSchema: Schema = new Schema(
   {
     _id: {
       type: String,
@@ -49,7 +49,7 @@ const UserSchema: mongoose.Schema = new mongoose.Schema(
       ref: "users",
     },
     world: {
-      type: mongoose.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "worlds",
     },
     chapters: {
@@ -112,7 +112,7 @@ UserSchema.plugin(indexPlugin<IUser>, {
   properties: ["_id", "name"],
 });
 UserSchema.plugin(aggregatePlugin);
-export const UserModel = mongoose.model<IUser & mongoose.Document>(
+export const UserModel = model<IUser & Document>(
   "users",
   UserSchema,
 );

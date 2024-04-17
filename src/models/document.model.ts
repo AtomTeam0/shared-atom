@@ -1,11 +1,11 @@
-import * as mongoose from "mongoose";
+import {Schema, Types, Document, model} from "mongoose";
 import { populatePlugin } from "../utils/schema/plugins/populatePlugin";
 import { IDocument } from "common-atom/interfaces/document.interface";
 
-const DocumentSchema: mongoose.Schema = new mongoose.Schema(
+const DocumentSchema: Schema = new Schema(
   {
     chapters: {
-      type: [mongoose.Types.ObjectId],
+      type: [Types.ObjectId],
       ref: "chapters",
     },
     pdf: {
@@ -24,7 +24,7 @@ DocumentSchema.plugin(populatePlugin<IDocument>, [
   { property: "chapters", ref: "chapters", isArray: true },
 ]);
 
-export const DocumentModel = mongoose.model<IDocument & mongoose.Document>(
+export const DocumentModel = model<IDocument & Document>(
   "documents",
   DocumentSchema,
 );

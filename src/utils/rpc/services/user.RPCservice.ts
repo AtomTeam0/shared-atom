@@ -1,14 +1,13 @@
-import * as jayson from "jayson/promise";
+import { Client } from "jayson/promise";
 import {
   IUser,
-  IUserAuthUpdater,
   userAmountObject,
 } from "common-atom/interfaces/user.interface";
 import { config } from "../../../config";
 import { RPCClientRequest } from "../rpc.functions";
 
 export class UsersRPCService {
-  private static rpcClient = jayson.Client.http({
+  private static rpcClient = Client.http({
     hostname: config.rpc.userService.rpcHostname,
     port: config.rpc.userService.rpcPort,
   });

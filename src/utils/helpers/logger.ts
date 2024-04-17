@@ -1,18 +1,18 @@
-import * as winston from "winston";
-import * as os from "os";
+import {createLogger, format, transports} from "winston";
+import { hostname } from "os";
 
 export const initLogger = (config: any) => {
-  const logger = winston.createLogger({
-    defaultMeta: { service: config.server.name, hostname: os.hostname() },
+  const logger = createLogger({
+    defaultMeta: { service: config.server.name, hostname: hostname() },
   });
 
-  const winstonConsole = new winston.transports.Console({
+  const winstonConsole = new transports.Console({
     level: "silly",
-    format: winston.format.combine(
-      winston.format.timestamp({
+    format: format.combine(
+      format.timestamp({
         format: "YYYY-MM-DD HH:mm:ss",
       }),
-      winston.format.json()
+      format.json()
     ),
   });
 

@@ -1,15 +1,15 @@
-import * as mongoose from "mongoose";
+import  { Schema } from "mongoose";
 import { Plugins } from "common-atom/enums/Plugins";
-import { PorpertyOptionalDeep, propertyValGetter } from "../../helpers/types";
+import { PropertyOptionalDeep, propertyValGetter } from "../../helpers/types";
 import { genericPostMiddleware } from "../helpers/pluginHelpers";
 import { creationFunctionType } from "../helpers/schemaHelpers";
 import { emitEvent } from "../helpers/socketHelpers";
 
 export function socketPlugin<T>(
-  schema: mongoose.Schema,
+  schema: Schema,
   options: {
     eventName: string;
-    roomNameProperty?: PorpertyOptionalDeep<T>;
+    roomNameProperty?: PropertyOptionalDeep<T>;
   }
 ) {
   genericPostMiddleware(

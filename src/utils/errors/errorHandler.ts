@@ -1,13 +1,13 @@
-import * as express from "express";
+import { NextFunction, Request, Response } from "express";
 import { ServerError, UserError } from "./applicationError";
 
 export const userErrorHandler =
   (log: (...args: any) => void) =>
   (
     error: Error,
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
+    req: Request,
+    res: Response,
+    next: NextFunction
   ) => {
     if (error instanceof UserError) {
       log(
@@ -33,9 +33,9 @@ export const serverErrorHandler =
   (log: (...args: any) => void) =>
   (
     error: Error,
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
+    req: Request,
+    res: Response,
+    next: NextFunction
   ) => {
     if (error instanceof ServerError) {
       log(
@@ -60,9 +60,9 @@ export const unknownErrorHandler =
   (log: (...args: any) => void) =>
   (
     error: Error,
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
+    req: Request,
+    res: Response,
+    next: NextFunction
   ) => {
     log(
       "error",

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import * as context from "cls-hooked";
+import { createNamespace } from "cls-hooked";
 import { Global } from "common-atom/enums/helpers/Global";
 import { Permission } from "common-atom/enums/Permission";
 import { Plugins } from "common-atom/enums/Plugins";
@@ -7,7 +7,7 @@ import { config } from "../../config";
 import { wrapAsyncMiddleware } from "./wrapper";
 
 const nameSpace = "global";
-const session = context.createNamespace(nameSpace);
+const session = createNamespace(nameSpace);
 
 export const getContext = (property: Global): any => session.get(property);
 

@@ -1,7 +1,7 @@
-import * as mongoose from "mongoose";
+import {Schema, Types, Document, model} from "mongoose";
 import { IVideo } from "common-atom/interfaces/video.interface";
 
-const VideoSchema: mongoose.Schema = new mongoose.Schema(
+const VideoSchema: Schema = new Schema(
   {
     video: {
       type: String,
@@ -14,7 +14,7 @@ const VideoSchema: mongoose.Schema = new mongoose.Schema(
   },
 );
 
-export const VideoModel = mongoose.model<IVideo & mongoose.Document>(
+export const VideoModel = model<IVideo & Document>(
   "videos",
   VideoSchema,
 );

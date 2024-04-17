@@ -1,6 +1,6 @@
-import * as mongoose from "mongoose";
+import { Schema } from "mongoose";
 
-export function aggregatePlugin(schema: mongoose.Schema) {
+export function aggregatePlugin(schema: Schema) {
   // eslint-disable-next-line no-param-reassign
   schema.statics.aggregateSingleByCond = function (pipeline, cond = false) {
     return new Promise((resolve, reject) => {

@@ -1,15 +1,15 @@
-import * as mongoose from "mongoose";
+import {Schema, Types, Document, model} from "mongoose";
 import { ItemViews } from "common-atom/interfaces/itemViews.type";
 
-const itemViewsSchema: mongoose.Schema<ItemViews> = new mongoose.Schema(
+const itemViewsSchema: Schema<ItemViews> = new Schema(
   {
     itemId: {
-      type: mongoose.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "items",
       required: true,
     },
     userId: {
-      type: mongoose.Types.ObjectId,
+      type: Types.ObjectId,
       ref: "users",
       required: true,
     },
@@ -20,7 +20,7 @@ const itemViewsSchema: mongoose.Schema<ItemViews> = new mongoose.Schema(
   }
 );
 
-export const ItemViewsModel = mongoose.model<ItemViews & mongoose.Document>(
+export const ItemViewsModel = model<ItemViews & Document>(
   "itemViews",
   itemViewsSchema
 );
