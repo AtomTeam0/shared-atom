@@ -1,5 +1,4 @@
 import { NextFunction, Response, Request as expressRequest } from "express";
-import { Request } from "common-atom/interfaces/helpers/request.type";
 
 // standard wrappers (taken from the internet) that help with error handling & more
 export const wrapValidator =
@@ -11,13 +10,29 @@ export const wrapValidator =
   };
 
 export const wrapController =
-  (func: (req: Request, res: Response, next?: NextFunction) => Promise<void>) =>
-  (req: Request, res: Response, next: NextFunction): void => {
+  <P, B, Q>(
+    func: (
+      req: expressRequest<P, object, B, Q>,
+      res: Response,
+      next?: NextFunction
+    ) => Promise<void>
+  ) =>
+  (
+    req: expressRequest<P, object, B, Q>,
+    res: Response,
+    next: NextFunction
+  ): void => {
     func(req, res, next).catch(next);
   };
 
 export const wrapAsyncMiddleware =
-  (func: (req: expressRequest, res: Response, next: NextFunction) => Promise<void>) =>
+  (
+    func: (
+      req: expressRequest,
+      res: Response,
+      next: NextFunction
+    ) => Promise<void>
+  ) =>
   (req: expressRequest, res: Response, next: NextFunction): void => {
     func(req, res, next).catch(next);
   };
