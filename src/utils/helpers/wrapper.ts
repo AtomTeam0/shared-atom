@@ -1,4 +1,4 @@
-import {NextFunction, Request, Response} from "express";
+import { NextFunction, Request, Response } from "express";
 
 // standard wrappers (taken from the internet) that help with error handling & more
 export const wrapValidator =
