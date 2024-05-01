@@ -6,4 +6,10 @@ export const config = {
   jwt: {
     secretKey: process.env.SECRET_KEY || "atomTeam",
   },
+  rpc: {
+    userService: {
+      rpcPort: +(process.env.APPLICATION_RPC_PORT || 5000),
+      rpcHostname: process.env.USER_SERVICE_RPC_HOST || "localhost",
+    },
+  },
 };
