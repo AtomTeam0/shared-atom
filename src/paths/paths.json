@@ -5,27 +5,27 @@
       "users": {
         "GET_ALL": {
           "METHOD": "get",
-          "URL": "/getUsers"
+          "URL": "getUsers"
         },
         "GET_AMOUNT": {
           "METHOD": "get",
-          "URL": "/getAmountOfUsers"
+          "URL": "getAmountOfUsers"
         },
         "CREATE": {
           "METHOD": "post",
-          "URL": "/createUser"
+          "URL": "createUser"
         },
         "UPDATE": {
           "METHOD": "put",
-          "URL": "/updateUser"
+          "URL": "updateUser"
         },
         "PATCH_CHAPTER": {
           "METHOD": "patch",
-          "URL": "/patchChapter"
+          "URL": "patchChapter"
         },
         "CHANGE_OWN_WORLD": {
           "METHOD": "patch",
-          "URL": "/me/world/:worldId"
+          "URL": "me/world/:worldId"
         }
       }
     },
@@ -33,27 +33,27 @@
       "myWiki": {
         "GET": {
           "METHOD": "get",
-          "URL": "/getMyWiki"
+          "URL": "getMyWiki"
         },
         "BY_IS_PUBLISHED": {
           "METHOD": "get",
-          "URL": "/byIsPublished"
+          "URL": "byIsPublished"
         },
         "APPROVE": {
           "METHOD": "put",
-          "URL": "/approve/:myWikiId"
+          "URL": "approve/:myWikiId"
         },
         "CREATE": {
           "METHOD": "post",
-          "URL": "/createMyWiki"
+          "URL": "createMyWiki"
         },
         "UPDATE": {
           "METHOD": "put",
-          "URL": "/updateMyWiki/:myWikiId"
+          "URL": "updateMyWiki/:myWikiId"
         },
         "DELETE": {
           "METHOD": "delete",
-          "URL": "/deleteMyWiki/:myWikiId"
+          "URL": "deleteMyWiki/:myWikiId"
         }
       }
     },
@@ -61,79 +61,79 @@
       "filters": {
         "GET": {
           "METHOD": "get",
-          "URL": "/get"
+          "URL": "get"
         },
         "DELETE": {
           "METHOD": "delete",
-          "URL": "/:filterId"
+          "URL": ":filterId"
         }
       },
       "filtersGroup": {
         "GET_BY_ANCESTOR": {
           "METHOD": "get",
-          "URL": "/"
+          "URL": ""
         },
         "FIRST_FILTER": {
           "METHOD": "get",
-          "URL": "/firstFilter"
+          "URL": "firstFilter"
         }
       },
       "items": {
         "GET_ALL": {
           "METHOD": "get",
-          "URL": "/getAll"
+          "URL": "getAll"
         },
         "TOP_5": {
           "METHOD": "get",
-          "URL": "/Top5"
+          "URL": "Top5"
         },
         "GET_ITEMS": {
           "METHOD": "get",
-          "URL": "/getItems"
+          "URL": "getItems"
         },
         "GET_FILTERED": {
           "METHOD": "get",
-          "URL": "/get/filtered"
+          "URL": "get/filtered"
         },
         "GET_ITEM_BY_ID": {
           "METHOD": "get",
-          "URL": "/getItemById"
+          "URL": "getItemById"
         },
         "FAVORITES": {
           "METHOD": "get",
-          "URL": "/favorites"
+          "URL": "favorites"
         },
         "UPDATE": {
           "METHOD": "put",
-          "URL": "/"
+          "URL": ""
         },
         "CREATE": {
           "METHOD": "post",
-          "URL": "/firstFilter"
+          "URL": ""
         },
         "SEARCH": {
           "METHOD": "get",
-          "URL": "/search"
+          "URL": "search"
         },
         "GET_BY": {
           "METHOD": "get",
-          "URL": "/"
+          "URL": ""
         }
       },
       "units": {
         "GET": {
           "METHOD": "get",
-          "URL": "/getUnits"
+          "URL": "getUnits"
         }
       },
       "worlds": {
         "GET_ALL": {
           "METHOD": "get",
-          "URL": "/"
+          "URL": ""
         },
         "GET_BY_ID": {
           "METHOD": "get",
-          "URL": "/:id"
+          "URL": ":id"
         }
       }
     }
