@@ -1,6 +1,6 @@
 import { __, fill, flow, fromPairs, get, keys, map } from "lodash/fp";
 import * as paths from "./paths.json";
-import { Paths } from "./types";
+import { ConvertMethod, Result } from "./types";
 
 export const getRouters = <T extends keyof typeof paths.services>(
   serviceName: T
@@ -26,13 +26,7 @@ export const getPaths = <
 >(
   serviceName: T,
   miniRouter?: R
-): Paths<
-  NonNullable<
-    R extends undefined
-      ? (typeof paths.services)[T]
-      : (typeof paths.services)[T][NonNullable<R>]
-  >
-> => {
+): ConvertMethod<Result<T, R>> => {
   const service = paths.services[serviceName];
   const result = (miniRouter ? service[miniRouter] : service) as ReturnType<
     typeof getPaths<T, R>
