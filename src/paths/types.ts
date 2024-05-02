@@ -1,27 +1,64 @@
-import * as paths from "./paths.json";
+import paths from "./paths";
 
-type Method = "get" | "post" | "delete" | "patch" | "put";
+export type Service = keyof typeof paths.services;
 
-type SwitchMethod<T extends object, key extends keyof T> = key extends "METHOD"
-  ? T[key] extends string
-    ? Method
-    : T[key]
-  : T[key];
-
-type service = keyof typeof paths.services;
-
-type GetService<T extends service> = (typeof paths.services)[T];
-
-//recursively switches every "METHODS" field in T to a valid method string
-export type ConvertMethod<T extends object> = {
-  [key in keyof T]: T[key] extends object
-    ? ConvertMethod<T[key]>
-    : SwitchMethod<T, key>;
-};
+export type GetService<T extends Service> = (typeof paths.services)[T];
 
 export type Result<
-  T extends service,
+  T extends Service,
   R extends undefined | keyof GetService<T>,
 > = NonNullable<
   R extends undefined ? GetService<T> : GetService<T>[NonNullable<R>]
 >;
+
+type LastUrlPart<T extends string> = T extends `${string}/${infer Res}`
+  ? `/${Res}`
+  : "";
+
+export type ReplaceParams<
+  Route extends string,
+  Arr extends Params<Route>,
+> = Route extends `${infer Prefix}/:${infer Suffix}`
+  ? Arr extends [
+      infer Current extends string,
+      ...infer Rest extends Params<LastUrlPart<Suffix>>,
+    ]
+    ? `${Prefix}/${Current}${ReplaceParams<LastUrlPart<Suffix>, Rest>}`
+    : Route
+  : Route;
+
+export type Params<
+  Route extends string,
+  Result extends string[] = [],
+> = Route extends `${string}/:${infer Suffix}`
+  ? Params<Suffix, [string, ...Result]>
+  : Result;
+
+export type ParamsReplacer<Route extends string> = <Args extends Params<Route>>(
+  ...args: Args
+) => ReplaceParams<Route, Args>;
+
+export type ParamRoute = `:${string}` | `${string}/:${string}`;
+
+type SwitchURL<T extends { URL: string }> = Omit<T, "URL"> & {
+  URL: ParamsReplacer<`/${T["URL"]}`>;
+};
+
+export type URLObject = {
+  URL: ParamRoute;
+} & Record<string, unknown>;
+
+type HandleObject<T extends object> = T extends URLObject ? SwitchURL<T> : T;
+
+//in every "URL" nested field, checks if it is a parametarized route (contains ":"), and if so (and withParams is on), switches the URL with a function that receives the params and returns the url
+export type TransformUrls<T extends object> = {
+  [key in keyof T]: T[key] extends Record<string, unknown>
+    ? TransformUrls<HandleObject<T[key]>>
+    : T[key];
+};
+
+export type FinalResult<
+  T extends Service,
+  R extends undefined | keyof GetService<T>,
+  withParams extends boolean,
+> = withParams extends true ? TransformUrls<Result<T, R>> : Result<T, R>;
