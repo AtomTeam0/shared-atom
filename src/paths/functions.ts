@@ -1,6 +1,7 @@
 import { Function1, isObject } from "lodash";
 import {
   __,
+  capitalize,
   fill,
   flow,
   fromPairs,
@@ -69,31 +70,33 @@ const isParamRoute = (value: string): value is ParamRoute =>
 const isURLObject = (obj: object): obj is URLObject =>
   "URL" in obj && isString(obj.URL) && isParamRoute(obj.URL);
 
+const switchWithArg = (route: string, args: string[]) => (segment: string) =>
+  flow(split("/"), indexOf(segment), nth(__, args))(route)!;
+
+const putArgIfParam = (route: string, args: string[]) => (segment: string) =>
+  switchValueIf(startsWith(":"), switchWithArg(route, args))(segment);
+
 const toURLFunction =
-  <T extends string>(route: T): ParamsReplacer<T> =>
-  <R extends Params<T>>(...args: R) =>
+  <Route extends string>(route: Route): ParamsReplacer<Route> =>
+  <Args extends Params<Route>>(...args: Args) =>
     flow(
       split("/"),
-      map((segment) =>
-        switchValueIf(
-          startsWith(":"),
-          flow(split("/"), indexOf(segment), nth(__, args))(route)
-        )(segment)
-      ),
+      map(putArgIfParam(route, args)),
       join("/")
-    )(route) as ReplaceParams<T, R>;
+    )(route) as ReplaceParams<Route, Args>;
 
-const transformUrls = <T extends object>(obj: T): TransformUrls<T> =>
+const transformUrls = <Paths extends object>(
+  paths: Paths
+): TransformUrls<Paths> =>
   mapValues(
-    switchValueIf(
-      isObject,
-      flow(
-        switchValueIf(isURLObject, update("URL", toURLFunction)),
-        transformUrls
-      )
-    ),
-    obj
-  ) as TransformUrls<T>;
+    switchValueIf(isObject, updateNestedUrls),
+    paths
+  ) as TransformUrls<Paths>;
+
+const updateNestedUrls = flow(
+  switchValueIf(isURLObject, update("URL", toURLFunction)),
+  transformUrls
+);
 
 export const getPaths = <
   T extends Service,
