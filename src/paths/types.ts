@@ -50,7 +50,7 @@ export type URLObject = {
 
 type HandleObject<T extends object> = T extends URLObject ? SwitchURL<T> : T;
 
-//in every "URL" nested field, checks if it is a parametarized route (contains ":"), and if so (and withParams is on), switches the URL with a function that receives the params and returns the url
+//in every "URL" nested field, checks if it is a parametarized route (contains ":"), and if so, switches the URL with a function that receives the params and returns the url
 export type TransformUrls<T extends object> = {
   [key in keyof T]: T[key] extends Record<string, unknown>
     ? TransformUrls<HandleObject<T[key]>>
