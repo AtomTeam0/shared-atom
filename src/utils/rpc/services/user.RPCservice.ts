@@ -1,4 +1,4 @@
-import { IUser } from "common-atom/interfaces/user.interface";
+import { IUser, userAmountObject } from "common-atom/interfaces/user.interface";
 import { Client } from "jayson/promise";
 import { config } from "../../../config";
 import { RPCClientRequest } from "../rpc.functions";
@@ -13,5 +13,9 @@ export class UsersRPCService {
     return RPCClientRequest(UsersRPCService.rpcClient, "getUserById", {
       userId,
     });
+  }
+
+  static async getAmountOfUsers(): Promise<userAmountObject> {
+    return RPCClientRequest(UsersRPCService.rpcClient, "getAmountOfUsers");
   }
 }
