@@ -21,7 +21,6 @@ const FiltersGroupSchema: mongoose.Schema = new mongoose.Schema(
         },
         filters: {
             type: [mongoose.Types.ObjectId],
-            required: true,
             ref: "filters",
             validate: atLeastOneInArray<mongoose.Types.ObjectId>
         },
