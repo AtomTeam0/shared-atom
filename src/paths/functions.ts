@@ -1,7 +1,6 @@
-import { Function1, isObject } from "lodash";
+import { Function1 } from "lodash";
 import {
   __,
-  capitalize,
   fill,
   flow,
   fromPairs,
@@ -10,6 +9,7 @@ import {
   indexOf,
   isEqual,
   isFunction,
+  isPlainObject,
   isString,
   join,
   keys,
@@ -20,19 +20,16 @@ import {
   startsWith,
   update,
 } from "lodash/fp";
-import paths from "./paths";
 import {
   FinalResult,
   GetService,
   ParamRoute,
-  Params,
-  ParamsReplacer,
-  ReplaceParams,
   Result,
   Service,
   TransformUrls,
   URLObject,
 } from "./types";
+import Paths from "./paths";
 
 const switchValueIf =
   <Origin, Result>(
@@ -43,9 +40,12 @@ const switchValueIf =
     const doesMatchCondition = isFunction(condition)
       ? condition(value)
       : isEqual(value, condition);
+
+    if (!doesMatchCondition) return value;
+
     const finalResult = isFunction(result) ? result(value) : result;
 
-    return doesMatchCondition ? finalResult : value;
+    return finalResult;
   };
 
 export const getRouters = <T extends Service>(serviceName: T) => {
@@ -54,12 +54,12 @@ export const getRouters = <T extends Service>(serviceName: T) => {
     keys,
     map(fill(0, 2, __, Array(2))),
     fromPairs
-  )(paths.services) as {
+  )(Paths.services) as {
     [key in keyof GetService<T>]: key;
   };
 
   return {
-    prefix: `/${paths.api}/${serviceName}`,
+    prefix: `/${Paths.api}/${serviceName}`,
     routers,
   };
 };
@@ -77,19 +77,15 @@ const putArgIfParam = (route: string, args: string[]) => (segment: string) =>
   switchValueIf(startsWith(":"), switchWithArg(route, args))(segment);
 
 const toURLFunction =
-  <Route extends string>(route: Route): ParamsReplacer<Route> =>
-  <Args extends Params<Route>>(...args: Args) =>
-    flow(
-      split("/"),
-      map(putArgIfParam(route, args)),
-      join("/")
-    )(route) as ReplaceParams<Route, Args>;
+  (route: string) =>
+  (...args: string[]) =>
+    flow(split("/"), map(putArgIfParam(route, args)), join("/"))(route);
 
 const transformUrls = <Paths extends object>(
   paths: Paths
 ): TransformUrls<Paths> =>
   mapValues(
-    switchValueIf(isObject, updateNestedUrls),
+    switchValueIf(isPlainObject, updateNestedUrls),
     paths
   ) as TransformUrls<Paths>;
 
@@ -107,7 +103,7 @@ export const getPaths = <
   miniRouter?: R,
   withParams?: P
 ): FinalResult<T, R, P> => {
-  const service = paths.services[serviceName];
+  const service = Paths.services[serviceName];
   const result = (miniRouter ? service[miniRouter] : service) as Result<T, R>;
 
   return (withParams ? transformUrls(result) : result) as FinalResult<T, R, P>;
