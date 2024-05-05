@@ -1,5 +1,5 @@
-import { Client } from "jayson/promise";
 import { IUser } from "common-atom/interfaces/user.interface";
+import { Client } from "jayson/promise";
 import { config } from "../../../config";
 import { RPCClientRequest } from "../rpc.functions";
 

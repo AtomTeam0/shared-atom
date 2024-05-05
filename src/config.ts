@@ -7,6 +7,10 @@ export const config = {
     secretKey: process.env.SECRET_KEY || "atomTeam",
   },
   rpc: {
+    itemService: {
+      rpcPort: +(process.env.APPLICATION_RPC_PORT || 5000),
+      rpcHostname: process.env.ITEM_COMPOSITOR_RPC_HOST || "localhost",
+    },
     userService: {
       rpcPort: +(process.env.APPLICATION_RPC_PORT || 5000),
       rpcHostname: process.env.USER_SERVICE_RPC_HOST || "localhost",
