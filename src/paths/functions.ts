@@ -2,6 +2,7 @@ import { Function1 } from "lodash";
 import {
   __,
   fill,
+  filter,
   flow,
   fromPairs,
   get,
@@ -21,6 +22,7 @@ import {
   startsWith,
   update,
 } from "lodash/fp";
+import Paths from "./paths";
 import {
   FinalResult,
   GetService,
@@ -30,7 +32,6 @@ import {
   TransformUrls,
   URLObject,
 } from "./types";
-import Paths from "./paths";
 
 //actually already exists in the nest utils, will be removed when shared is in the monorepo
 const switchValueIf =
@@ -97,11 +98,16 @@ const isParamRoute = (value: string): value is ParamRoute =>
 const isURLObject = (obj: object): obj is URLObject =>
   "URL" in obj && isString(obj.URL) && isParamRoute(obj.URL);
 
-const switchWithArg = (route: string, args: string[]) => (segment: string) =>
-  flow(split("/"), indexOf(segment), nth(__, args))(route)!;
+const switchWithArg = (route: string, args: string[], segment: string) =>
+  flow(
+    split("/"),
+    filter(startsWith(":")),
+    indexOf(segment),
+    nth(__, args)
+  )(route)!;
 
 const putArgIfParam = (route: string, args: string[]) => (segment: string) =>
-  switchValueIf(startsWith(":"), switchWithArg(route, args))(segment);
+  switchValueIf(startsWith(":"), switchWithArg(route, args, segment))(segment);
 
 const toURLFunction =
   (route: string) =>

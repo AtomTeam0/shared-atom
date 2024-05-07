@@ -1,7 +1,7 @@
 const Paths = {
   api: "api",
   services: {
-    "users-service": {
+    "user-service": {
       users: {
         GET_ALL: {
           METHOD: "get",
@@ -17,15 +17,19 @@ const Paths = {
         },
         UPDATE: {
           METHOD: "put",
-          URL: "/updateUser",
+          URL: "/updateUser/:userId",
         },
         PATCH_CHAPTER: {
           METHOD: "patch",
-          URL: "/patchChapter",
+          URL: "/patchChapter/:chapterId",
         },
         CHANGE_OWN_WORLD: {
           METHOD: "patch",
           URL: "/me/world/:worldId",
+        },
+        CHANGE_PERMISSION: {
+          METHOD: "patch",
+          URL: "/:id/permission",
         },
       },
     },
