@@ -38,10 +38,10 @@ export type ParamsReplacer<Route extends string> = <Args extends Params<Route>>(
   ...args: Args
 ) => ReplaceParams<Route, Args>;
 
-export type ParamRoute = `:${string}` | `${string}/:${string}`;
+export type ParamRoute = `${string}/:${string}`;
 
 type SwitchURL<T extends { URL: string }> = Omit<T, "URL"> & {
-  URL: ParamsReplacer<`/${T["URL"]}`>;
+  URL: ParamsReplacer<T["URL"]>;
 };
 
 export type URLObject = {

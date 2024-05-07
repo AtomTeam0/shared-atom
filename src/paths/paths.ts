@@ -5,27 +5,27 @@ const Paths = {
       users: {
         GET_ALL: {
           METHOD: "get",
-          url: "/getUsers",
+          URL: "/getUsers",
         },
         GET_AMOUNT: {
           METHOD: "get",
-          url: "/getAmountOfUsers",
+          URL: "/getAmountOfUsers",
         },
         CREATE: {
           METHOD: "post",
-          url: "/createUser",
+          URL: "/createUser",
         },
         UPDATE: {
           METHOD: "put",
-          url: "/updateUser",
+          URL: "/updateUser",
         },
         PATCH_CHAPTER: {
           METHOD: "patch",
-          url: "/patchChapter",
+          URL: "/patchChapter",
         },
         CHANGE_OWN_WORLD: {
           METHOD: "patch",
-          url: "/me/world/:worldId",
+          URL: "/me/world/:worldId",
         },
       },
     },
@@ -33,27 +33,27 @@ const Paths = {
       myWiki: {
         GET: {
           METHOD: "get",
-          url: "/getMyWiki",
+          URL: "/getMyWiki",
         },
         BY_IS_PUBLISHED: {
           METHOD: "get",
-          url: "/byIsPublished",
+          URL: "/byIsPublished",
         },
         APPROVE: {
           METHOD: "put",
-          url: "/approve/:myWikiId",
+          URL: "/approve/:myWikiId",
         },
         CREATE: {
           METHOD: "post",
-          url: "/createMyWiki",
+          URL: "/createMyWiki",
         },
         UPDATE: {
           METHOD: "put",
-          url: "/updateMyWiki/:myWikiId",
+          URL: "/updateMyWiki/:myWikiId",
         },
         DELETE: {
           METHOD: "delete",
-          url: "/deleteMyWiki/:myWikiId",
+          URL: "/deleteMyWiki/:myWikiId",
         },
       },
     },
@@ -61,79 +61,79 @@ const Paths = {
       filters: {
         GET: {
           METHOD: "get",
-          url: "/get",
+          URL: "/get",
         },
         DELETE: {
           METHOD: "delete",
-          url: "/:filterId",
+          URL: "/:filterId",
         },
       },
       filtersGroup: {
         GET_BY_ANCESTOR: {
           METHOD: "get",
-          url: "",
+          URL: "",
         },
         FIRST_FILTER: {
           METHOD: "get",
-          url: "/firstFilter",
+          URL: "/firstFilter",
         },
       },
       items: {
         GET_ALL: {
           METHOD: "get",
-          url: "/getAll",
+          URL: "/getAll",
         },
         TOP_5: {
           METHOD: "get",
-          url: "/Top5",
+          URL: "/Top5",
         },
         GET_ITEMS: {
           METHOD: "get",
-          url: "/getItems",
+          URL: "/getItems",
         },
         GET_FILTERED: {
           METHOD: "get",
-          url: "/get/filtered",
+          URL: "/get/filtered",
         },
         GET_ITEM_BY_ID: {
           METHOD: "get",
-          url: "/getItemById",
+          URL: "/getItemById",
         },
         FAVORITES: {
           METHOD: "get",
-          url: "/favorites",
+          URL: "/favorites",
         },
         UPDATE: {
           METHOD: "put",
-          url: "",
+          URL: "",
         },
         CREATE: {
           METHOD: "post",
-          url: "",
+          URL: "",
         },
         SEARCH: {
           METHOD: "get",
-          url: "/search",
+          URL: "/search",
         },
         GET_BY: {
           METHOD: "get",
-          url: "",
+          URL: "",
         },
       },
       units: {
         GET: {
           METHOD: "get",
-          url: "/getUnits",
+          URL: "/getUnits",
         },
       },
       worlds: {
         GET_ALL: {
           METHOD: "get",
-          url: "",
+          URL: "",
         },
         GET_BY_ID: {
           METHOD: "get",
-          url: "/:id",
+          URL: "/:id",
         },
       },
     },

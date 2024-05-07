@@ -11,6 +11,7 @@ import {
   isFunction,
   isPlainObject,
   isString,
+  isUndefined,
   join,
   keys,
   map,
@@ -49,14 +50,6 @@ const switchValueIf =
     return finalResult;
   };
 
-const toURLFunction =
-  (route: string) =>
-  (...args: string[]) =>
-    flow(split("/"), map(putArgIfParam(route, args)), join("/"))(route);
-
-const isURLObject = (obj: object): obj is URLObject =>
-  "URL" in obj && isString(obj.URL) && isParamRoute(obj.URL);
-
 export const getRouters = <T extends Service>(serviceName: T) => {
   const routers = flow(
     get(serviceName),
@@ -67,8 +60,10 @@ export const getRouters = <T extends Service>(serviceName: T) => {
     [key in keyof GetService<T>]: key;
   };
 
+  const prefix: `/${typeof Paths.api}/${T}` = `/${Paths.api}/${serviceName}`;
+
   return {
-    prefix: `/${Paths.api}/${serviceName}`,
+    prefix,
     routers,
   };
 };
@@ -76,14 +71,14 @@ export const getRouters = <T extends Service>(serviceName: T) => {
 export const getPaths = <
   T extends Service,
   R extends undefined | keyof GetService<T> = undefined,
-  P extends boolean = false,
+  P extends boolean = R extends undefined ? true : false,
 >(
   serviceName: T,
-  miniRouter?: R,
-  withParams?: P
+  miniRouter?: R
 ): FinalResult<T, R, P> => {
   const service = Paths.services[serviceName];
   const result = (miniRouter ? service[miniRouter] : service) as Result<T, R>;
+  const withParams = isUndefined(miniRouter);
 
   return (withParams ? transformUrls(result) : result) as FinalResult<T, R, P>;
 };
@@ -95,6 +90,24 @@ export const getPaths = <
 //{METHOD: "get", URL: "/users/:param1/world/:param2"}, it would return something that
 //looks like: {METHOD: "get", URL: (param1, param2) => `/users/${param1}/world/${param2}`}
 //with some carefull reading, the code should be pretty understandable
+
+const isParamRoute = (value: string): value is ParamRoute =>
+  includes("/:", value);
+
+const isURLObject = (obj: object): obj is URLObject =>
+  "URL" in obj && isString(obj.URL) && isParamRoute(obj.URL);
+
+const switchWithArg = (route: string, args: string[]) => (segment: string) =>
+  flow(split("/"), indexOf(segment), nth(__, args))(route)!;
+
+const putArgIfParam = (route: string, args: string[]) => (segment: string) =>
+  switchValueIf(startsWith(":"), switchWithArg(route, args))(segment);
+
+const toURLFunction =
+  (route: string) =>
+  (...args: string[]) =>
+    flow(split("/"), map(putArgIfParam(route, args)), join("/"))(route);
+
 const transformUrls = <Paths extends object>(
   paths: Paths
 ): TransformUrls<Paths> =>
@@ -107,12 +120,3 @@ const updateNestedUrls = flow(
   switchValueIf(isURLObject, update("URL", toURLFunction)),
   transformUrls
 );
-
-const putArgIfParam = (route: string, args: string[]) => (segment: string) =>
-  switchValueIf(startsWith(":"), switchWithArg(route, args))(segment);
-
-const switchWithArg = (route: string, args: string[]) => (segment: string) =>
-  flow(split("/"), indexOf(segment), nth(__, args))(route)!;
-
-const isParamRoute = (value: string): value is ParamRoute =>
-  includes("/:", value) || startsWith(":", value);
