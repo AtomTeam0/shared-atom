@@ -7,7 +7,7 @@ type AsyncRequestHandler<T = Request> = (
 ) => Promise<void>;
 
 type MiddlewareWrapper = (func: AsyncRequestHandler) => AsyncRequestHandler;
-// standard wrappers (taken from the internet) that help with error handling & more
+
 export const wrapValidator: MiddlewareWrapper =
   (func) => async (req, res, next) => {
     func(req, res, next)
