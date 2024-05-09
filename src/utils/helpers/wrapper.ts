@@ -1,22 +1,27 @@
-import {NextFunction, Request, Response} from "express";
+import { NextFunction, Response, Request } from "express";
 
-// standard wrappers (taken from the internet) that help with error handling & more
-export const wrapValidator =
-  (func: (req: Request) => Promise<void>) =>
-  (req: Request, _res: Response, next: NextFunction): void => {
-    func(req)
+type AsyncRequestHandler<T = Request> = (
+  req: T,
+  res: Response,
+  next: NextFunction
+) => Promise<void>;
+
+type MiddlewareWrapper = (func: AsyncRequestHandler) => AsyncRequestHandler;
+
+export const wrapValidator: MiddlewareWrapper =
+  (func) => async (req, res, next) => {
+    func(req, res, next)
       .then(() => next())
       .catch(next);
   };
 
 export const wrapController =
-  (func: (req: Request, res: Response, next?: NextFunction) => Promise<void>) =>
-  (req: Request, res: Response, next: NextFunction): void => {
-    func(req, res, next).catch(next);
+  <T>(func: AsyncRequestHandler<T>): AsyncRequestHandler =>
+  async (req, res, next) => {
+    func(req as T, res, next).catch(next);
   };
 
-export const wrapAsyncMiddleware =
-  (func: (req: Request, res: Response, next: NextFunction) => Promise<void>) =>
-  (req: Request, res: Response, next: NextFunction): void => {
+export const wrapAsyncMiddleware: MiddlewareWrapper =
+  (func) => async (req, res, next) => {
     func(req, res, next).catch(next);
   };
