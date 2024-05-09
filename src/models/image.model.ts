@@ -1,7 +1,7 @@
-import * as mongoose from "mongoose";
+import {Schema, Document, model} from "mongoose";
 import { IImage } from "common-atom/interfaces/image.interface";
 
-const ImageSchema: mongoose.Schema = new mongoose.Schema(
+const ImageSchema: Schema = new Schema(
   {
     image: {
       type: String,
@@ -14,7 +14,7 @@ const ImageSchema: mongoose.Schema = new mongoose.Schema(
   },
 );
 
-export const ImageModel = mongoose.model<IImage & mongoose.Document>(
+export const ImageModel = model<IImage & Document>(
   "images",
   ImageSchema,
 );

@@ -1,8 +1,8 @@
-import * as mongoose from "mongoose";
+import {Schema, Types, Document, model} from "mongoose";
 import {aggregatePlugin} from "../utils/schema/plugins/aggregatePlugin";
 import {World} from "common-atom/interfaces/world.interface";
 
-const WorldSchema: mongoose.Schema = new mongoose.Schema(
+const WorldSchema: Schema = new Schema(
     {
         name: {
             type: String,
@@ -28,7 +28,7 @@ const WorldSchema: mongoose.Schema = new mongoose.Schema(
 
 // plugins
 WorldSchema.plugin(aggregatePlugin);
-export const WorldModel = mongoose.model<World & mongoose.Document>(
+export const WorldModel = model<World & Document>(
     "worlds",
     WorldSchema
 );

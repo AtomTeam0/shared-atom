@@ -1,15 +1,15 @@
-import * as mongoose from "mongoose";
+import {Schema, Types, Document, model} from "mongoose";
 import {IFilter} from "common-atom/interfaces/filter.interface";
 import {aggregatePlugin} from "../utils/schema/plugins/aggregatePlugin";
 
-const FilterSchema: mongoose.Schema = new mongoose.Schema(
+const FilterSchema: Schema = new Schema(
     {
         name: {
             type: String,
             required: true,
         },
         world: {
-            type: mongoose.Types.ObjectId,
+            type: Types.ObjectId,
             required: true,
         },
         level: {
@@ -31,7 +31,7 @@ const FilterSchema: mongoose.Schema = new mongoose.Schema(
 
 // plugins
 FilterSchema.plugin(aggregatePlugin);
-export const FilterModel = mongoose.model<IFilter & mongoose.Document>(
+export const FilterModel = model<IFilter & Document>(
     "filters",
     FilterSchema
 );

@@ -1,20 +1,18 @@
-import { Server } from "socket.io";
-import * as http from "http";
+import { Server } from "http";
+import { Server as SocketServer } from "socket.io";
 import { Global } from "common-atom/enums/helpers/Global";
 import { AreaNames } from "common-atom/enums/AreaNames";
 import { getContext } from "../../helpers/context";
 
-let socketServer: Server;
+let socketServer: SocketServer;
 
-// set a new socket server with an overritten generateId method
-export const setSocketServer = (server: http.Server) => {
-  socketServer = new Server(server, {
+export const setSocketServer = (server: Server) => {
+  socketServer = new SocketServer(server, {
     cors: { origin: "*", methods: ["GET", "PUT", "POST"] },
   });
   socketServer.engine.generateId = () => getContext(Global.USER)._id;
 };
 
-// send the event to the socket clinet by room name
 export const emitEvent = (
   eventName: string,
   data?: any,
@@ -28,7 +26,6 @@ export const emitEvent = (
   }
 };
 
-// updates a socket clients room location
 export const updateSocketRoom = async (roomOptions: {
   joinRoomId: AreaNames;
   leaveRoomId?: AreaNames;

@@ -1,7 +1,7 @@
-import * as mongoose from "mongoose";
+import {Schema, Document, model} from "mongoose";
 import { IChapter } from "common-atom/interfaces/chapter.interface";
 
-const ChapterDocumentSchema: mongoose.Schema = new mongoose.Schema(
+const ChapterDocumentSchema: Schema = new Schema(
   {
     title: {
       type: String,
@@ -18,7 +18,7 @@ const ChapterDocumentSchema: mongoose.Schema = new mongoose.Schema(
   },
 );
 
-export const ChapterModel = mongoose.model<IChapter & mongoose.Document>(
+export const ChapterModel = model<IChapter & Document>(
   "chapters",
   ChapterDocumentSchema,
 );

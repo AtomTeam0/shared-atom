@@ -1,5 +1,5 @@
 /* eslint-disable no-nested-ternary */
-import * as mongoose from "mongoose";
+import { Schema, Types } from "mongoose";
 import { Plugins } from "common-atom/enums/Plugins";
 import { isWithSearch } from "../../helpers/aggregation";
 import { genericPreMiddleware } from "../helpers/pluginHelpers";
@@ -11,7 +11,7 @@ import {
 } from "../helpers/schemaHelpers";
 
 export function populatePlugin<T>(
-  schema: mongoose.Schema,
+  schema: Schema,
   options: {
     property: keyof T;
     ref: string;
@@ -20,7 +20,7 @@ export function populatePlugin<T>(
   }[]
 ) {
   const convertId = (innerId: string, isTazId?: boolean) =>
-    isTazId ? innerId : mongoose.Types.ObjectId(innerId);
+    isTazId ? innerId : Types.ObjectId(innerId);
   genericPreMiddleware(
     schema,
     [...creationFunctionType, ...updateFunctionType],

@@ -1,11 +1,11 @@
-import * as mongoose from "mongoose";
+import {Schema, Types, Document, model} from "mongoose";
 import {FiltersGroup} from "common-atom/interfaces/filtersGroup.interface";
 import {aggregatePlugin} from "../utils/schema/plugins/aggregatePlugin";
 import {atLeastOneInArray} from "./validators/general";
 import {populatePlugin} from "../utils/schema/plugins/populatePlugin";
 import {IItem} from "common-atom/interfaces/item.interface";
 
-const FiltersGroupSchema: mongoose.Schema = new mongoose.Schema(
+const FiltersGroupSchema: Schema = new Schema(
     {
         name: {
             type: String,
@@ -16,20 +16,20 @@ const FiltersGroupSchema: mongoose.Schema = new mongoose.Schema(
             required: true,
         },
         world: {
-            type: mongoose.Types.ObjectId,
+            type: Types.ObjectId,
             required: true,
         },
         filters: {
-            type: [mongoose.Types.ObjectId],
+            type: [Types.ObjectId],
             required: true,
             ref: "filters",
-            validate: atLeastOneInArray<mongoose.Types.ObjectId>
+            validate: atLeastOneInArray<Types.ObjectId>
         },
         isLast: {
             type: Boolean,
         },
         ancestorFilters: {
-            type: [mongoose.Types.ObjectId],
+            type: [Types.ObjectId],
             ref: "filters",
         },
     },
@@ -47,7 +47,7 @@ FiltersGroupSchema.plugin(populatePlugin<IItem>, [
 
 // plugins
 FiltersGroupSchema.plugin(aggregatePlugin);
-export const FiltersGroupModel = mongoose.model<FiltersGroup & mongoose.Document>(
+export const FiltersGroupModel = model<FiltersGroup & Document>(
     "filtersGroups",
     FiltersGroupSchema
 );

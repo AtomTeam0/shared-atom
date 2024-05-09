@@ -1,9 +1,9 @@
 import { IMyWiki } from "common-atom/interfaces/myWiki.interface";
-import * as mongoose from "mongoose";
+import {Schema, Document, model} from "mongoose";
 import { aggregatePlugin } from "../utils/schema/plugins/aggregatePlugin";
 import { indexPlugin } from "../utils/schema/plugins/indexPlugin";
 
-const MyWikiSchema: mongoose.Schema = new mongoose.Schema(
+const MyWikiSchema: Schema = new Schema(
   {
     word: {
       type: String,
@@ -34,7 +34,7 @@ MyWikiSchema.plugin(indexPlugin<IMyWiki>, {
   properties: ["word", "defenition"],
 });
 MyWikiSchema.plugin(aggregatePlugin);
-export const MyWikiModel = mongoose.model<IMyWiki & mongoose.Document>(
+export const MyWikiModel = model<IMyWiki & Document>(
   "myWiki",
   MyWikiSchema
 );

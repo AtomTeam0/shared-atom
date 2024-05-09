@@ -1,7 +1,7 @@
-import * as mongoose from "mongoose";
+import { Schema } from "mongoose";
 
 export function indexPlugin<T>(
-  schema: mongoose.Schema,
+  schema: Schema,
   options: {
     properties: Array<keyof T>;
   }

@@ -1,12 +1,12 @@
-import * as express from "express";
-import * as http from "http";
-import * as bodyParser from "body-parser";
-import * as cookieParser from "cookie-parser";
-import * as morgan from "morgan";
-import * as cors from "cors";
-import * as winston from "winston";
+import express from "express";
+import http from "http";
+import { urlencoded, json } from "body-parser";
+import cookieParser from "cookie-parser";
+import morgan from "morgan";
+import cors from "cors";
+import { Logger } from "winston";
 import { Router } from "express";
-import * as jayson from "jayson/promise";
+import { Server as JaysonServer } from "jayson/promise";
 import { IServerConfig } from "common-atom/interfaces/helpers/serverConfig.interface";
 import {
   userErrorHandler,
@@ -25,12 +25,12 @@ export class Server {
 
   private server: http.Server;
 
-  private logger: winston.Logger;
+  private logger: Logger;
 
   public static bootstrap(
     serverConfig: IServerConfig,
     router: Router,
-    RpcServer?: jayson.Server,
+    RpcServer?: JaysonServer,
     isSocket = false
   ): Server {
     return new Server(serverConfig, router, RpcServer, isSocket);
@@ -39,10 +39,9 @@ export class Server {
   private constructor(
     serverConfig: IServerConfig,
     router: Router,
-    RpcServer?: jayson.Server,
+    RpcServer?: JaysonServer,
     isSocket = false
   ) {
-    // handle express
     this.app = express();
     this.serverConfig = serverConfig;
     this.logger = initLogger(serverConfig);
@@ -92,8 +91,8 @@ export class Server {
     }
 
     this.app.use(express.json({ limit: "500mb" }));
-    this.app.use(bodyParser.json({ limit: "500mb" }));
-    this.app.use(bodyParser.urlencoded({ extended: true }));
+    this.app.use(json({ limit: "500mb" }));
+    this.app.use(urlencoded({ extended: true }));
     this.app.use(cookieParser());
   }
 

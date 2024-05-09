@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import * as formidable from "formidable";
+import formidable from "formidable";
 import { IFileDetails } from "common-atom/interfaces/helpers/file.interface";
 import { wrapAsyncMiddleware } from "../helpers/wrapper";
 
