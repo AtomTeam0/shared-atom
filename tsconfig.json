@@ -10,8 +10,7 @@
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@types", "./typings"],
     "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "esModuleInterop": true
   },
   "exclude": ["node_modules", "dist"]
 }
