@@ -36,7 +36,8 @@ export const joiMongoId = (
     return value;
   });
 
-export const joiPages = joi.array()
+export const joiPages = joi
+  .array()
   .items(joi.any())
   .external(
     async (value: (IPageRange | number)[] | undefined, _helpers: any) => {
@@ -73,3 +74,27 @@ export const joiPersonalId = joi.string().regex(personalIdRegex);
 export const joiFreeText = joi.string().regex(freeTextRegex);
 
 export const joiPriority = joi.number().integer().min(1).max(100);
+
+//TODO: this is PM approved, find actual solution for ensuring text safety
+export const forbiddenChars = "<>$%";
+export const joiSafeString = (forbiddenChars: string) =>
+  joi.string().regex(new RegExp(`^[^${forbiddenChars}]+$`));
+
+//lightweight schema for making sure the file is from multer
+export const JoiMulterFile = () =>
+  joi.array()
+    .items(
+      joi.object({
+        fieldname: joi.string(),
+        originalname: joi.string(),
+        encoding: joi.string(),
+        mimetype: joi.string(),
+        size: joi.number(),
+        stream: joi.object().unknown(true),
+        destination: joi.string(),
+        fileName: joi.string(),
+        path: joi.string(),
+        buffer: joi.object().unknown(true),
+      })
+    )
+    .min(1);
