@@ -11,14 +11,20 @@ const throwError = (code: HttpStatusCode) =>
     throw err;
   });
 
+export const throwBadRequestError = throwError(HttpStatusCode.BadRequest);
+
+export const generateUnauthorizedError = generateError(
+  HttpStatusCode.Unauthorized
+);
+export const throwUnauthorizedError = throwError(HttpStatusCode.Unauthorized);
+
+export const throwNotFoundError = (missingItem: string) => {
+  throw generateError(HttpStatusCode.NotFound)(`${missingItem} not found`);
+};
+
 export const generateInternalServerError = generateError(
   HttpStatusCode.InternalServerError
 );
-
-export const throwBadRequestError = throwError(HttpStatusCode.BadRequest);
-
-export const generateUnauthorizedError = generateError(HttpStatusCode.Unauthorized);
-export const throwUnauthorizedError = throwError(HttpStatusCode.Unauthorized);
 
 export class ApplicationError extends Error {
   status: number;

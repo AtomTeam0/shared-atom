@@ -3,11 +3,10 @@
 import { Global } from "common-atom/enums/helpers/Global";
 import { IPageRange } from "common-atom/interfaces/subject.interface";
 import joi from "joi";
-import { throwBadRequestError } from "../errors/applicationError";
 import {
-  IdNotFoundError,
-  InvalidMongoIdError,
-} from "../errors/validationError";
+  throwBadRequestError,
+  throwNotFoundError,
+} from "../errors/applicationError";
 import { getContext, putSkipPlugins } from "../helpers/context";
 
 const personalIdRegex = /^[0-9]{9}$/;
@@ -22,14 +21,14 @@ export const joiMongoId = (
     if (value !== undefined) {
       const isValid = (isUserId ? personalIdRegex : mongoIdRegex).test(value);
       if (!isValid) {
-        throw new InvalidMongoIdError();
+        throwBadRequestError("Id is not a valid mongoDB id");
       } else if (getByIdFunc) {
         const skipPlugins = getContext(Global.SKIP_PLUGINS);
         putSkipPlugins();
         const res = await getByIdFunc(value);
         putSkipPlugins(skipPlugins);
         if (!res) {
-          throw new IdNotFoundError();
+          throwNotFoundError("Id");
         }
       }
     }

@@ -1,10 +1,15 @@
-import { Global } from "common-atom/enums/helpers/Global";
 import { Plugins } from "common-atom/enums/Plugins";
+import { Global } from "common-atom/enums/helpers/Global";
 import { IRPCPayload } from "common-atom/interfaces/helpers/rpcPayload.interface";
 import { HttpClient } from "jayson/promise";
 import { ObjectSchema } from "joi";
-import { RPCFunctionError } from "../errors/validationError";
-import { getContext, putSkipPlugins, runWithContext, setContext } from "../helpers/context";
+import { generateInternalServerError } from "../errors/applicationError";
+import {
+  getContext,
+  putSkipPlugins,
+  runWithContext,
+  setContext,
+} from "../helpers/context";
 import { defaultValidationOptions } from "../joi/joi.functions";
 
 // a generic RPC function for the sending side
@@ -42,26 +47,28 @@ export const RPCServerRequest =
     managerFunction: (...args: any) => Promise<any>,
     schemaValidation?: ObjectSchema<any>
   ): any =>
-    async (payload: IRPCPayload) =>
-      runWithContext(async () => {
-        let result;
-        try {
-          if (schemaValidation) {
-            await schemaValidation.validateAsync(
-              payload.params,
-              defaultValidationOptions
-            );
-          }
-
-          setContext(Global.USER, payload.user);
-          putSkipPlugins(payload.skipPlugins);
-
-          result = await managerFunction(
-            ...(payload.params ? Object.values(payload.params) : [])
+  async (payload: IRPCPayload) =>
+    runWithContext(async () => {
+      let result;
+      try {
+        if (schemaValidation) {
+          await schemaValidation.validateAsync(
+            payload.params,
+            defaultValidationOptions
           );
-        } catch (error: any) {
-          return new RPCFunctionError(error);
         }
 
-        return result;
-      });
+        setContext(Global.USER, payload.user);
+        putSkipPlugins(payload.skipPlugins);
+
+        result = await managerFunction(
+          ...(payload.params ? Object.values(payload.params) : [])
+        );
+      } catch (error: any) {
+        return generateInternalServerError(
+          `RPC function error${error.message && `- ${error.message}`}`
+        );
+      }
+
+      return result;
+    });

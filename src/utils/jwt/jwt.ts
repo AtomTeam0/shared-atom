@@ -6,7 +6,6 @@ import {
   generateUnauthorizedError,
   throwUnauthorizedError,
 } from "../errors/applicationError";
-import { TokenNotProvided } from "../errors/validationError";
 import { setContext } from "../helpers/context";
 import { wrapAsyncMiddleware } from "../helpers/wrapper";
 import authConfig from "./authConfig";
@@ -39,7 +38,7 @@ const azureADBearerStrategy = new BearerStrategy(
         );
       }
       if (!token) {
-        throw new TokenNotProvided();
+        throwUnauthorizedError("Must provide token");
       }
 
       return done(null, {}, token);
@@ -64,7 +63,7 @@ export const verifyToken = wrapAsyncMiddleware(
         }
 
         if (!tokenPayload) {
-          throw new TokenNotProvided();
+          throwUnauthorizedError("Must provide token");
         }
         req.user = tokenPayload;
         setContext(Global.AZURE_USER, req.user);
