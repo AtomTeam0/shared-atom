@@ -5,7 +5,7 @@ import { BearerStrategy, ITokenPayload } from "passport-azure-ad";
 import {
   generateUnauthorizedError,
   throwUnauthorizedError,
-} from "../errors/applicationError";
+} from "../errors/ErrorGenerators";
 import { setContext } from "../helpers/context";
 import { wrapAsyncMiddleware } from "../helpers/wrapper";
 import authConfig from "./authConfig";

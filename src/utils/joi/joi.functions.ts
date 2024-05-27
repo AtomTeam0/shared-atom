@@ -2,7 +2,7 @@ import { Permission } from "common-atom/enums/Permission";
 import { Global } from "common-atom/enums/helpers/Global";
 import { Request } from "express";
 import { ObjectSchema, ValidationOptions } from "joi";
-import { throwUnauthorizedError } from "../errors/applicationError";
+import { throwUnauthorizedError } from "../errors/ErrorGenerators";
 import { getContext } from "../helpers/context";
 import { wrapValidator } from "../helpers/wrapper";
 

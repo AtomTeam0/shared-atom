@@ -6,7 +6,7 @@ import joi from "joi";
 import {
   throwBadRequestError,
   throwNotFoundError,
-} from "../errors/applicationError";
+} from "../errors/ErrorGenerators";
 import { getContext, putSkipPlugins } from "../helpers/context";
 
 const personalIdRegex = /^[0-9]{9}$/;

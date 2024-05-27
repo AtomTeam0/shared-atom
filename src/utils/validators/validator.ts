@@ -2,7 +2,7 @@ import { Permission } from "common-atom/enums/Permission";
 import { Global } from "common-atom/enums/helpers/Global";
 import { NextFunction, Request, Response } from "express";
 import { ITokenPayload } from "passport-azure-ad";
-import { generateUnauthorizedError } from "../errors/applicationError";
+import { generateUnauthorizedError } from "../errors/ErrorGenerators";
 import { setContext } from "../helpers/context";
 import { wrapAsyncMiddleware } from "../helpers/wrapper";
 import { UsersRPCService } from "../rpc/services/user.RPCservice";

@@ -3,7 +3,7 @@ import { Global } from "common-atom/enums/helpers/Global";
 import { IRPCPayload } from "common-atom/interfaces/helpers/rpcPayload.interface";
 import { HttpClient } from "jayson/promise";
 import { ObjectSchema } from "joi";
-import { generateInternalServerError } from "../errors/applicationError";
+import { generateInternalServerError } from "../errors/ErrorGenerators";
 import {
   getContext,
   putSkipPlugins,
