@@ -15,5 +15,8 @@ export const errorCatcherMiddleware =
       ? error
       : generateInternalServerError(error);
 
+    log("error", message, JSON.stringify(req.user));
+
     res.status(code).send({ code, message });
+    next();
   };
