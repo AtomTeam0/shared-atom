@@ -1,8 +1,8 @@
 import { Permission } from "common-atom/enums/Permission";
 import { Global } from "common-atom/enums/helpers/Global";
-import { Request } from "express";
+import { NextFunction, Request, Response } from "express";
 import { ObjectSchema, ValidationOptions } from "joi";
-import { flow, get } from "lodash/fp";
+import { ary, flow, get } from "lodash/fp";
 import {
   throwBadRequestError,
   throwUnauthorizedError,
@@ -19,9 +19,10 @@ export const defaultValidationOptions: ValidationOptions = {
 // joi validation for noraml schemas
 export const validateRequest =
   (schema: ObjectSchema): any =>
-  async (req: Request) =>
+  async (req: Request, res: Response, next: NextFunction) =>
     await schema
       .validateAsync(req)
+      .then(ary(0, next))
       .catch(flow(get("message"), throwBadRequestError));
 
 // joi validation for schemas that changes according to the permission of the user
