@@ -17,12 +17,6 @@ export class ServerError extends ApplicationError {
   }
 }
 
-export class ConnectionError extends ApplicationError {
-  constructor(message?: string, status?: number) {
-    super(message || "Service Unavailable Error", status || 503);
-  }
-}
-
 export class UserError extends ApplicationError {
   constructor(message?: string, status?: number) {
     super(message || "User Error", status || 400);
