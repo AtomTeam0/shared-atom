@@ -19,9 +19,9 @@ export const defaultValidationOptions: ValidationOptions = {
 
 // joi validation for noraml schemas
 export const validateRequest =
-  (schema: ObjectSchema): any =>
+  (requestSchema: ObjectSchema): any =>
   async (req: Request, res: Response, next: NextFunction) =>
-    await schema
+    await requestSchema
       .unknown(true)
       .validateAsync(req)
       .then(ary(0, next))
