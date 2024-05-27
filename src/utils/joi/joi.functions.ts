@@ -22,6 +22,7 @@ export const validateRequest =
   (schema: ObjectSchema): any =>
   async (req: Request, res: Response, next: NextFunction) =>
     await schema
+      .unknown(true)
       .validateAsync(req)
       .then(ary(0, next))
       .catch(flow(get("message"), generateBadRequestError, next));
