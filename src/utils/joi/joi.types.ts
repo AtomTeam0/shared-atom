@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
-import joi from "joi";
 import { Global } from "common-atom/enums/helpers/Global";
 import { IPageRange } from "common-atom/interfaces/subject.interface";
+import joi from "joi";
+import { throwBadRequestError } from "../errors/applicationError";
 import {
   IdNotFoundError,
   InvalidMongoIdError,
-  InvalidPageRange,
 } from "../errors/validationError";
 import { getContext, putSkipPlugins } from "../helpers/context";
 
@@ -54,7 +54,7 @@ export const joiPages = joi
           .flat();
         const isValid = new Set(arr).size === arr.length;
         if (!isValid) {
-          throw new InvalidPageRange();
+          throwBadRequestError("Page range cannot intersect");
         }
       }
       return value;
@@ -82,7 +82,8 @@ export const joiSafeString = (forbiddenChars: string) =>
 
 //lightweight schema for making sure the file is from multer
 export const JoiMulterFile = () =>
-  joi.array()
+  joi
+    .array()
     .items(
       joi.object({
         fieldname: joi.string(),

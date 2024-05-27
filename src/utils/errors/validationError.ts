@@ -1,4 +1,4 @@
-import {ServerError, UserError} from "./applicationError";
+import { ServerError, UserError } from "./applicationError";
 
 export class RPCFunctionError extends ServerError {
   constructor(err?: Error) {
@@ -32,17 +32,3 @@ export class TokenNotProvided extends UserError {
     super("Must provide token", 401);
   }
 }
-
-export class InvalidToken extends UserError {
-  constructor(msg?: string) {
-    super(`Invalid Token -- ${msg}`, 401);
-  }
-}
-
-
-export class InvalidPageRange extends ServerError {
-  constructor() {
-    super("Page range cannot intersect", 400);
-  }
-}
-
