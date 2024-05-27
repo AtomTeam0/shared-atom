@@ -1,10 +1,10 @@
-import { ValidationOptions, ObjectSchema } from "joi";
-import { Request } from "express";
-import { Global } from "common-atom/enums/helpers/Global";
 import { Permission } from "common-atom/enums/Permission";
-import { wrapValidator } from "../helpers/wrapper";
-import { PermissionError } from "../errors/generalError";
+import { Global } from "common-atom/enums/helpers/Global";
+import { Request } from "express";
+import { ObjectSchema, ValidationOptions } from "joi";
+import { throwUnauthorizedError } from "../errors/applicationError";
 import { getContext } from "../helpers/context";
+import { wrapValidator } from "../helpers/wrapper";
 
 export const defaultValidationOptions: ValidationOptions = {
   abortEarly: false,
@@ -51,10 +51,10 @@ export const validateRequestByPermission = (
     const wantedValidation = allValidations.find((validation) =>
       validation.permissions.includes(getContext(Global.USER).permission)
     );
-    if (!wantedValidation) {
-      throw new PermissionError();
-    }
-    await validateRequest(wantedValidation.schema, options, false)(req);
+
+    wantedValidation
+      ? await validateRequest(wantedValidation.schema, options, false)(req)
+      : throwUnauthorizedError("Invalid Permission");
   };
   return wrapValidator(validator);
 };
