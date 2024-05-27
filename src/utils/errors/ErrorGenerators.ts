@@ -11,6 +11,7 @@ const throwError = (code: HttpStatusCode) =>
     throw err;
   });
 
+export const generateBadRequestError = generateError(HttpStatusCode.BadRequest);
 export const throwBadRequestError = throwError(HttpStatusCode.BadRequest);
 
 export const generateUnauthorizedError = generateError(

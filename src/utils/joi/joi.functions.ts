@@ -4,6 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import { ObjectSchema, ValidationOptions } from "joi";
 import { ary, flow, get } from "lodash/fp";
 import {
+  generateBadRequestError,
   throwBadRequestError,
   throwUnauthorizedError,
 } from "../errors/ErrorGenerators";
@@ -23,7 +24,7 @@ export const validateRequest =
     await schema
       .validateAsync(req)
       .then(ary(0, next))
-      .catch(flow(get("message"), throwBadRequestError));
+      .catch(flow(get("message"), generateBadRequestError, next));
 
 // joi validation for schemas that changes according to the permission of the user
 export const validateRequestByPermission = (
