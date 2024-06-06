@@ -74,11 +74,6 @@ export const joiFreeText = joi.string().regex(freeTextRegex);
 
 export const joiPriority = joi.number().integer().min(1).max(100);
 
-//TODO: this is PM approved, find actual solution for ensuring text safety
-export const forbiddenChars = "<>$%";
-export const joiSafeString = (forbiddenChars: string) =>
-  joi.string().regex(new RegExp(`^[^${forbiddenChars}]+$`));
-
 //lightweight schema for making sure the file is from multer
 export const JoiMulterFile = () =>
   joi

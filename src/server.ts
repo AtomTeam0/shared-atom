@@ -12,6 +12,7 @@ import { errorCatcherMiddleware } from "./utils/errors/Middlewares";
 import { runWithContextMiddleWare } from "./utils/helpers/context";
 import { initLogger } from "./utils/helpers/logger";
 import { setSocketServer } from "./utils/schema/helpers/socketHelpers";
+import mongoSanitize from "express-mongo-sanitize";
 
 export class Server {
   public app: express.Application;
@@ -87,6 +88,7 @@ export class Server {
     this.app.use(json({ limit: "500mb" }));
     this.app.use(urlencoded({ extended: true }));
     this.app.use(cookieParser());
+    this.app.use(mongoSanitize({ allowDots: true }));
   }
 
   private initializeErrorHandler() {
