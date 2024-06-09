@@ -12,11 +12,13 @@ const throwError = (code: HttpStatusCode) =>
   });
 
 export const generateBadRequestError = generateError(HttpStatusCode.BadRequest);
+
 export const throwBadRequestError = throwError(HttpStatusCode.BadRequest);
 
 export const generateUnauthorizedError = generateError(
   HttpStatusCode.Unauthorized
 );
+
 export const throwUnauthorizedError = throwError(HttpStatusCode.Unauthorized);
 
 export const throwNotFoundError = (missingItem: string) => {
