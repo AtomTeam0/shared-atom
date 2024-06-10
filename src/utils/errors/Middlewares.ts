@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { Server } from "../../server";
-import { httpError, isHttpError } from "./types";
+import { httpError } from "./types";
 import { generateInternalServerError } from "./ErrorGenerators";
+import { isHttpError } from "./functions";
 
 export const errorCatcherMiddleware =
   (log: Server["log"]) =>
