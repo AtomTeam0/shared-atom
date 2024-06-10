@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
-import joi from "joi";
 import { Global } from "common-atom/enums/helpers/Global";
 import { IPageRange } from "common-atom/interfaces/subject.interface";
+import joi from "joi";
 import {
-  IdNotFoundError,
-  InvalidMongoIdError,
-  InvalidPageRange,
-} from "../errors/validationError";
+  throwBadRequestError,
+  throwNotFoundError,
+} from "../errors/ErrorGenerators";
 import { getContext, putSkipPlugins } from "../helpers/context";
 
 const personalIdRegex = /^[0-9]{9}$/;
@@ -22,14 +21,14 @@ export const joiMongoId = (
     if (value !== undefined) {
       const isValid = (isUserId ? personalIdRegex : mongoIdRegex).test(value);
       if (!isValid) {
-        throw new InvalidMongoIdError();
+        throwBadRequestError("Id is not a valid mongoDB id");
       } else if (getByIdFunc) {
         const skipPlugins = getContext(Global.SKIP_PLUGINS);
         putSkipPlugins();
         const res = await getByIdFunc(value);
         putSkipPlugins(skipPlugins);
         if (!res) {
-          throw new IdNotFoundError();
+          throwNotFoundError("Id");
         }
       }
     }
@@ -54,7 +53,7 @@ export const joiPages = joi
           .flat();
         const isValid = new Set(arr).size === arr.length;
         if (!isValid) {
-          throw new InvalidPageRange();
+          throwBadRequestError("Page range cannot intersect");
         }
       }
       return value;
@@ -75,14 +74,10 @@ export const joiFreeText = joi.string().regex(freeTextRegex);
 
 export const joiPriority = joi.number().integer().min(1).max(100);
 
-//TODO: this is PM approved, find actual solution for ensuring text safety
-export const forbiddenChars = "<>$%";
-export const joiSafeString = (forbiddenChars: string) =>
-  joi.string().regex(new RegExp(`^[^${forbiddenChars}]+$`));
-
 //lightweight schema for making sure the file is from multer
 export const JoiMulterFile = () =>
-  joi.array()
+  joi
+    .array()
     .items(
       joi.object({
         fieldname: joi.string(),

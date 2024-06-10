@@ -1,10 +1,15 @@
-import { ValidationOptions, ObjectSchema } from "joi";
-import { Request } from "express";
-import { Global } from "common-atom/enums/helpers/Global";
 import { Permission } from "common-atom/enums/Permission";
-import { wrapValidator } from "../helpers/wrapper";
-import { PermissionError } from "../errors/generalError";
+import { Global } from "common-atom/enums/helpers/Global";
+import { NextFunction, Request, Response } from "express";
+import { ObjectSchema, ValidationOptions } from "joi";
+import { ary, flow, get } from "lodash/fp";
+import {
+  generateBadRequestError,
+  throwBadRequestError,
+  throwUnauthorizedError,
+} from "../errors/ErrorGenerators";
 import { getContext } from "../helpers/context";
+import { wrapValidator } from "../helpers/wrapper";
 
 export const defaultValidationOptions: ValidationOptions = {
   abortEarly: false,
@@ -12,49 +17,31 @@ export const defaultValidationOptions: ValidationOptions = {
   convert: true,
 };
 
-const normalizeRequest = (req: any, value: any): void => {
-  req.originalBody = req.body;
-  req.body = value.body;
-
-  req.originalQuery = req.query;
-  req.query = value.query;
-
-  req.originalParams = req.params;
-  req.params = value.params;
-};
-
 // joi validation for noraml schemas
-export const validateRequest = (
-  schema: ObjectSchema,
-  options: ValidationOptions = defaultValidationOptions,
-  doesWrap = true
-): any => {
-  const validator = async (req: Request): Promise<void> => {
-    const value = await schema.unknown().validateAsync(req, options);
-    if (options.convert) {
-      normalizeRequest(req, value);
-    }
-  };
-
-  return doesWrap ? wrapValidator(validator) : validator;
-};
+export const validateRequest =
+  (requestSchema: ObjectSchema): any =>
+  async (req: Request, res: Response, next: NextFunction) =>
+    await requestSchema
+      .unknown(true)
+      .validateAsync(req)
+      .then(ary(0, next))
+      .catch(flow(get("message"), generateBadRequestError, next));
 
 // joi validation for schemas that changes according to the permission of the user
 export const validateRequestByPermission = (
   allValidations: {
     permissions: Permission[];
     schema: ObjectSchema<any>;
-  }[],
-  options: ValidationOptions = defaultValidationOptions
+  }[]
 ) => {
   const validator = async (req: Request): Promise<void> => {
     const wantedValidation = allValidations.find((validation) =>
       validation.permissions.includes(getContext(Global.USER).permission)
     );
-    if (!wantedValidation) {
-      throw new PermissionError();
-    }
-    await validateRequest(wantedValidation.schema, options, false)(req);
+
+    wantedValidation
+      ? await validateRequest(wantedValidation.schema)(req)
+      : throwUnauthorizedError("Invalid Permission");
   };
   return wrapValidator(validator);
 };

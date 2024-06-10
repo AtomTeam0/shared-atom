@@ -1,10 +1,13 @@
-import { Request, Response, NextFunction } from "express";
+import { Global } from "common-atom/enums/helpers/Global";
+import { NextFunction, Request, Response } from "express";
 import passport from "passport";
 import { BearerStrategy, ITokenPayload } from "passport-azure-ad";
-import { Global } from "common-atom/enums/helpers/Global";
+import {
+  generateUnauthorizedError,
+  throwUnauthorizedError,
+} from "../errors/ErrorGenerators";
 import { setContext } from "../helpers/context";
 import { wrapAsyncMiddleware } from "../helpers/wrapper";
-import { InvalidToken, TokenNotProvided } from "../errors/validationError";
 import authConfig from "./authConfig";
 
 // Configure the Azure AD bearer strategy
@@ -26,21 +29,22 @@ const azureADBearerStrategy = new BearerStrategy(
        */
       if (!token.hasOwnProperty("scp") && !token.hasOwnProperty("roles")) {
         return done(
-          new InvalidToken(
+          generateUnauthorizedError(
             "Unauthorized - No delegated or app permission claims found [roles,scp]"
           ),
+
           null,
           "No delegated or app permission claims found"
         );
       }
       if (!token) {
-        throw new TokenNotProvided();
+        throwUnauthorizedError("Must provide token");
       }
 
       return done(null, {}, token);
     } catch (error) {
       console.log("Error validating access token:", error);
-      return done(new InvalidToken("Invalid access token"));
+      return done(generateUnauthorizedError("Invalid access token"));
     }
   }
 );
@@ -55,11 +59,11 @@ export const verifyToken = wrapAsyncMiddleware(
       (err: Error, user: any, tokenPayload: ITokenPayload) => {
         if (err) {
           console.log("Error validating access token:", err.message);
-          throw new InvalidToken(`Invalid access token  [${err.message}]`);
+          throwUnauthorizedError(`Invalid access token  [${err.message}]`);
         }
 
         if (!tokenPayload) {
-          throw new TokenNotProvided();
+          throwUnauthorizedError("Must provide token");
         }
         req.user = tokenPayload;
         setContext(Global.AZURE_USER, req.user);

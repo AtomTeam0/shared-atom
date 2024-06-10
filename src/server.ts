@@ -1,22 +1,18 @@
-import express from "express";
-import http from "http";
-import { urlencoded, json } from "body-parser";
-import cookieParser from "cookie-parser";
-import morgan from "morgan";
-import cors from "cors";
-import { Logger } from "winston";
-import { Router } from "express";
-import { Server as JaysonServer } from "jayson/promise";
+import { json, urlencoded } from "body-parser";
 import { IServerConfig } from "common-atom/interfaces/helpers/serverConfig.interface";
-import {
-  userErrorHandler,
-  serverErrorHandler,
-  unknownErrorHandler,
-} from "./utils/errors/errorHandler";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import express, { Router } from "express";
+import http from "http";
+import { Server as JaysonServer } from "jayson/promise";
+import morgan from "morgan";
+import { Logger } from "winston";
+import { config } from "./config";
+import { errorCatcherMiddleware } from "./utils/errors/Middlewares";
+import { runWithContextMiddleWare } from "./utils/helpers/context";
 import { initLogger } from "./utils/helpers/logger";
 import { setSocketServer } from "./utils/schema/helpers/socketHelpers";
-import { runWithContextMiddleWare } from "./utils/helpers/context";
-import { config } from "./config";
+import mongoSanitize from "express-mongo-sanitize";
 
 export class Server {
   public app: express.Application;
@@ -56,8 +52,7 @@ export class Server {
       );
       this.log(
         "info",
-        `Server running in ${config.server.nodeEnv} environment on port ${this.serverConfig.server.port}`,
-        "server started"
+        `Server running in ${config.server.nodeEnv} environment on port ${this.serverConfig.server.port}`
       );
     });
 
@@ -69,8 +64,7 @@ export class Server {
         );
         this.log(
           "info",
-          `RPC server running on port ${this.serverConfig.rpc?.port}`,
-          "RPC server started"
+          `RPC server running on port ${this.serverConfig.rpc?.port}`
         );
       });
     }
@@ -94,25 +88,20 @@ export class Server {
     this.app.use(json({ limit: "500mb" }));
     this.app.use(urlencoded({ extended: true }));
     this.app.use(cookieParser());
+    this.app.use(mongoSanitize({ allowDots: true }));
   }
 
   private initializeErrorHandler() {
-    this.app.use(userErrorHandler(this.log));
-    this.app.use(serverErrorHandler(this.log));
-    this.app.use(unknownErrorHandler(this.log));
+    this.app.use(errorCatcherMiddleware(this.log));
   }
 
   public log = (
     severity: string,
-    name: string,
     description: string,
-    correlationId?: string,
     user?: string,
     more?: object
   ) => {
     this.logger.log({
-      name,
-      correlationId,
       user,
       level: severity,
       message: description,

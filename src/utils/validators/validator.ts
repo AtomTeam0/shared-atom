@@ -1,11 +1,11 @@
-import {NextFunction, Request, Response} from "express";
-import {Global} from "common-atom/enums/helpers/Global";
-import {Permission} from "common-atom/enums/Permission";
-import {ITokenPayload} from "passport-azure-ad";
-import {AuthenticationError, PermissionError} from "../errors/generalError";
-import {setContext} from "../helpers/context";
-import {wrapAsyncMiddleware} from "../helpers/wrapper";
-import {UsersRPCService} from "../rpc/services/user.RPCservice";
+import { Permission } from "common-atom/enums/Permission";
+import { Global } from "common-atom/enums/helpers/Global";
+import { NextFunction, Request, Response } from "express";
+import { ITokenPayload } from "passport-azure-ad";
+import { generateUnauthorizedError } from "../errors/ErrorGenerators";
+import { setContext } from "../helpers/context";
+import { wrapAsyncMiddleware } from "../helpers/wrapper";
+import { UsersRPCService } from "../rpc/services/user.RPCservice";
 
 export const validateUserAndPermission = (
   permissions: Permission[] = [...Object.values(Permission)]
@@ -16,11 +16,15 @@ export const validateUserAndPermission = (
   ) => {
     // validate user property preferred_username
     if (!user || !user.preferred_username) {
-      return new AuthenticationError("Missing preferred_username");
+      return generateUnauthorizedError(
+        "Authentication Error- Missing preferred_username"
+      );
     }
     // validate user property name
     if (!user || !user.name) {
-      return new AuthenticationError("Missing user.name");
+      return generateUnauthorizedError(
+        "Authentication Error- Missing user.name"
+      );
     }
 
     let userFromDb;
@@ -42,8 +46,8 @@ export const validateUserAndPermission = (
         userFromDb.permission
       )
     ) {
-      return new PermissionError(
-        `Required permissions: ${permissionsToValidate} users permissions: ${userFromDb.permission}`
+      return generateUnauthorizedError(
+        `Invalid Permission- Required permissions: ${permissionsToValidate} users permissions: ${userFromDb.permission}`
       );
     }
 
