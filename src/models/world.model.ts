@@ -8,11 +8,15 @@ const WorldSchema: Schema = new Schema(
             type: String,
             required: true,
         },
-        Icon: {
+        icon: {
             type: String,
             required: true,
         },
         color: {
+            type: String,
+            required: true,
+        },
+        thumbnail: {
             type: String,
             required: true,
         },
