@@ -13,6 +13,7 @@ import { runWithContextMiddleWare } from "./utils/helpers/context";
 import { initLogger } from "./utils/helpers/logger";
 import { setSocketServer } from "./utils/schema/helpers/socketHelpers";
 import mongoSanitize from "express-mongo-sanitize";
+import compression from "compression";
 
 export class Server {
   public app: express.Application;
@@ -39,6 +40,7 @@ export class Server {
     isSocket = false
   ) {
     this.app = express();
+    this.app.use(compression())
     this.serverConfig = serverConfig;
     this.logger = initLogger(serverConfig);
     this.configureMiddlewares();
