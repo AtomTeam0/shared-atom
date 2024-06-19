@@ -1,4 +1,4 @@
-import {Schema, Types, Document, model} from "mongoose";
+import {Schema, Document, model} from "mongoose";
 import {aggregatePlugin} from "../utils/schema/plugins/aggregatePlugin";
 import {World} from "common-atom/interfaces/world.interface";
 
@@ -16,6 +16,10 @@ const WorldSchema: Schema = new Schema(
             type: String,
             required: true,
         },
+      priority: {
+        type: Number,
+        required: true,
+      },
         thumbnail: {
             type: String,
             required: true,
