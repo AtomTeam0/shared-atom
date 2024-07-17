@@ -19,6 +19,14 @@ const FilterSchema: Schema = new Schema(
         thumbnail: {
             type: String,
         },
+        priority: {
+            type: Number,
+            validate: {
+                validator: (val: number) => val <= 100 && val >= 1,
+                message: `priority out of range (1-100)`,
+            },
+
+        },
         timeDeleted: {
             type: Date,
         },
